@@ -4,10 +4,12 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-export default function CTASection() {
+export default function CTASection({ locale = 'tr' }: { locale?: Locale }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const t = getTranslations(locale);
 
   return (
     <section ref={ref} className="py-20 relative overflow-hidden">
@@ -34,28 +36,28 @@ export default function CTASection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-5xl font-display font-black text-white mb-6">
-            Projeniz İçin Hemen Teklif Alın
+            {t.cta.title}
           </h2>
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Uzman ekibimiz en uygun çözümü sunmak için hazır. Hemen iletişime geçin.
+            {t.cta.description}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/tr/teklif-al">
+            <Link href={`/${locale}/teklif-al`}>
               <Button
                 variant="secondary"
                 size="lg"
                 className="min-w-[200px] bg-white text-primary-600 hover:bg-gray-100"
               >
-                Teklif Formu
+                {t.cta.button}
               </Button>
             </Link>
-            <Link href="/tr/iletisim">
+            <Link href={`/${locale}/iletisim`}>
               <Button
                 variant="outline"
                 size="lg"
                 className="min-w-[200px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-primary-600"
               >
-                İletişime Geçin
+                {locale === 'tr' ? 'İletişime Geçin' : 'Contact Us'}
               </Button>
             </Link>
           </div>

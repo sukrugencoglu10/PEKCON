@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer } from '@/lib/animations';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-export default function HeroSection() {
+export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
+  const t = getTranslations(locale);
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Animated Gradient Background */}
@@ -75,33 +77,32 @@ export default function HeroSection() {
             variants={slideUp}
             className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-white mb-6 leading-tight"
           >
-            Küresel Lojistikte{' '}
+            {t.hero.title1}{' '}
             <span className="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-              Güvenilir Çözüm
+              {t.hero.title2}
             </span>{' '}
-            Ortağınız
+            {t.hero.title3}
           </motion.h1>
 
           <motion.p
             variants={slideUp}
             className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
           >
-            25 yılı aşkın tecrübe ile konteyner tedariği ve uluslararası taşımacılık
-            hizmetlerinde lider
+            {t.hero.description}
           </motion.p>
 
           <motion.div
             variants={slideUp}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link href="/tr/teklif-al">
+            <Link href={`/${locale}/teklif-al`}>
               <Button variant="primary" size="lg" className="min-w-[200px]">
-                Hızlı Teklif Al
+                {t.hero.cta1}
               </Button>
             </Link>
-            <Link href="/tr/hizmetlerimiz">
+            <Link href={`/${locale}/hizmetlerimiz`}>
               <Button variant="ghost" size="lg" className="min-w-[200px] bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-dark-900 hover:border-white">
-                Hizmetlerimizi Keşfedin
+                {t.hero.cta2}
               </Button>
             </Link>
           </motion.div>

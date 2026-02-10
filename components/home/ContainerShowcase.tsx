@@ -6,34 +6,48 @@ import Link from 'next/link';
 import { Box } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer } from '@/lib/animations';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-const containers = [
-  {
-    id: '20dc',
-    name: "20' Standart Kuru Yük",
-    type: '20DC',
-    description: 'Standart boyut konteyner, genel kargo taşımacılığı için ideal',
-    specs: ['33.2 m³ hacim', '28,180 kg max yük', 'Yeni/Sıfır'],
-  },
-  {
-    id: '40hc',
-    name: "40' HC Kuru Yük",
-    type: '40HC',
-    description: 'Yüksek hacimli konteyner, daha fazla yük kapasitesi',
-    specs: ['76.3 m³ hacim', '26,580 kg max yük', 'High Cube'],
-  },
-  {
-    id: '40rf',
-    name: "40' HC Buzdolabı",
-    type: '40RF',
-    description: 'Sıcaklık kontrollü konteyner, gıda ve hassas yükler için',
-    specs: ['-30°C ile +30°C', 'Dijital kontrol', 'Carrier kompresör'],
-  },
-];
-
-export default function ContainerShowcase() {
+export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const t = getTranslations(locale);
+
+  const containers = [
+    {
+      id: '20dc',
+      name: locale === 'tr' ? "20' Standart Kuru Yük" : "20' Standard Dry Cargo",
+      type: '20DC',
+      description: locale === 'tr'
+        ? 'Standart boyut konteyner, genel kargo taşımacılığı için ideal'
+        : 'Standard size container, ideal for general cargo transportation',
+      specs: locale === 'tr'
+        ? ['33.2 m³ hacim', '28,180 kg max yük', 'Yeni/Sıfır']
+        : ['33.2 m³ volume', '28,180 kg max load', 'New/Zero'],
+    },
+    {
+      id: '40hc',
+      name: locale === 'tr' ? "40' HC Kuru Yük" : "40' HC Dry Cargo",
+      type: '40HC',
+      description: locale === 'tr'
+        ? 'Yüksek hacimli konteyner, daha fazla yük kapasitesi'
+        : 'High volume container, greater load capacity',
+      specs: locale === 'tr'
+        ? ['76.3 m³ hacim', '26,580 kg max yük', 'High Cube']
+        : ['76.3 m³ volume', '26,580 kg max load', 'High Cube'],
+    },
+    {
+      id: '40rf',
+      name: locale === 'tr' ? "40' HC Buzdolabı" : "40' HC Refrigerated",
+      type: '40RF',
+      description: locale === 'tr'
+        ? 'Sıcaklık kontrollü konteyner, gıda ve hassas yükler için'
+        : 'Temperature controlled container for food and sensitive cargo',
+      specs: locale === 'tr'
+        ? ['-30°C ile +30°C', 'Dijital kontrol', 'Carrier kompresör']
+        : ['-30°C to +30°C', 'Digital control', 'Carrier compressor'],
+    },
+  ];
 
   return (
     <section ref={ref} className="py-20 bg-white">
@@ -45,10 +59,10 @@ export default function ContainerShowcase() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-5xl font-display font-black text-dark-900 mb-4">
-            Konteyner Çözümlerimiz
+            {t.containers.title}
           </h2>
           <p className="text-lg text-dark-700 max-w-2xl mx-auto">
-            Yeni ve sıfır konteynerlerimizle her türlü yük taşıma ihtiyacınıza çözüm
+            {t.containers.subtitle}
           </p>
         </motion.div>
 
@@ -100,9 +114,9 @@ export default function ContainerShowcase() {
                   ))}
                 </ul>
 
-                <Link href={`/tr/konteynerlar#${container.id}`}>
+                <Link href={`/${locale}/konteynerlar#${container.id}`}>
                   <Button variant="outline" className="w-full">
-                    Detayları Görüntüle
+                    {locale === 'tr' ? 'Detayları Görüntüle' : 'View Details'}
                   </Button>
                 </Link>
               </div>
@@ -111,9 +125,9 @@ export default function ContainerShowcase() {
         </motion.div>
 
         <div className="text-center">
-          <Link href="/tr/konteynerlar">
+          <Link href={`/${locale}/konteynerlar`}>
             <Button variant="primary" size="lg">
-              Tüm Konteynerler
+              {locale === 'tr' ? 'Tüm Konteynerler' : 'All Containers'}
             </Button>
           </Link>
         </div>

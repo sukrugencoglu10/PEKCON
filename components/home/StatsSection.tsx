@@ -3,17 +3,19 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { slideUp, staggerContainer } from '@/lib/animations';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-const stats = [
-  { value: '1000+', label: 'Tamamlanan Proje' },
-  { value: '25+', label: 'Yıllık Tecrübe' },
-  { value: '50+', label: 'Hizmet Verdiğimiz Ülke' },
-  { value: '7/24', label: 'Müşteri Desteği' },
-];
-
-export default function StatsSection() {
+export default function StatsSection({ locale = 'tr' }: { locale?: Locale }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const t = getTranslations(locale);
+
+  const stats = [
+    { value: '25+', label: t.stats.experience },
+    { value: '50+', label: t.stats.countries },
+    { value: '10,000+', label: t.stats.containers },
+    { value: '98%', label: t.stats.satisfaction },
+  ];
 
   return (
     <section ref={ref} className="py-20 bg-white">

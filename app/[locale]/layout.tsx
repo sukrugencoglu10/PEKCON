@@ -22,7 +22,7 @@ export default async function LocaleLayout({
     <>
       <Header locale={locale} />
       <main>{children}</main>
-      <Footer />
+      <Footer locale={locale} />
       <ChatWidget />
       <WhatsAppButton />
     </>

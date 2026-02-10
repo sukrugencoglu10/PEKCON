@@ -3,54 +3,44 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
-import { Ship, Truck, Train, Plane, Route, Package } from 'lucide-react';
+import { Ship, Truck, Plane, FileText } from 'lucide-react';
 import { slideUp, staggerContainer, cardHover } from '@/lib/animations';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
 const iconMap: Record<string, any> = {
   Ship,
   Truck,
-  Train,
   Plane,
-  Route,
-  Package,
+  FileText,
 };
 
-const services = [
-  {
-    icon: 'Ship',
-    title: 'Denizyolu Taşımacılık',
-    description: 'Global ağımızla güvenilir denizyolu taşımacılığı hizmetleri',
-  },
-  {
-    icon: 'Truck',
-    title: 'Karayolu Taşımacılık',
-    description: 'Parsiyel ve komple yük çözümleri ile hızlı teslimat',
-  },
-  {
-    icon: 'Train',
-    title: 'Demiryolu Taşımacılık',
-    description: 'Çevre dostu ve ekonomik çözümler',
-  },
-  {
-    icon: 'Plane',
-    title: 'Hava Kargo',
-    description: 'Acil ve zaman hassas yükler için hızlı taşımacılık',
-  },
-  {
-    icon: 'Route',
-    title: 'İntermodal Taşımacılık',
-    description: 'Farklı taşıma modlarının kombinasyonu',
-  },
-  {
-    icon: 'Package',
-    title: 'Proje Kargo',
-    description: 'Büyük ölçekli ve özel projelerde uzmanlaşmış hizmet',
-  },
-];
-
-export default function ServicesOverview() {
+export default function ServicesOverview({ locale = 'tr' }: { locale?: Locale }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const t = getTranslations(locale);
+
+  const services = [
+    {
+      icon: 'Ship',
+      title: t.services.sea.title,
+      description: t.services.sea.description,
+    },
+    {
+      icon: 'Truck',
+      title: t.services.land.title,
+      description: t.services.land.description,
+    },
+    {
+      icon: 'Plane',
+      title: t.services.air.title,
+      description: t.services.air.description,
+    },
+    {
+      icon: 'FileText',
+      title: t.services.customs.title,
+      description: t.services.customs.description,
+    },
+  ];
 
   return (
     <section ref={ref} className="py-20 bg-gray-50">
@@ -62,10 +52,10 @@ export default function ServicesOverview() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-5xl font-display font-black text-dark-900 mb-4">
-            Hizmetlerimiz
+            {t.services.title}
           </h2>
           <p className="text-lg text-dark-700 max-w-2xl mx-auto">
-            Kapsamlı lojistik çözümlerimizle iş süreçlerinizi optimize ediyoruz
+            {t.services.subtitle}
           </p>
         </motion.div>
 
@@ -73,7 +63,7 @@ export default function ServicesOverview() {
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {services.map((service, index) => {
             const Icon = iconMap[service.icon];
@@ -84,7 +74,7 @@ export default function ServicesOverview() {
                 whileHover="hover"
                 initial="rest"
               >
-                <Link href="/tr/hizmetlerimiz">
+                <Link href={`/${locale}/hizmetlerimiz`}>
                   <motion.div
                     variants={cardHover}
                     className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 h-full group border border-gray-100 hover:border-primary-300"
@@ -97,7 +87,7 @@ export default function ServicesOverview() {
                     </h3>
                     <p className="text-dark-700 mb-4">{service.description}</p>
                     <span className="inline-flex items-center text-primary-500 font-medium group-hover:gap-2 transition-all">
-                      Detaylı Bilgi
+                      {locale === 'tr' ? 'Detaylı Bilgi' : 'Learn More'}
                       <svg
                         className="w-0 group-hover:w-5 h-5 transition-all duration-300"
                         fill="none"
