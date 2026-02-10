@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* PEKCON Gradient Utilities */
+  .gradient-pekcon-primary {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500;
+  }
+
+  .gradient-pekcon-secondary {
+    @apply bg-gradient-to-r from-secondary-500 to-accent-500;
+  }
+
+  .gradient-pekcon-hero {
+    @apply bg-gradient-to-br from-primary-900 via-secondary-900 to-dark-900;
+  }
+
+  .text-gradient-pekcon {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-warm {
+    @apply bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent;
+  }
+}

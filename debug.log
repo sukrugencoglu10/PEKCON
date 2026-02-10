@@ -1,0 +1,17 @@
+[0210/174421.535:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174421.587:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174422.325:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174426.082:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174426.595:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/174426.784:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174426.925:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/174427.082:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174427.182:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/174427.395:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174427.562:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174428.592:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174432.467:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174436.344:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/174529.226:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174529.364:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
+[0210/174530.235:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Sistem belirtilen dosyayı bulamıyor. (0x2)
