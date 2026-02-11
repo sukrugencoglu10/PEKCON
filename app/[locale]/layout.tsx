@@ -3,6 +3,20 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ChatWidget from '@/components/widgets/ChatWidget';
 import WhatsAppButton from '@/components/widgets/WhatsAppButton';
+import { Inter, Satisfy } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const satisfy = Satisfy({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-satisfy',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'PEKCON Container & Logistics',
@@ -19,12 +33,14 @@ export default async function LocaleLayout({
   const { locale } = await params;
 
   return (
-    <>
-      <Header locale={locale} />
-      <main>{children}</main>
-      <Footer locale={locale} />
-      <ChatWidget />
-      <WhatsAppButton />
-    </>
+    <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
+      <body className="font-sans antialiased">
+        <Header locale={locale} />
+        <main>{children}</main>
+        <Footer locale={locale} />
+        <ChatWidget />
+        <WhatsAppButton />
+      </body>
+    </html>
   );
 }

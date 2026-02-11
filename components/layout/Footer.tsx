@@ -10,22 +10,22 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Şirket */}
-          <div>
+          <div className="flex flex-col items-center md:items-start">
             <Image
               src="/images/logo.svg"
               alt="PEKCON Container & Logistics"
-              width={150}
+              width={160}
               height={50}
-              className="mb-4"
+              className="mb-4 h-auto w-40"
             />
-            <div className="flex space-x-4">
+            <div className="flex space-x-6">
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-dark-700 hover:text-primary-500 transition-colors"
               >
-                <Instagram size={24} />
+                <Instagram size={22} />
               </a>
               <a
                 href="https://linkedin.com"
@@ -33,7 +33,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
                 rel="noopener noreferrer"
                 className="text-dark-700 hover:text-primary-500 transition-colors"
               >
-                <Linkedin size={24} />
+                <Linkedin size={22} />
               </a>
             </div>
           </div>

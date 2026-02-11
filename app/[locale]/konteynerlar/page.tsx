@@ -1,61 +1,60 @@
 import { Box } from 'lucide-react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-const containers = [
-  {
-    id: '20dc',
-    name: "20' DC Kuru Yük Konteyneri",
-    type: '20DC',
-    description: 'Standart boyut konteyner, genel kargo taşımacılığı için ideal',
-    specs: {
-      volume: '33.2 m³',
-      maxPayload: '28,180 kg',
-      dimensions: '6.06 x 2.44 x 2.59 m',
-    },
-    features: ['Yeni/Sıfır', 'ISO standartları', 'Dayanıklı çelik yapı'],
-  },
-  {
-    id: '40hc',
-    name: "40' HC Kuru Yük Konteyneri",
-    type: '40HC',
-    description: 'Yüksek hacimli konteyner, daha fazla yük kapasitesi',
-    specs: {
-      volume: '76.3 m³',
-      maxPayload: '26,580 kg',
-      dimensions: '12.19 x 2.44 x 2.90 m',
-    },
-    features: ['Yeni/Sıfır', 'High Cube', 'Geniş iç hacim'],
-  },
-  {
-    id: '40rf',
-    name: "40' HC Buzdolabı Konteyneri",
-    type: '40RF',
-    description: 'Sıcaklık kontrollü konteyner, gıda ve hassas yükler için',
-    specs: {
-      volume: '67.5 m³',
-      maxPayload: '29,200 kg',
-      dimensions: '12.19 x 2.44 x 2.90 m',
-    },
-    features: [
-      '-30°C ile +30°C sıcaklık kontrolü',
-      'Carrier marka kompresör',
-      'Dijital kontrol paneli',
-      'Yeni/Sıfır',
-    ],
-  },
-];
+export default async function ContainersPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const t = getTranslations(locale);
 
-export default function ContainersPage() {
+  const containers = [
+    {
+      id: '20dc',
+      name: t.containersPage.c20dc.name,
+      type: '20DC',
+      description: t.containersPage.c20dc.desc,
+      specs: {
+        volume: '33.2 m³',
+        maxPayload: '28,180 kg',
+        dimensions: '6.06 x 2.44 x 2.59 m',
+      },
+      features: [t.containersPage.c20dc.f1, t.containersPage.c20dc.f2, t.containersPage.c20dc.f3],
+    },
+    {
+      id: '40hc',
+      name: t.containersPage.c40hc.name,
+      type: '40HC',
+      description: t.containersPage.c40hc.desc,
+      specs: {
+        volume: '76.3 m³',
+        maxPayload: '26,580 kg',
+        dimensions: '12.19 x 2.44 x 2.90 m',
+      },
+      features: [t.containersPage.c40hc.f1, t.containersPage.c40hc.f2, t.containersPage.c40hc.f3],
+    },
+    {
+      id: '40rf',
+      name: t.containersPage.c40rf.name,
+      type: '40RF',
+      description: t.containersPage.c40rf.desc,
+      specs: {
+        volume: '67.5 m³',
+        maxPayload: '29,200 kg',
+        dimensions: '12.19 x 2.44 x 2.90 m',
+      },
+      features: [t.containersPage.c40rf.f1, t.containersPage.c40rf.f2, t.containersPage.c40rf.f3],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-white py-20">
       <div className="container mx-auto px-4 pt-20">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-4">
-            Konteyner Çözümlerimiz
+            {t.containersPage.title}
           </h1>
           <p className="text-lg text-dark-700 max-w-2xl mx-auto">
-            Yeni ve sıfır konteynerlerimizle her türlü yük taşıma ihtiyacınıza çözüm
+            {t.containersPage.subtitle}
           </p>
         </div>
 
@@ -84,23 +83,23 @@ export default function ContainersPage() {
                 {/* Middle: Specs */}
                 <div>
                   <h3 className="text-lg font-display font-bold text-dark-900 mb-4">
-                    Teknik Özellikler
+                    {t.containersPage.techSpecs}
                   </h3>
                   <dl className="space-y-2">
                     <div>
-                      <dt className="text-sm text-dark-700">Hacim:</dt>
+                      <dt className="text-sm text-dark-700">{t.containersPage.volume}:</dt>
                       <dd className="text-lg font-semibold text-dark-900">
                         {container.specs.volume}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm text-dark-700">Max Yük:</dt>
+                      <dt className="text-sm text-dark-700">{t.containersPage.payload}:</dt>
                       <dd className="text-lg font-semibold text-dark-900">
                         {container.specs.maxPayload}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm text-dark-700">Dış Boyutlar:</dt>
+                      <dt className="text-sm text-dark-700">{t.containersPage.dimensions}:</dt>
                       <dd className="text-lg font-semibold text-dark-900">
                         {container.specs.dimensions}
                       </dd>
@@ -111,7 +110,7 @@ export default function ContainersPage() {
                 {/* Right: Features & CTA */}
                 <div>
                   <h3 className="text-lg font-display font-bold text-dark-900 mb-4">
-                    Özellikler
+                    {t.containersPage.features}
                   </h3>
                   <ul className="space-y-2 mb-6">
                     {container.features.map((feature, idx) => (
@@ -133,9 +132,9 @@ export default function ContainersPage() {
                       </li>
                     ))}
                   </ul>
-                  <Link href="/tr/teklif-al">
+                  <Link href={`/${locale}/teklif-al`}>
                     <Button variant="primary" className="w-full">
-                      Teklif Al
+                      {t.nav.quote}
                     </Button>
                   </Link>
                 </div>

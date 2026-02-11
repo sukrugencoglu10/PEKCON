@@ -46,7 +46,7 @@ export default function CTASection({ locale = 'tr' }: { locale?: Locale }) {
               <Button
                 variant="secondary"
                 size="lg"
-                className="min-w-[200px] bg-white text-primary-600 hover:bg-gray-100"
+                className="min-w-[200px] !bg-white !text-red-600 hover:!bg-red-50 hover:!text-red-700"
               >
                 {t.cta.button}
               </Button>
@@ -55,7 +55,7 @@ export default function CTASection({ locale = 'tr' }: { locale?: Locale }) {
               <Button
                 variant="outline"
                 size="lg"
-                className="min-w-[200px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-primary-600"
+                className="min-w-[200px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:!bg-white hover:!text-secondary-600"
               >
                 {locale === 'tr' ? 'İletişime Geçin' : 'Contact Us'}
               </Button>

@@ -1,0 +1,5 @@
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\hakksearch.txt
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\.next\dev\server\app\[locale]\hakkimizda
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\.next\dev\server\chunks\ssr\PEKCON__next-internal_server_app_[locale]_hakkimizda_page_actions_c9f38a47.js
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\.next\dev\server\chunks\ssr\PEKCON__next-internal_server_app_[locale]_hakkimizda_page_actions_c9f38a47.js.map
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\app\[locale]\hakkimizda

@@ -1,54 +1,58 @@
 import { Ship, Truck, Train, Plane, Route, Package } from 'lucide-react';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-const services = [
-  {
-    icon: Ship,
-    title: 'Denizyolu Taşımacılık',
-    description: 'Global ağımızla güvenilir denizyolu taşımacılığı hizmetleri',
-    features: ['FCL (Full Container Load)', 'LCL (Less than Container Load)', 'Break Bulk'],
-  },
-  {
-    icon: Truck,
-    title: 'Karayolu Taşımacılık',
-    description: 'Parsiyel ve komple yük çözümleri ile hızlı teslimat',
-    features: ['FTL (Full Truck Load)', 'LTL (Less than Truck Load)', 'Kapıdan kapıya'],
-  },
-  {
-    icon: Train,
-    title: 'Demiryolu Taşımacılık',
-    description: 'Çevre dostu ve ekonomik çözümler',
-    features: ['Blok tren taşımacılığı', 'Avrupa-Asya hattı', 'Kombine taşıma'],
-  },
-  {
-    icon: Plane,
-    title: 'Hava Kargo',
-    description: 'Acil ve zaman hassas yükler için hızlı taşımacılık',
-    features: ['Express teslimat', 'Door-to-door', 'Gümrük hizmetleri'],
-  },
-  {
-    icon: Route,
-    title: 'İntermodal Taşımacılık',
-    description: 'Farklı taşıma modlarının kombinasyonu',
-    features: ['Entegre çözümler', 'Maliyet optimizasyonu', 'Esnek rotalar'],
-  },
-  {
-    icon: Package,
-    title: 'Proje Kargo',
-    description: 'Büyük ölçekli ve özel projelerde uzmanlaşmış hizmet',
-    features: ['Ağır yük taşıma', 'Özel ekipman', 'Proje yönetimi'],
-  },
-];
+export default async function ServicesPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const t = getTranslations(locale);
 
-export default function ServicesPage() {
+  const services = [
+    {
+      icon: Ship,
+      title: t.servicesPage.sea.title,
+      description: t.servicesPage.sea.desc,
+      features: [t.servicesPage.sea.f1, t.servicesPage.sea.f2, t.servicesPage.sea.f3],
+    },
+    {
+      icon: Truck,
+      title: t.servicesPage.land.title,
+      description: t.servicesPage.land.desc,
+      features: [t.servicesPage.land.f1, t.servicesPage.land.f2, t.servicesPage.land.f3],
+    },
+    {
+      icon: Train,
+      title: t.servicesPage.rail.title,
+      description: t.servicesPage.rail.desc,
+      features: [t.servicesPage.rail.f1, t.servicesPage.rail.f2, t.servicesPage.rail.f3],
+    },
+    {
+      icon: Plane,
+      title: t.servicesPage.air.title,
+      description: t.servicesPage.air.desc,
+      features: [t.servicesPage.air.f1, t.servicesPage.air.f2, t.servicesPage.air.f3],
+    },
+    {
+      icon: Route,
+      title: t.servicesPage.intermodal.title,
+      description: t.servicesPage.intermodal.desc,
+      features: [t.servicesPage.intermodal.f1, t.servicesPage.intermodal.f2, t.servicesPage.intermodal.f3],
+    },
+    {
+      icon: Package,
+      title: t.servicesPage.project.title,
+      description: t.servicesPage.project.desc,
+      features: [t.servicesPage.project.f1, t.servicesPage.project.f2, t.servicesPage.project.f3],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 py-20">
       <div className="container mx-auto px-4 pt-20">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-4">
-            Hizmetlerimiz
+            {t.servicesPage.title}
           </h1>
           <p className="text-lg text-dark-700 max-w-2xl mx-auto">
-            Kapsamlı lojistik çözümlerimizle iş süreçlerinizi optimize ediyoruz
+            {t.servicesPage.subtitle}
           </p>
         </div>
 

@@ -23,4 +23,49 @@
   .text-gradient-warm {
     @apply bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent;
   }
+
+  /* Glassmorphism for Anti-Gravity Effect */
+  .glass-float {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  }
+
+  .glass-float-strong {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20;
+  }
+
+  /* Layered Depth Effects */
+  .depth-layer-far {
+    @apply blur-sm opacity-20;
+  }
+
+  .depth-layer-mid {
+    @apply blur-[2px] opacity-40;
+  }
+
+  .depth-layer-near {
+    @apply opacity-60;
+  }
+
+  /* Gradient Borders for Floating Elements */
+  .gradient-border-float {
+    @apply border-2 border-transparent bg-clip-padding;
+    background-image: linear-gradient(
+      to right,
+      rgba(0, 102, 255, 0.3),
+      rgba(255, 102, 0, 0.3)
+    );
+  }
+}
+
+.font-signature {
+  font-family: var(--font-satisfy), cursive;
+}
+
+@keyframes shine {
+  from { transform: translateX(-100%) skewX(-15deg); }
+  to { transform: translateX(200%) skewX(-15deg); }
+}
+
+.animate-shine {
+  animation: shine 3s infinite;
 }

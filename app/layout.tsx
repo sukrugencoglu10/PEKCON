@@ -50,9 +50,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="tr" className={inter.variable}>
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }

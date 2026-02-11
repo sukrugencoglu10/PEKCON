@@ -1,15 +1,19 @@
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-export default function ContactPage() {
+export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const t = getTranslations(locale);
+
   return (
     <div className="min-h-screen bg-gray-50 py-20">
       <div className="container mx-auto px-4 pt-20">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-4">
-            İletişime Geçin
+            {t.contactPage.title}
           </h1>
           <p className="text-lg text-dark-700">
-            Sorularınız için bize ulaşın, size yardımcı olmaktan mutluluk duyarız
+            {t.contactPage.subtitle}
           </p>
         </div>
 
@@ -19,7 +23,7 @@ export default function ContactPage() {
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Phone className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-display font-bold text-dark-900 mb-2">Telefon</h3>
+            <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.phone}</h3>
             <a
               href="tel:+902122979758"
               className="text-primary-500 hover:text-primary-600 font-medium"
@@ -33,7 +37,7 @@ export default function ContactPage() {
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Mail className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-display font-bold text-dark-900 mb-2">E-posta</h3>
+            <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.email}</h3>
             <a
               href="mailto:info@pekcon.com.tr"
               className="text-primary-500 hover:text-primary-600 font-medium"
@@ -47,13 +51,9 @@ export default function ContactPage() {
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
               <MapPin className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-display font-bold text-dark-900 mb-2">Adres</h3>
+            <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.address}</h3>
             <p className="text-dark-700">
-              Gülbahar Mah. Avni Dilligil Sok.
-              <br />
-              Köroğlu İş Merkezi No:5 D:6
-              <br />
-              34394 Şişli/İstanbul
+              {t.contactPage.addressLine}
             </p>
           </div>
         </div>
@@ -61,7 +61,9 @@ export default function ContactPage() {
         {/* Map placeholder */}
         <div className="max-w-6xl mx-auto mt-12">
           <div className="bg-gray-200 rounded-2xl h-96 flex items-center justify-center">
-            <p className="text-gray-600">Google Maps entegrasyonu buraya eklenecek</p>
+            <p className="text-gray-600">
+              {locale === 'tr' ? 'Google Maps entegrasyonu buraya eklenecek' : 'Google Maps integration will be added here'}
+            </p>
           </div>
         </div>
       </div>

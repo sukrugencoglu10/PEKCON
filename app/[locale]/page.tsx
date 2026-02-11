@@ -5,8 +5,8 @@ import ContainerShowcase from '@/components/home/ContainerShowcase';
 import CTASection from '@/components/home/CTASection';
 import type { Locale } from '@/lib/i18n';
 
-export default function HomePage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
 
   return (
     <>

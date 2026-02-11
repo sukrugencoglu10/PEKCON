@@ -1,0 +1,5 @@
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\public\apple-touch-icon.png
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\public\favicon-16x16.png
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\public\favicon-192x192.png
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\public\favicon-32x32.png
+C:\Users\sukru\OneDrive\new pekcon\PEKCON\public\favicon-512x512.png

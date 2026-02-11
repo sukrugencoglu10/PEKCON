@@ -8,10 +8,13 @@ import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import Button from '../ui/Button';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-export default function QuoteForm() {
+export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const t = getTranslations(locale);
+  const f = t.quotePage.form;
 
   const {
     register,
@@ -59,7 +62,7 @@ export default function QuoteForm() {
       {/* Transaction Type */}
       <div>
         <label className="block text-sm font-medium text-dark-800 mb-3">
-          İşlem Türü *
+          {f.transactionType} *
         </label>
         <div className="flex gap-4">
           <label className="flex items-center cursor-pointer">
@@ -69,7 +72,7 @@ export default function QuoteForm() {
               {...register('transactionType')}
               className="mr-2"
             />
-            <span>Satın Alma</span>
+            <span>{f.purchase}</span>
           </label>
           <label className="flex items-center cursor-pointer">
             <input
@@ -78,7 +81,7 @@ export default function QuoteForm() {
               {...register('transactionType')}
               className="mr-2"
             />
-            <span>Kiralama</span>
+            <span>{f.rental}</span>
           </label>
         </div>
         {errors.transactionType && (
@@ -88,25 +91,25 @@ export default function QuoteForm() {
 
       {/* Container Category */}
       <FormSelect
-        label="Konteyner Kategorisi *"
+        label={`${f.category} *`}
         {...register('containerCategory')}
         error={errors.containerCategory?.message}
         options={[
-          { value: '', label: 'Seçiniz' },
-          { value: 'standard_cargo', label: 'Standart Yük Konteyneri' },
-          { value: 'refrigerated', label: 'Buzdolabı Konteyneri' },
-          { value: 'custom', label: 'Özel Üretim' },
+          { value: '', label: f.select },
+          { value: 'standard_cargo', label: f.standard },
+          { value: 'refrigerated', label: f.refrigerated },
+          { value: 'custom', label: f.custom },
         ]}
       />
 
       {/* Container Type (conditional) */}
       {containerCategory === 'standard_cargo' && (
         <FormSelect
-          label="Konteyner Tipi *"
+          label={`${f.type} *`}
           {...register('containerType')}
           error={errors.containerType?.message}
           options={[
-            { value: '', label: 'Seçiniz' },
+            { value: '', label: f.select },
             { value: '20DC', label: "20' DC (Dry Container)" },
             { value: '40DC', label: "40' DC (Dry Container)" },
             { value: '40HC', label: "40' HC (High Cube)" },
@@ -120,40 +123,24 @@ export default function QuoteForm() {
       {/* Quantity */}
       <FormInput
         type="number"
-        label="Miktar *"
+        label={`${f.quantity} *`}
         {...register('quantity', { valueAsNumber: true })}
         error={errors.quantity?.message}
         min={1}
         max={1000}
       />
 
-      {/* Delivery Location */}
-      <FormInput
-        type="text"
-        label="Teslimat Konumu *"
-        placeholder="Şehir, Ülke"
-        {...register('deliveryLocation')}
-        error={errors.deliveryLocation?.message}
-      />
-
-      {/* Delivery Date (optional) */}
-      <FormInput
-        type="date"
-        label="Tahmini Teslimat Tarihi"
-        {...register('deliveryDate')}
-        error={errors.deliveryDate?.message}
-      />
 
       <div className="border-t pt-6">
         <h3 className="text-lg font-display font-bold text-dark-900 mb-4">
-          İletişim Bilgileriniz
+          {f.contactInfo}
         </h3>
 
         <div className="space-y-4">
           {/* Full Name */}
           <FormInput
             type="text"
-            label="Ad Soyad *"
+            label={`${f.fullName} *`}
             {...register('fullName')}
             error={errors.fullName?.message}
           />
@@ -161,7 +148,7 @@ export default function QuoteForm() {
           {/* Company Name (optional) */}
           <FormInput
             type="text"
-            label="Firma Adı"
+            label={f.company}
             {...register('companyName')}
             error={errors.companyName?.message}
           />
@@ -169,8 +156,8 @@ export default function QuoteForm() {
           {/* Phone */}
           <FormInput
             type="tel"
-            label="Telefon *"
-            placeholder="+90 5XX XXX XX XX"
+            label={`${f.phone} *`}
+            placeholder={f.phonePlaceholder}
             {...register('phone')}
             error={errors.phone?.message}
           />
@@ -178,15 +165,15 @@ export default function QuoteForm() {
           {/* Email */}
           <FormInput
             type="email"
-            label="E-posta *"
+            label={`${f.email} *`}
             {...register('email')}
             error={errors.email?.message}
           />
 
           {/* Notes (optional) */}
           <FormTextarea
-            label="Ek Notlar"
-            placeholder="Eklemek istediğiniz detaylar..."
+            label={f.notes}
+            placeholder={f.notesPlaceholder}
             {...register('notes')}
             error={errors.notes?.message}
           />
@@ -201,19 +188,19 @@ export default function QuoteForm() {
         className="w-full"
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Gönderiliyor...' : 'Teklif İste'}
+        {isSubmitting ? f.submitting : f.submit}
       </Button>
 
       {/* Status Messages */}
       {submitStatus === 'success' && (
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-          ✓ Teklifiniz başarıyla alındı! En kısa sürede size dönüş yapacağız.
+          ✓ {f.success}
         </div>
       )}
 
       {submitStatus === 'error' && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-          ✗ Bir hata oluştu. Lütfen tekrar deneyin veya bizi arayın.
+          ✗ {f.error}
         </div>
       )}
     </form>
