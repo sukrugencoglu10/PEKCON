@@ -11,7 +11,7 @@ export default function StatsSection({ locale = 'tr' }: { locale?: Locale }) {
   const t = getTranslations(locale);
 
   const stats = [
-    { value: '25+', label: t.stats.experience },
+    { value: '15+', label: t.stats.experience },
     { value: '50+', label: t.stats.countries },
     { value: '10,000+', label: t.stats.containers },
     { value: '98%', label: t.stats.satisfaction },

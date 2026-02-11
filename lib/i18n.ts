@@ -3,8 +3,8 @@ export const translations = {
     // Hero Section
     hero: {
       title1: 'Uluslararası Dolaşımda',
-      title2: 'Satılık Yük',
-      title3: 'Konteynerleri',
+      title2: 'Satılık',
+      title3: 'Yük Konteynerleri',
       description: 'Küresel Lojistikte Güvenilir Çözüm Ortağınız',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',

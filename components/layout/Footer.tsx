@@ -10,7 +10,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Şirket */}
-          <div className="flex flex-col items-center md:items-start">
+          <div className="flex flex-col items-center">
             <Image
               src="/images/logo.svg"
               alt="PEKCON Container & Logistics"

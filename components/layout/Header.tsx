@@ -1,27 +1,39 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Menu, X, Phone, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
-import Button from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
-import { getTranslations, type Locale } from '@/lib/i18n';
-import { flagWave } from '@/lib/animations';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { Menu, X, Phone, Mail } from "lucide-react";
+import { motion } from "framer-motion";
+import Button from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
+import { getTranslations, type Locale } from "@/lib/i18n";
+import { flagWave } from "@/lib/animations";
 
-export default function Header({ locale = 'tr' }: { locale?: string }) {
+export default function Header({ locale = "tr" }: { locale?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
   const t = getTranslations(locale as Locale);
+
+  // Check if a link is active
+  const isActive = (href: string) => {
+    // Exact match for home page
+    if (href === `/${locale}`) {
+      return pathname === `/${locale}` || pathname === `/${locale}/`;
+    }
+    // For other pages, check if pathname starts with the href
+    return pathname.startsWith(href);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
@@ -38,11 +50,17 @@ export default function Header({ locale = 'tr' }: { locale?: string }) {
       <div className="bg-secondary-500 text-white py-2 hidden md:block">
         <div className="container mx-auto px-4">
           <div className="flex justify-end items-center space-x-6 text-sm font-medium">
-            <a href="tel:+902122979758" className="flex items-center space-x-2 hover:text-primary-400 transition-colors">
+            <a
+              href="tel:+902122979758"
+              className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
+            >
               <Phone size={14} />
               <span>+90 (212) 297 97 58</span>
             </a>
-            <a href="mailto:info@pekcon.com.tr" className="flex items-center space-x-2 hover:text-primary-400 transition-colors">
+            <a
+              href="mailto:info@pekcon.com.tr"
+              className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
+            >
               <Mail size={14} />
               <span>info@pekcon.com.tr</span>
             </a>
@@ -53,124 +71,169 @@ export default function Header({ locale = 'tr' }: { locale?: string }) {
       {/* Main Header */}
       <div className="bg-white shadow-md py-4">
         <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link
-            href={`/${locale}`}
-            className="flex items-center p-0 m-0 overflow-visible group"
-          >
-            <motion.div
-              variants={flagWave}
-              initial="rest"
-              animate="animate"
-              className="origin-left flex items-center"
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link
+              href={`/${locale}`}
+              className="flex items-center p-0 m-0 overflow-visible group"
             >
-              <Image
-                src="/images/logo.svg"
-                alt="PEKCON Container & Logistics"
-                width={207}
-                height={69}
-                className="h-14 w-auto"
-                priority
-              />
-              <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
-                <div className="flex flex-col leading-[1.1]">
-                  {t.manager.split('\n').map((line, idx, arr) => (
-                    <span 
-                      key={idx} 
-                      className={cn(
-                        "block whitespace-nowrap",
-                        idx === 0 && arr.length > 1 
-                          ? "text-[10px] uppercase tracking-wider font-sans font-bold text-gray-500" 
-                          : "font-signature text-lg text-secondary-600"
-                      )}
-                    >
-                      {line}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 rounded-md font-medium text-secondary-500 hover:bg-secondary-500 hover:text-white transition-all duration-300"
+              <motion.div
+                variants={flagWave}
+                initial="rest"
+                animate="animate"
+                className="origin-left flex items-center"
               >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* CTA & Language Switcher */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <Link href={`/${locale}/teklif-al`}>
-              <Button variant="primary" size="md">
-                {t.nav.quote}
-              </Button>
+                <Image
+                  src="/images/logo.svg"
+                  alt="PEKCON Container & Logistics"
+                  width={207}
+                  height={69}
+                  className="h-[140px] w-auto"
+                  priority
+                />
+                <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
+                  <div className="flex flex-col leading-[1.1]">
+                    {t.manager.split("\n").map((line, idx, arr) => (
+                      <span
+                        key={idx}
+                        className={cn(
+                          "block whitespace-nowrap",
+                          idx === 0 && arr.length > 1
+                            ? "text-[10px] uppercase tracking-wider font-sans font-bold text-gray-500"
+                            : "font-signature text-lg text-secondary-600",
+                        )}
+                      >
+                        {line}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </Link>
-            <div className="flex items-center space-x-2">
-              <Link href="/tr">
-                <button className={cn(
-                  "px-3 py-1 text-sm font-medium rounded transition-colors",
-                  locale === 'tr'
-                    ? "text-white bg-secondary-500"
-                    : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
-                )}>
-                  TR
-                </button>
-              </Link>
-              <Link href="/en">
-                <button className={cn(
-                  "px-3 py-1 text-sm font-medium rounded transition-colors",
-                  locale === 'en'
-                    ? "text-white bg-secondary-500"
-                    : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
-                )}>
-                  EN
-                </button>
-              </Link>
-            </div>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-secondary-500 hover:text-secondary-600"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4">
-            <nav className="flex flex-col space-y-2">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-4 py-2 rounded-md font-medium text-secondary-500 hover:bg-secondary-500 hover:text-white transition-all"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "px-4 py-2 rounded-md font-medium transition-all duration-300",
+                    isActive(link.href)
+                      ? "bg-secondary-500 text-white"
+                      : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                  )}
                 >
                   {link.label}
                 </Link>
               ))}
-              <Link href={`/${locale}/teklif-al`} onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="primary" size="md" className="w-full mt-2">
+            </nav>
+
+            {/* CTA & Language Switcher */}
+            <div className="hidden lg:flex items-center">
+              <Link href={`/${locale}/teklif-al`}>
+                <Button variant="primary" size="md" className="scale-[1.15]">
                   {t.nav.quote}
                 </Button>
               </Link>
-            </nav>
+              <div className="flex items-center space-x-2 ml-[40px]">
+                <Link href="/tr">
+                  <button
+                    className={cn(
+                      "px-3 py-1 text-sm font-medium rounded transition-colors",
+                      locale === "tr"
+                        ? "text-white bg-red-600"
+                        : "text-red-600 border-2 border-red-600 hover:bg-red-600 hover:text-white",
+                    )}
+                  >
+                    TR
+                  </button>
+                </Link>
+                <Link href="/en">
+                  <button
+                    className={cn(
+                      "px-3 py-1 text-sm font-medium rounded transition-colors",
+                      locale === "en"
+                        ? "text-white bg-blue-600"
+                        : "text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white",
+                    )}
+                  >
+                    EN
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 text-secondary-500 hover:text-secondary-600"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
           </div>
-        )}
+
+          {/* Mobile Menu */}
+          {isMobileMenuOpen && (
+            <div className="lg:hidden mt-4 pb-4">
+              <nav className="flex flex-col space-y-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={cn(
+                      "px-4 py-2 rounded-md font-medium transition-all",
+                      isActive(link.href)
+                        ? "bg-secondary-500 text-white"
+                        : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                    )}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Link
+                  href={`/${locale}/teklif-al`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Button variant="primary" size="md" className="w-full mt-2">
+                    {t.nav.quote}
+                  </Button>
+                </Link>
+                <div className="flex items-center justify-center space-x-2 mt-4">
+                  <Link href="/tr">
+                    <button
+                      className={cn(
+                        "px-3 py-1 text-sm font-medium rounded transition-colors",
+                        locale === "tr"
+                          ? "text-white bg-red-600"
+                          : "text-red-600 border-2 border-red-600 hover:bg-red-600 hover:text-white"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      TR
+                    </button>
+                  </Link>
+                  <Link href="/en">
+                    <button
+                      className={cn(
+                        "px-3 py-1 text-sm font-medium rounded transition-colors",
+                        locale === "en"
+                          ? "text-white bg-blue-600"
+                          : "text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      EN
+                    </button>
+                  </Link>
+                </div>
+              </nav>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
   );
 }

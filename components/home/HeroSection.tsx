@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion';
 import { useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer, floatComplex, floatSlow, floatFast, antiGravityFloat } from '@/lib/animations';
@@ -41,19 +42,18 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-secondary-900 to-dark-900">
-        {/* Grid Pattern Overlay */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, rgba(0, 102, 255, 0.1) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(0, 102, 255, 0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-          }}
+      {/* Background Image with Gradient Overlay */}
+      <div className="absolute inset-0">
+        <Image
+          src="/x.jpeg"
+          alt="Yük Konteynerleri"
+          fill
+          className="object-cover"
+          priority
+          unoptimized
         />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-900/85 via-secondary-900/75 to-dark-900/90" />
 
         {/* Floating Geometric Shapes - Layered with Depth */}
         <div className="absolute inset-0">
@@ -127,13 +127,13 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
         >
           <motion.h1
             variants={slideUp}
-            className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-white mb-6 leading-tight"
+            className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-white mb-6 leading-tight flex flex-col"
           >
-            {t.hero.title1}{' '}
+            <span>{t.hero.title1}</span>
             <span className="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
               {t.hero.title2}
-            </span>{' '}
-            {t.hero.title3}
+            </span>
+            <span className="whitespace-nowrap">{t.hero.title3}</span>
           </motion.h1>
 
           <motion.p
@@ -155,14 +155,6 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
               >
                 <span className="relative z-10">{t.hero.cta1}</span>
                 <div className="absolute inset-0 w-1/3 h-full bg-white/20 skew-x-[-15deg] translate-x-[-100%] group-hover/btn:animate-shine pointer-events-none" />
-              </Button>
-            </Link>
-            <Link href={`/${locale}/hizmetlerimiz`}>
-              <Button 
-                size="lg" 
-                className="min-w-[200px] !bg-gradient-to-r !from-[#aa1917] !to-[#0069b4] !text-white hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
-              >
-                {t.hero.cta2}
               </Button>
             </Link>
             <Link href="https://wa.me/905543545201" target="_blank" rel="noopener noreferrer">

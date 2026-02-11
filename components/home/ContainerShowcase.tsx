@@ -76,14 +76,14 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
             <motion.div
               key={container.id}
               variants={slideUp}
-              className="group"
+              className="group h-full"
             >
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 h-full border border-gray-200 hover:border-primary-300">
+              <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 h-full border border-gray-200 hover:border-primary-300 flex flex-col">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mb-6">
                   <Box className="w-8 h-8 text-white" />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 flex-grow">
                   <div className="inline-block px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-2">
                     {container.type}
                   </div>
@@ -114,8 +114,8 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
                   ))}
                 </ul>
 
-                <Link href={`/${locale}/konteynerlar#${container.id}`}>
-                  <Button variant="outline" className="w-full">
+                <Link href={`/${locale}/konteynerlar#${container.id}`} className="mt-auto">
+                  <Button variant="primary" className="w-full !bg-red-600 !bg-none hover:!bg-red-700 !from-red-600 !to-red-600">
                     {locale === 'tr' ? 'Detayları Görüntüle' : 'View Details'}
                   </Button>
                 </Link>
@@ -126,7 +126,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
 
         <div className="text-center">
           <Link href={`/${locale}/konteynerlar`}>
-            <Button variant="primary" size="lg">
+            <Button variant="primary" size="lg" className="!bg-[#0069b4] !bg-none hover:!bg-[#005490] !from-[#0069b4] !to-[#0069b4]">
               {locale === 'tr' ? 'Tüm Konteynerler' : 'All Containers'}
             </Button>
           </Link>

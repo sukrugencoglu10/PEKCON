@@ -13,12 +13,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {t.about.title}
           </h1>
           
-          <div className="flex flex-col lg:flex-row items-start gap-12">
-            {/* Text Content */}
-            <div className="flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div>
               <div className="prose prose-lg max-w-none">
                 {t.about.description.split('\n\n').map((para, i) => (
-                  <p key={i} className="text-lg text-dark-700 leading-relaxed mb-6">
+                  <p key={i} className="text-lg text-dark-700 leading-relaxed mb-6 indent-8">
                     {para}
                   </p>
                 ))}
@@ -47,17 +46,15 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </div>
             </div>
 
-            {/* Image Content */}
-            <div className="flex-1 w-full lg:sticky lg:top-32">
-              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-gray-100">
-                <Image
-                  src="/hakkimizda.jpg" // Lütfen dosyanızın public klasöründe hakkimizda.jpg adıyla olduğundan emin olun
-                  alt={t.about.title}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
+            {/* Image on the right */}
+            <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/x2.jpeg"
+                alt="PEKCON Container & Logistics"
+                fill
+                className="object-cover"
+                unoptimized
+              />
             </div>
           </div>
         </div>
