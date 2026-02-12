@@ -12,9 +12,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
     <>
       <HeroSection locale={locale} />
       <StatsSection locale={locale} />
-      <ServicesOverview locale={locale} />
       <ContainerShowcase locale={locale} />
       <CTASection locale={locale} />
+      <ServicesOverview locale={locale} />
     </>
   );
 }

@@ -3,67 +3,79 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
-import { Ship, Truck, Plane, FileText } from 'lucide-react';
-import { slideUp, staggerContainer, cardHover } from '@/lib/animations';
+import { Ship, Truck, Train, Route, ClipboardCheck, ArrowRight } from 'lucide-react';
 import { getTranslations, type Locale } from '@/lib/i18n';
+import { staggerContainer, slideUp, cardHover } from '@/lib/animations';
 
-const iconMap: Record<string, any> = {
+interface ServicesOverviewProps {
+  locale: Locale;
+}
+
+const iconMap = {
   Ship,
   Truck,
-  Plane,
-  FileText,
+  Train,
+  Route,
+  ClipboardCheck,
 };
 
-export default function ServicesOverview({ locale = 'tr' }: { locale?: Locale }) {
+export default function ServicesOverview({ locale }: ServicesOverviewProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const t = getTranslations(locale);
 
   const services = [
     {
-      icon: 'Ship',
-      title: t.services.sea.title,
-      description: t.services.sea.description,
+      title: t.servicesPage.sea.title,
+      description: t.servicesPage.sea.desc,
+      icon: 'Ship' as const,
     },
     {
-      icon: 'Truck',
-      title: t.services.land.title,
-      description: t.services.land.description,
+      title: t.servicesPage.land.title,
+      description: t.servicesPage.land.desc,
+      icon: 'Truck' as const,
     },
     {
-      icon: 'Plane',
-      title: t.services.air.title,
-      description: t.services.air.description,
-    },
-    {
-      icon: 'FileText',
       title: t.services.customs.title,
-      description: t.services.customs.description,
+      description: t.services.customs.desc,
+      icon: 'ClipboardCheck' as const,
     },
   ];
 
   return (
-    <section ref={ref} className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section ref={ref} className="relative py-32 overflow-hidden bg-white">
+      {/* Background Image with subtle effect */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=2000')" }}
+      />
+      
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl md:text-5xl font-display font-black text-dark-900 mb-4">
+          <span className="text-primary-600 font-bold tracking-widest uppercase text-sm mb-3 block">
+            {locale === 'tr' ? 'HİZMETLERİMİZ' : 'OUR SERVICES'}
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-6">
             {t.services.title}
           </h2>
-          <p className="text-lg text-dark-700 max-w-2xl mx-auto">
-            {t.services.subtitle}
-          </p>
+          <div className="w-24 h-1.5 bg-primary-500 mx-auto mb-8 rounded-full" />
+          <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-white/50">
+            <p className="text-xl text-dark-700 leading-relaxed font-medium">
+              {t.services.subtitle}
+            </p>
+          </div>
         </motion.div>
 
         <motion.div
           variants={staggerContainer}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-3 gap-10"
         >
           {services.map((service, index) => {
             const Icon = iconMap[service.icon];
@@ -77,36 +89,40 @@ export default function ServicesOverview({ locale = 'tr' }: { locale?: Locale })
                 <Link href={`/${locale}/hizmetlerimiz`}>
                   <motion.div
                     variants={cardHover}
-                    className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 h-full group border border-gray-100 hover:border-primary-300"
+                    className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 h-full group border border-gray-100 hover:border-primary-200"
                   >
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <Icon className="w-8 h-8 text-white" />
+                    <div className="w-20 h-20 border-2 border-primary-500 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary-500 group-hover:border-primary-500 transition-all duration-500">
+                      <Icon className="w-10 h-10 text-primary-500 group-hover:text-white transition-colors duration-500" />
                     </div>
-                    <h3 className="text-xl font-display font-bold text-dark-900 mb-3">
+                    <h3 className="text-2xl font-display font-bold text-dark-900 mb-4 group-hover:text-primary-600 transition-colors">
                       {service.title}
                     </h3>
-                    <p className="text-dark-700 mb-4">{service.description}</p>
-                    <span className="inline-flex items-center text-primary-500 font-medium group-hover:gap-2 transition-all">
-                      {locale === 'tr' ? 'Detaylı Bilgi' : 'Learn More'}
-                      <svg
-                        className="w-0 group-hover:w-5 h-5 transition-all duration-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
+                    <p className="text-dark-700 mb-8 leading-relaxed text-lg">
+                      {service.description}
+                    </p>
+                    <span className="inline-flex items-center text-primary-600 font-bold group-hover:translate-x-2 transition-transform duration-300">
+                      {locale === 'tr' ? 'Detayları İncele' : 'View Details'}
+                      <ArrowRight className="ml-2 w-5 h-5" />
                     </span>
                   </motion.div>
                 </Link>
               </motion.div>
             );
           })}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mt-20"
+        >
+          <Link href={`/${locale}/hizmetlerimiz`}>
+            <button className="bg-primary-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-primary-700 transition-all shadow-lg hover:shadow-primary-500/25 active:scale-95 group">
+              {locale === 'tr' ? 'Tüm Hizmetlerimizi Gör' : 'View All Services'}
+              <ArrowRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </Link>
         </motion.div>
       </div>
     </section>

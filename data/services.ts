@@ -21,13 +21,7 @@ export const services = {
       description: 'Çevre dostu ve ekonomik çözümler',
       features: ['Blok tren taşımacılığı', 'Avrupa-Asya hattı', 'Kombine taşıma'],
     },
-    {
-      id: 'air-freight',
-      icon: 'Plane',
-      title: 'Hava Kargo',
-      description: 'Acil ve zaman hassas yükler için hızlı taşımacılık',
-      features: ['Express teslimat', 'Door-to-door', 'Gümrük hizmetleri'],
-    },
+
     {
       id: 'intermodal',
       icon: 'Route',
@@ -36,11 +30,11 @@ export const services = {
       features: ['Entegre çözümler', 'Maliyet optimizasyonu', 'Esnek rotalar'],
     },
     {
-      id: 'project-cargo',
-      icon: 'Package',
-      title: 'Proje Kargo',
-      description: 'Büyük ölçekli ve özel projelerde uzmanlaşmış hizmet',
-      features: ['Ağır yük taşıma', 'Özel ekipman', 'Proje yönetimi'],
+      id: 'customs-services',
+      icon: 'ClipboardCheck',
+      title: 'Gümrük İşleri',
+      description: 'Profesyonel gümrük danışmanlığı ve süreç takibi',
+      features: ['Gümrük Müşavirliği', 'Mevzuat Danışmanlığı', 'Belge Yönetimi'],
     },
   ],
   en: [
@@ -65,13 +59,7 @@ export const services = {
       description: 'Eco-friendly and economical solutions',
       features: ['Block train transport', 'Europe-Asia route', 'Combined transport'],
     },
-    {
-      id: 'air-freight',
-      icon: 'Plane',
-      title: 'Air Cargo',
-      description: 'Fast shipping for urgent and time-sensitive cargo',
-      features: ['Express delivery', 'Door-to-door', 'Customs services'],
-    },
+
     {
       id: 'intermodal',
       icon: 'Route',
@@ -80,11 +68,11 @@ export const services = {
       features: ['Integrated solutions', 'Cost optimization', 'Flexible routes'],
     },
     {
-      id: 'project-cargo',
-      icon: 'Package',
-      title: 'Project Cargo',
-      description: 'Specialized service for large-scale and special projects',
-      features: ['Heavy cargo transport', 'Special equipment', 'Project management'],
+      id: 'customs-services',
+      icon: 'ClipboardCheck',
+      title: 'Customs Services',
+      description: 'Professional customs consultancy and process tracking',
+      features: ['Customs Brokerage', 'Regulatory Compliance', 'Document Management'],
     },
   ],
 };

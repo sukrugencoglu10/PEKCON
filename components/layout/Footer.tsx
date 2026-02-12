@@ -12,7 +12,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
           {/* Şirket */}
           <div className="flex flex-col items-center">
             <Image
-              src="/images/logo.svg"
+              src="/SVGpekcon_x.svg"
               alt="PEKCON Container & Logistics"
               width={160}
               height={50}
@@ -24,6 +24,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-dark-700 hover:text-primary-500 transition-colors"
+                title="Instagram"
               >
                 <Instagram size={22} />
               </a>
@@ -32,6 +33,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-dark-700 hover:text-primary-500 transition-colors"
+                title="LinkedIn"
               >
                 <Linkedin size={22} />
               </a>
@@ -50,11 +52,6 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
               <li>
                 <Link href={`/${locale}/hizmetlerimiz`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.landTransport}
-                </Link>
-              </li>
-              <li>
-                <Link href={`/${locale}/hizmetlerimiz`} className="text-dark-700 hover:text-primary-500 transition-colors">
-                  {t.footer.airTransport}
                 </Link>
               </li>
               <li>
@@ -103,13 +100,18 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
                   info@pekcon.com.tr
                 </a>
               </li>
-              <li className="flex items-start space-x-3">
-                <MapPin size={20} className="text-primary-500 mt-1 flex-shrink-0" />
-                <span className="text-dark-700">
-                  Dap vadi, Merkez mh. Seçkin sokak<br />
-                  no2-4a iç kapı:172, Z Ofis<br />
-                  34406 Kağıthane/İstanbul
-                </span>
+              <li>
+                <Link 
+                  href={`/${locale}/iletisim`}
+                  className="flex items-start space-x-3 group cursor-pointer"
+                >
+                  <MapPin size={20} className="text-primary-500 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                  <span className="text-dark-700 group-hover:text-primary-500 transition-colors">
+                    Dap vadi, Merkez mh. Seçkin sokak<br />
+                    no2-4a iç kapı:172, Z Ofis<br />
+                    34406 Kağıthane/İstanbul
+                  </span>
+                </Link>
               </li>
             </ul>
           </div>

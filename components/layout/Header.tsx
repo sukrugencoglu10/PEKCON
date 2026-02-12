@@ -84,7 +84,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                 className="origin-left flex items-center"
               >
                 <Image
-                  src="/images/logo.svg"
+                  src="/SVGpekcon_x.svg"
                   alt="PEKCON Container & Logistics"
                   width={207}
                   height={69}

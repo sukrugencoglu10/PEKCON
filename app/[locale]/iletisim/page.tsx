@@ -20,8 +20,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Phone */}
           <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Phone className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Phone className="w-8 h-8 text-primary-500" />
             </div>
             <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.phone}</h3>
             <a
@@ -34,8 +34,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
           {/* Email */}
           <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Mail className="w-8 h-8 text-primary-500" />
             </div>
             <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.email}</h3>
             <a
@@ -48,8 +48,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
           {/* Address */}
           <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <MapPin className="w-8 h-8 text-primary-500" />
             </div>
             <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.address}</h3>
             <p className="text-dark-700">
@@ -58,12 +58,18 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           </div>
         </div>
 
-        {/* Map placeholder */}
         <div className="max-w-6xl mx-auto mt-12">
-          <div className="bg-gray-200 rounded-2xl h-96 flex items-center justify-center">
-            <p className="text-gray-600">
-              {locale === 'tr' ? 'Google Maps entegrasyonu buraya eklenecek' : 'Google Maps integration will be added here'}
-            </p>
+          <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
+            <iframe
+              src="https://maps.google.com/maps?q=3XGC%2BVQ%20Ka%C4%9F%C4%B1thane,%20%C4%B0stanbul&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="450"
+              className="border-0"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="PEKCON Kağıthane Office Location"
+            />
           </div>
         </div>
       </div>

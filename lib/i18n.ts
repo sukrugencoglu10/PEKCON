@@ -1,4 +1,4 @@
-export const translations = {
+﻿export const translations = {
   tr: {
     // Hero Section
     hero: {
@@ -21,7 +21,7 @@ export const translations = {
     // Services
     services: {
       title: 'Hizmetlerimiz',
-      subtitle: 'Küresel lojistik ihtiyaçlarınız için eksiksiz çözümler',
+      subtitle: 'Pekcon ile uluslararası dolaşım standartlarına (CSC) tam uyumlu ve millileştirme süreçleri tamamlanmış geniş yük konteyneri portföyümüzle, taşımacılığın her aşamasında yanınızdayız. Deniz, kara ve demiryolu lojistiğinin sert koşullarına dayanıklı; standart ebatlardan özel projelere kadar uzanan stok ağımızla, armatörlerden ihracatçılara kadar tüm paydaşlarımıza kesintisiz tedarik sağlıyoruz. Dünyanın stratejik noktalarındaki depo ağımız ve uzman ekibimizle, yükünüzün tipine ve rotasına en uygun ekipmanı saniyeler içinde belirliyoruz.',
       sea: {
         title: 'Denizyolu Taşımacılık',
         description: 'FCL ve LCL taşımacılık ile küresel ticaret ağınızı güçlendirin',
@@ -30,10 +30,7 @@ export const translations = {
         title: 'Karayolu Taşımacılık',
         description: 'Avrupa ve Asya arasında hızlı ve güvenli karayolu lojistiği',
       },
-      air: {
-        title: 'Havayolu Taşımacılık',
-        description: 'Acil sevkiyatlarınız için ekspres havayolu çözümleri',
-      },
+
       customs: {
         title: 'Gümrük Hizmetleri',
         description: 'Profesyonel gümrük danışmanlığı ve işlem takibi',
@@ -41,14 +38,14 @@ export const translations = {
     },
     // Containers
     containers: {
-      title: 'Konteyner Çözümleri',
-      subtitle: 'İhtiyacınıza uygun konteyner seçenekleri',
+      title: 'Küresel Standartlarda Yerli Güçle Konteyner Çözümleri',
+      subtitle: 'İhtiyacınıza uygun sıfır ve ikinci el konteyner seçenekleri',
       saleRent: 'Satış & Kiralama',
       fromPrice: 'başlayan fiyatlarla',
     },
     // CTA Section
     cta: {
-      title: 'Lojistik İhtiyaçlarınız İçin Hemen Teklif Alın',
+      title: 'Konteyner İhtiyaçlarınız İçin Hemen Teklif Alın',
       description: 'Uzman ekibimiz size en uygun çözümü sunmak için hazır',
       button: 'Ücretsiz Teklif Al',
     },
@@ -59,7 +56,7 @@ export const translations = {
       contact: 'İletişim',
       seaTransport: 'Denizyolu Taşımacılık',
       landTransport: 'Karayolu Taşımacılık',
-      airTransport: 'Havayolu Taşımacılık',
+
       containerSales: 'Konteyner Satış & Kiralama',
       about: 'Hakkımızda',
       contactPage: 'İletişim',
@@ -78,7 +75,7 @@ export const translations = {
     // About Page
     about: {
       title: 'Hakkımızda',
-      description: "2018 yılında kurulan PEKCON KONTEYNER, konteyner tedarik zinciri yönetimi ve uluslararası taşımacılık alanında faaliyet göstermektedir. İstanbul merkezli firmamız, geniş acente ağı ile hizmet vermektedir. Dünya çapında geniş acente ağına sahip olan firmamız, başta Uzakdoğu, Ortadoğu ve Akdeniz Ülkeleri olmak üzere Afrika, Avrupa ve Amerika'nın birçok bölgesine kaliteli, güvenilir, profesyonel hizmet anlayışı ve geniş acente bağlantıları ile FCL tam konteyner, LCL parsiyel konteyner, yurt içi taşımacılık, gemi kiralama, transit ticaret taşımaları ve kombine taşımacılık alanlarında hizmet vermeye devam etmektedir.\n\nKoşulsuz müşteri memnuniyeti anlayışı ile değerli müşterilerimizi iş ve lojistik çözüm ortakları olarak gören; sorun değil, çözüm üreten konumunda; etik kurallara asla taviz vermeyen; butik yaklaşımlar, taşıma sürecinin her aşamasında maksimum özen ve doğru, güncel bilgi aktarımı ile firmamız, uzun vadeli ilişkileri hedef olarak seçmiştir.",
+      description: "2018 yılında kurulan PEKCON DENİZCİLİK KONTEYNER VE LOJİSTİK, konteyner tedarik zinciri yönetimi ve uluslararası taşımacılık alanında faaliyet göstermektedir. İstanbul merkezli firmamız, geniş acente ağı ile hizmet vermektedir. Dünya çapında geniş acente ağına sahip olan firmamız, başta Uzakdoğu, Ortadoğu ve Akdeniz Ülkeleri olmak üzere Afrika, Avrupa ve Amerika'nın birçok bölgesine kaliteli, güvenilir, profesyonel hizmet anlayışı ve geniş acente bağlantıları ile FCL tam konteyner, LCL parsiyel konteyner, yurt içi taşımacılık, gemi kiralama, transit ticaret taşımaları ve kombine taşımacılık alanlarında hizmet vermeye devam etmektedir.\n\nKoşulsuz müşteri memnuniyeti anlayışı ile değerli müşterilerimizi iş ve lojistik çözüm ortakları olarak gören; sorun değil, çözüm üreten konumunda; etik kurallara asla taviz vermeyen; butik yaklaşımlar, taşıma sürecinin her aşamasında maksimum özen ve doğru, güncel bilgi aktarımı ile firmamız, uzun vadeli ilişkileri hedef olarak seçmiştir.",
     },
     // Services Page
     servicesPage: {
@@ -105,13 +102,7 @@ export const translations = {
         f2: 'Avrupa-Asya Hattı',
         f3: 'Kombine Taşımacılık',
       },
-      air: {
-        title: 'Havayolu Taşımacılık',
-        desc: 'Acil ve zaman hassas yükler için hızlı taşımacılık',
-        f1: 'Ekspres Teslimat',
-        f2: 'Hava Kargo Hizmetleri',
-        f3: 'Gümrükleme Hizmetleri',
-      },
+
       intermodal: {
         title: 'İntermodal Taşımacılık',
         desc: 'Farklı taşıma modlarının kombinasyonu',
@@ -120,11 +111,11 @@ export const translations = {
         f3: 'Esnek Rotalar',
       },
       project: {
-        title: 'Proje Kargo',
-        desc: 'Büyük ölçekli ve özel projelerde uzmanlaşmış hizmet',
-        f1: 'Ağır Yük Taşıma',
-        f2: 'Özel Ekipman',
-        f3: 'Uçtan Uca Proje Yönetimi',
+        title: 'Gümrük İşleri',
+        desc: 'Profesyonel gümrük danışmanlığı ve süreç takibi',
+        f1: 'Gümrük Müşavirliği',
+        f2: 'Mevzuat Danışmanlığı',
+        f3: 'Belge ve İzin Yönetimi',
       },
     },
     // Containers Page
@@ -143,6 +134,13 @@ export const translations = {
         f2: 'ISO Standartlarına Uygun',
         f3: 'Dayanıklı Çelik Yapı',
       },
+      c40dc: {
+        name: "40' DC Kuru Yük Konteyneri",
+        desc: 'Standart yükseklikte konteyner, genel kargo taşımacılığı için',
+        f1: 'Yeni/Sıfır Durum',
+        f2: 'ISO Standartlarına Uygun',
+        f3: 'Standart Yükseklik',
+      },
       c40hc: {
         name: "40' HC Kuru Yük Konteyneri",
         desc: 'Yüksek hacimli konteyner, daha fazla yük kapasitesi',
@@ -150,13 +148,49 @@ export const translations = {
         f2: 'High Cube (Yüksek Tavan)',
         f3: 'Geniş İç Hacim',
       },
-      c40rf: {
-        name: "40' HC Buzdolabı Konteyneri",
-        desc: 'Sıcaklık kontrollü konteyner, gıda ve hassas yükler için',
-        f1: '-30°C ile +30°C Kontrol',
-        f2: 'Carrier Marka Kompresör',
-        f3: 'Dijital Kontrol Paneli',
+      c20ot: {
+        name: "20' Open Top Konteyner",
+        desc: 'Üstten yükleme yapılabilen brandalı konteyner',
+        f1: 'Üstten Yükleme İmkanı',
+        f2: 'Ağır ve Yüksek Yükler İçin',
+        f3: 'Çıkarılabilir Üst Raylar',
       },
+      c20fr: {
+        name: "20' Flat Rack Konteyner",
+        desc: 'Yanları ve üstü açık, ağır yükler için ideal',
+        f1: 'Gabari Dışı Yükler',
+        f2: 'Katlanabilir Uç Paneller',
+        f3: 'Yüksek Taşıma Kapasitesi',
+      },
+      c40rf: {
+        name: "40' Reefer (Soğutuculu) Konteyner",
+        desc: 'Isı kontrollü taşımacılık için ideal',
+        f1: 'Hassas Isı Kontrolü',
+        f2: 'Taze ve Donmuş Gıda',
+        f3: 'Paslanmaz Çelik İç Yapı',
+      },
+      c40ot: {
+        name: "40' Open Top Konteyner",
+        desc: 'Geniş ve yüksek yükler için üstten açılır yapı',
+        f1: 'Vinçle Yükleme Kolaylığı',
+        f2: 'Su Geçirmez Branda',
+        f3: 'Esnek Tasarım',
+      },
+      c40fr: {
+        name: "40' Flat Rack Konteyner",
+        desc: 'Büyük ve ağır iş makineleri için ideal çözüm',
+        f1: 'Ekstra Geniş Yük Birimi',
+        f2: 'Zemine Sabitleme Noktaları',
+        f3: 'Dayanıklı Platform Tasarımı',
+      },
+      c45hc: {
+        name: "45' HC Kuru Yük Konteyneri",
+        desc: 'Maksimum hacim ve uzunluk sunan konteyner',
+        f1: 'Ekstra Uzun Kapasite',
+        f2: 'Lojistik Avantaj',
+        f3: 'Geniş Depolama Alanı',
+      },
+
     },
     // Contact Page
     contactPage: {
@@ -225,7 +259,7 @@ export const translations = {
     // Services Section
     services: {
       title: 'Our Services',
-      subtitle: 'Complete solutions for your global logistics needs',
+      subtitle: 'With Pekcon, we stand by you at every stage of transportation with our extensive cargo container portfolio fully compliant with international circulation standards (CSC) and with finalized nationalization processes. Resistant to the harsh conditions of sea, land, and rail logistics; we provide uninterrupted supply to all our stakeholders, from shipowners to exporters, with our stock network ranging from standard sizes to special projects. With our depot network at strategic points around the world and our expert team, we determine the most suitable equipment for your cargo type and route within seconds.',
       sea: {
         title: 'Sea Freight',
         description: 'Strengthen your global trade network with FCL and LCL transportation',
@@ -234,10 +268,7 @@ export const translations = {
         title: 'Land Transport',
         description: 'Fast and secure land logistics between Europe and Asia',
       },
-      air: {
-        title: 'Air Freight',
-        description: 'Express air freight solutions for your urgent shipments',
-      },
+
       customs: {
         title: 'Customs Services',
         description: 'Professional customs consultancy and process tracking',
@@ -245,14 +276,14 @@ export const translations = {
     },
     // Containers Section
     containers: {
-      title: 'Container Solutions',
-      subtitle: 'Container options suited to your needs',
+      title: 'Container Solutions with Global Standards and Local Power',
+      subtitle: 'New and used container options suited to your needs',
       saleRent: 'Sale & Rental',
       fromPrice: 'starting from',
     },
     // CTA Section
     cta: {
-      title: 'Get a Quote for Your Logistics Needs Today',
+      title: 'Get a Quote for Your Container Needs Today',
       description: 'Our expert team is ready to provide you with the most suitable solution',
       button: 'Get Free Quote',
     },
@@ -263,7 +294,7 @@ export const translations = {
       contact: 'Contact',
       seaTransport: 'Sea Freight',
       landTransport: 'Land Transport',
-      airTransport: 'Air Freight',
+
       containerSales: 'Container Sale & Rental',
       about: 'About Us',
       contactPage: 'Contact',
@@ -309,13 +340,7 @@ export const translations = {
         f2: 'Europe-Asia Line',
         f3: 'Combined Transportation',
       },
-      air: {
-        title: 'Air Freight',
-        desc: 'Fast transportation for urgent and time-sensitive cargo',
-        f1: 'Express Delivery',
-        f2: 'Air Cargo Services',
-        f3: 'Customs Clearance',
-      },
+
       intermodal: {
         title: 'Intermodal Transport',
         desc: 'Combination of different transport modes',
@@ -324,11 +349,11 @@ export const translations = {
         f3: 'Flexible Routes',
       },
       project: {
-        title: 'Project Cargo',
-        desc: 'Specialized services for large-scale and special projects',
-        f1: 'Heavy Lift Transport',
-        f2: 'Special Equipment',
-        f3: 'End-to-End Project Management',
+        title: 'Customs Services',
+        desc: 'Professional customs consultancy and process tracking',
+        f1: 'Customs Brokerage',
+        f2: 'Regulatory Compliance',
+        f3: 'Documentation & Permits',
       },
     },
     // Containers Page
@@ -347,6 +372,13 @@ export const translations = {
         f2: 'ISO Standard Compliant',
         f3: 'Durable Steel Structure',
       },
+      c40dc: {
+        name: "40' DC Dry Cargo Container",
+        desc: 'Standard height container for general cargo transportation',
+        f1: 'New/Zero Condition',
+        f2: 'ISO Standard Compliant',
+        f3: 'Standard Height',
+      },
       c40hc: {
         name: "40' HC Dry Cargo Container",
         desc: 'High volume container, greater load capacity',
@@ -354,13 +386,49 @@ export const translations = {
         f2: 'High Cube (High Ceiling)',
         f3: 'Large Interior Volume',
       },
-      c40rf: {
-        name: "40' HC Refrigerated Container",
-        desc: 'Temperature controlled container for food and sensitive cargo',
-        f1: '-30°C to +30°C Control',
-        f2: 'Carrier Brand Compressor',
-        f3: 'Digital Control Panel',
+      c20ot: {
+        name: "20' Open Top Container",
+        desc: 'Container with tarpaulin that allows top loading',
+        f1: 'Top Loading Option',
+        f2: 'For Heavy and Tall Cargo',
+        f3: 'Removable Upper Rails',
       },
+      c20fr: {
+        name: "20' Flat Rack Container",
+        desc: 'Open sides and top, ideal for heavy cargo',
+        f1: 'Out-of-Gauge Cargo',
+        f2: 'Collapsible End Panels',
+        f3: 'High Carrying Capacity',
+      },
+      c40rf: {
+        name: "40' Reefer (Refrigerated) Container",
+        desc: 'Ideal for temperature-controlled transportation',
+        f1: 'Precise Temperature Control',
+        f2: 'Fresh and Frozen Food',
+        f3: 'Stainless Steel Interior',
+      },
+      c40ot: {
+        name: "40' Open Top Container",
+        desc: 'Top-opening structure for wide and tall cargo',
+        f1: 'Easy Crane Loading',
+        f2: 'Waterproof Tarpaulin',
+        f3: 'Flexible Design',
+      },
+      c40fr: {
+        name: "40' Flat Rack Container",
+        desc: 'Ideal solution for large and heavy machinery',
+        f1: 'Extra Wide Load Unit',
+        f2: 'Floor Securing Points',
+        f3: 'Durable Platform Design',
+      },
+      c45hc: {
+        name: "45' HC Dry Cargo Container",
+        desc: 'Container offering maximum volume and length',
+        f1: 'Extra Long Capacity',
+        f2: 'Logistical Advantage',
+        f3: 'Wide Storage Area',
+      },
+
     },
     // Contact Page
     contactPage: {

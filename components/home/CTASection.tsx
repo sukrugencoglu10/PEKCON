@@ -57,7 +57,7 @@ export default function CTASection({ locale = 'tr' }: { locale?: Locale }) {
                 size="lg"
                 className="min-w-[200px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:!bg-white hover:!text-secondary-600"
               >
-                {locale === 'tr' ? 'İletişime Geçin' : 'Contact Us'}
+                {locale === 'tr' ? 'İletişime Geçiniz' : 'Contact Us'}
               </Button>
             </Link>
           </div>
