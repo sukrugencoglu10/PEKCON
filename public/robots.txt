@@ -1,0 +1,9 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and API areas
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://pekcon.com.tr/sitemap.xml

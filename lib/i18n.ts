@@ -2,8 +2,8 @@
   tr: {
     // Hero Section
     hero: {
-      title1: 'Uluslararası Dolaşımda',
-      title2: 'Satılık',
+      title1: 'Satılık',
+      title2: 'Uluslararası Dolaşımda',
       title3: 'Yük Konteynerleri',
       description: 'Küresel Lojistikte Güvenilir Çözüm Ortağınız',
       cta1: 'Hemen Teklif Al',
@@ -247,8 +247,8 @@
   en: {
     // Hero Section
     hero: {
-      title1: 'SOC Containers',
-      title2: 'for Sale',
+      title1: 'for Sale',
+      title2: 'SOC Containers',
       title3: 'in International Circulation',
       description: 'Your Reliable Solution Partner in Global Logistics',
       cta1: 'Get Free Quote',

@@ -1,6 +1,9 @@
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { getTranslations, type Locale } from '@/lib/i18n';
 
+// ISR: Revalidate every 1 hour
+export const revalidate = 3600;
+
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = getTranslations(locale);

@@ -1,6 +1,9 @@
 import QuoteForm from '@/components/forms/QuoteForm';
 import { getTranslations, type Locale } from '@/lib/i18n';
 
+// ISR: Revalidate every 30 minutes (form page)
+export const revalidate = 1800;
+
 export default async function QuotePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = getTranslations(locale);

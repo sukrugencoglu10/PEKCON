@@ -26,6 +26,11 @@ export const metadata: Metadata = {
   description: 'Küresel lojistikte güvenilir çözüm ortağınız',
 };
 
+// Generate static params for locales
+export async function generateStaticParams() {
+  return [{ locale: 'tr' }, { locale: 'en' }];
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -39,7 +44,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
-          <GoogleTagManager gtmId="GTM-PEKCON" />
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || 'GTM-PEKCON'} />
         </Suspense>
         <AnalyticsEvents />
         <Header locale={locale} />

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer, floatComplex, floatSlow, floatFast, antiGravityFloat } from '@/lib/animations';
 import { getTranslations, type Locale } from '@/lib/i18n';
+import { trackQuickQuoteSubmit, trackCTAClick, trackBeginCheckout } from '@/lib/gtm';
 
 export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
   const t = getTranslations(locale);
@@ -46,16 +47,14 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
     e.preventDefault();
     if (quoteInput.trim()) {
       setIsSubmitted(true);
-      // Here you would typically send this to an API or GTM
-      if (typeof window.dataLayer !== 'undefined') {
-        window.dataLayer.push({
-          event: 'quick_lead_submitted',
-          input: quoteInput
-        });
-      }
+
+      // Track quick quote submission with enhanced data
+      trackQuickQuoteSubmit(quoteInput);
+      trackBeginCheckout();
+
       setTimeout(() => {
         setQuoteInput('');
-        // Reset or redirect logic here
+        setIsSubmitted(false);
       }, 3000);
     }
   };
@@ -126,11 +125,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
           animate="visible"
           className="max-w-5xl mx-auto flex flex-col items-center"
         >
-          <motion.div variants={slideUp} className="mb-2">
-            <span className="inline-block py-1 px-3 rounded-full bg-accent-500/20 border border-accent-500/30 text-accent-300 text-sm font-medium tracking-wider uppercase mb-4 backdrop-blur-sm">
-              Global Lojistik Çözümleri
-            </span>
-          </motion.div>
+
 
           <motion.h1
             variants={slideUp}
@@ -188,9 +183,10 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link href="https://wa.me/905543545201" target="_blank" rel="noopener noreferrer">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="min-w-[200px] !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-lg hover:shadow-red-600/30"
+                onClick={() => trackCTAClick('whatsapp_direct', 'hero')}
               >
                 {t.hero.cta3}
               </Button>

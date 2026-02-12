@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { quoteFormSchema, QuoteFormData } from '@/lib/validators';
@@ -9,10 +9,21 @@ import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import Button from '../ui/Button';
 import { getTranslations, type Locale } from '@/lib/i18n';
+import {
+  trackQuoteFormSubmit,
+  trackFormFieldFocus,
+  trackFormError,
+  trackFormStarted,
+  trackFormAbandoned,
+  trackAddToCart,
+} from '@/lib/gtm';
 
 export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formInteracted, setFormInteracted] = useState(false);
+  const abandonTimeoutRef = useRef<NodeJS.Timeout>();
+  const lastFieldRef = useRef<string>('');
   const t = getTranslations(locale);
   const f = t.quotePage.form;
 
@@ -32,9 +43,71 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
 
   const containerCategory = watch('containerCategory');
 
+  // Form abandonment tracking
+  useEffect(() => {
+    const handleFieldInteraction = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const fieldName = target.getAttribute('name') || '';
+
+      if (!formInteracted && fieldName) {
+        setFormInteracted(true);
+        trackFormStarted('quote_form');
+      }
+
+      if (fieldName) {
+        lastFieldRef.current = fieldName;
+        trackFormFieldFocus('quote_form', fieldName);
+
+        // Reset abandon timer
+        if (abandonTimeoutRef.current) {
+          clearTimeout(abandonTimeoutRef.current);
+        }
+
+        abandonTimeoutRef.current = setTimeout(() => {
+          if (submitStatus === 'idle') {
+            trackFormAbandoned('quote_form', lastFieldRef.current);
+          }
+        }, 60000); // 1 minute
+      }
+    };
+
+    const formElement = document.querySelector('form');
+    if (formElement) {
+      formElement.addEventListener('focusin', handleFieldInteraction);
+    }
+
+    return () => {
+      if (formElement) {
+        formElement.removeEventListener('focusin', handleFieldInteraction);
+      }
+      if (abandonTimeoutRef.current) {
+        clearTimeout(abandonTimeoutRef.current);
+      }
+    };
+  }, [submitStatus, formInteracted]);
+
+  // Track form errors
+  useEffect(() => {
+    Object.entries(errors).forEach(([field, error]) => {
+      if (error?.message) {
+        trackFormError('quote_form', field, error.message as string);
+      }
+    });
+  }, [errors]);
+
   const onSubmit = async (data: QuoteFormData) => {
     setIsSubmitting(true);
+
+    // Clear abandon timeout since form is being submitted
+    if (abandonTimeoutRef.current) {
+      clearTimeout(abandonTimeoutRef.current);
+    }
+
     try {
+      // Track form submission and enhanced ecommerce event
+      trackQuoteFormSubmit(data);
+      trackAddToCart(data);
+
       const response = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -44,6 +117,7 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
       if (!response.ok) throw new Error('Submission failed');
 
       setSubmitStatus('success');
+      setFormInteracted(false);
       reset();
 
       // Reset status after 5 seconds

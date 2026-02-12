@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { getTranslations, type Locale } from "@/lib/i18n";
 import { flagWave } from "@/lib/animations";
+import { trackLanguageSwitch } from "@/lib/gtm";
 
 export default function Header({ locale = "tr" }: { locale?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -139,6 +140,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
               <div className="flex items-center space-x-2 ml-[40px]">
                 <Link href="/tr">
                   <button
+                    onClick={() => trackLanguageSwitch(locale, 'tr')}
                     className={cn(
                       "px-3 py-1 text-sm font-medium rounded transition-colors",
                       locale === "tr"
@@ -151,6 +153,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                 </Link>
                 <Link href="/en">
                   <button
+                    onClick={() => trackLanguageSwitch(locale, 'en')}
                     className={cn(
                       "px-3 py-1 text-sm font-medium rounded transition-colors",
                       locale === "en"
@@ -210,7 +213,10 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                           ? "text-white bg-red-600"
                           : "text-red-600 border-2 border-red-600 hover:bg-red-600 hover:text-white"
                       )}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => {
+                        trackLanguageSwitch(locale, 'tr');
+                        setIsMobileMenuOpen(false);
+                      }}
                     >
                       TR
                     </button>
@@ -223,7 +229,10 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                           ? "text-white bg-blue-600"
                           : "text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white"
                       )}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => {
+                        trackLanguageSwitch(locale, 'en');
+                        setIsMobileMenuOpen(false);
+                      }}
                     >
                       EN
                     </button>
