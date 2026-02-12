@@ -3,6 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Container } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer } from '@/lib/animations';
@@ -52,10 +53,15 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
   return (
     <section ref={ref} className="relative py-32 overflow-hidden bg-dark-900">
       {/* Background Image - User Provided */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-100"
-        style={{ backgroundImage: "url('/Free Cargo Stock Images _ StockCake.jpeg')" }}
-      />
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src="/Free Cargo Stock Images _ StockCake.jpeg"
+          alt="Konteyner Stokları"
+          fill
+          className="object-cover opacity-100"
+          sizes="100vw"
+        />
+      </div>
       {/* Lightened Overlay for better image visibility */}
       <div className="absolute inset-0 bg-black/25 z-[1]" />
 

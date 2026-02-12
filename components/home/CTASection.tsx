@@ -55,7 +55,7 @@ export default function CTASection({ locale = 'tr' }: { locale?: Locale }) {
               <Button
                 variant="outline"
                 size="lg"
-                className="min-w-[200px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:!bg-white hover:!text-secondary-600"
+                className="min-w-[200px] !bg-red-600 !border-red-600 text-white hover:!bg-red-700 hover:shadow-lg hover:shadow-red-600/30"
               >
                 {locale === 'tr' ? 'İletişime Geçiniz' : 'Contact Us'}
               </Button>

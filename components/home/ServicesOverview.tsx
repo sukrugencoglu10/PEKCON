@@ -3,6 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Ship, Truck, Train, Route, ClipboardCheck, ArrowRight } from 'lucide-react';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { staggerContainer, slideUp, cardHover } from '@/lib/animations';
@@ -37,7 +38,7 @@ export default function ServicesOverview({ locale }: ServicesOverviewProps) {
     },
     {
       title: t.services.customs.title,
-      description: t.services.customs.desc,
+      description: t.services.customs.description,
       icon: 'ClipboardCheck' as const,
     },
   ];
@@ -45,10 +46,16 @@ export default function ServicesOverview({ locale }: ServicesOverviewProps) {
   return (
     <section ref={ref} className="relative py-32 overflow-hidden bg-white">
       {/* Background Image with subtle effect */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=2000')" }}
-      />
+      {/* Background Image with subtle effect */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=2000"
+          alt="Services Background"
+          fill
+          className="object-cover opacity-25"
+          sizes="100vw"
+        />
+      </div>
       
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

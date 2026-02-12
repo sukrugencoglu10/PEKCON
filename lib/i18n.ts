@@ -9,6 +9,13 @@
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
       cta3: 'İletişime Geçiniz',
+      quickQuote: {
+        placeholder: 'Telefon veya E-posta adresiniz',
+        submit: 'Hemen Teklif Al',
+        submitted: 'Gönderildi!',
+        successMsg: 'Talebiniz alındı, en kısa sürede size dönüş yapacağız.',
+        loading: 'Gönderiliyor...',
+      },
     },
     // Stats Section
     stats: {
@@ -247,6 +254,13 @@
       cta1: 'Get Free Quote',
       cta2: 'Our Services',
       cta3: 'Contact Us',
+      quickQuote: {
+        placeholder: 'Your Phone or Email Address',
+        submit: 'Get Quick Quote',
+        submitted: 'Sent!',
+        successMsg: 'Request received, we will contact you shortly.',
+        loading: 'Sending...',
+      },
     },
     // Stats Section
     stats: {

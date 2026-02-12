@@ -4,6 +4,9 @@ import Footer from '@/components/layout/Footer';
 import ChatWidget from '@/components/widgets/ChatWidget';
 import WhatsAppButton from '@/components/widgets/WhatsAppButton';
 import { Inter, Satisfy } from 'next/font/google';
+import GoogleTagManager from '@/components/analytics/GoogleTagManager';
+import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
+import { Suspense } from 'react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -35,6 +38,10 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
       <body className="font-sans antialiased">
+        <Suspense fallback={null}>
+          <GoogleTagManager gtmId="GTM-PEKCON" />
+        </Suspense>
+        <AnalyticsEvents />
         <Header locale={locale} />
         <main>{children}</main>
         <Footer locale={locale} />
