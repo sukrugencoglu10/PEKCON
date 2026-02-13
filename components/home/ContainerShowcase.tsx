@@ -4,7 +4,6 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Container } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer } from '@/lib/animations';
 import { getTranslations, type Locale } from '@/lib/i18n';
@@ -19,6 +18,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
       id: '20dc',
       name: locale === 'tr' ? "20' DC Konteyner" : "20' DC Container",
       type: '20DC',
+      image: '/20.webp',
       description: locale === 'tr'
         ? 'Standart boyut konteyner, genel kargo taşımacılığı için ideal'
         : 'Standard size container, ideal for general cargo transportation',
@@ -30,6 +30,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
       id: '40dc',
       name: locale === 'tr' ? "40' DC Konteyner" : "40' DC Container",
       type: '40DC',
+      image: '/40.webp',
       description: locale === 'tr'
         ? 'Standart yükseklikte konteyner, genel kargo taşımacılığı için'
         : 'Standard height container for general cargo transportation',
@@ -41,6 +42,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
       id: '40hc',
       name: locale === 'tr' ? "40' HC Konteyner" : "40' HC Container",
       type: '40HC',
+      image: '/40h.webp',
       description: locale === 'tr'
         ? 'Yüksek hacimli konteyner, daha fazla yük kapasitesi'
         : 'High volume container, greater load capacity',
@@ -94,14 +96,19 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
             <motion.div
               key={container.id}
               variants={slideUp}
-              className="group h-full"
+              className="group h-full pt-12"
             >
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group">
-                <div className="w-16 h-16 border-2 border-primary-500 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-500 transition-colors duration-300">
-                  <Container className="w-8 h-8 text-white group-hover:text-white transition-colors" />
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 pt-0 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative mt-12">
+                <div className="relative w-full h-64 -mt-20 mb-6 group-hover:scale-110 transition-transform duration-300 z-10">
+                  <Image
+                    src={container.image}
+                    alt={container.name}
+                    fill
+                    className="object-contain object-bottom drop-shadow-2xl"
+                  />
                 </div>
 
-                <div className="mb-4 flex-grow">
+                <div className="mb-4 flex-grow relative z-0">
                   <div className="inline-block px-3 py-1 bg-primary-500/20 text-white rounded-full text-sm font-medium mb-3">
                     {container.type}
                   </div>
