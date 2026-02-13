@@ -1,9 +1,10 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { X } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer } from '@/lib/animations';
 import { getTranslations, type Locale } from '@/lib/i18n';
@@ -52,9 +53,11 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
     },
   ];
 
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   return (
     <section ref={ref} className="relative py-32 overflow-hidden bg-dark-900">
-      {/* Background Image - User Provided */}
+      {/* ... (background images remain same) */}
       <div className="absolute inset-0 z-0">
         <Image 
           src="/Free Cargo Stock Images _ StockCake.jpeg"
@@ -64,7 +67,6 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
           sizes="100vw"
         />
       </div>
-      {/* Lightened Overlay for better image visibility */}
       <div className="absolute inset-0 bg-black/25 z-[1]" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -96,19 +98,27 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
             <motion.div
               key={container.id}
               variants={slideUp}
-              className="group h-full pt-12"
+              className="group h-full"
             >
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 pt-0 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative mt-12">
-                <div className="relative w-full h-64 -mt-20 mb-6 group-hover:scale-110 transition-transform duration-300 z-10">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative">
+                <div 
+                  className="relative w-full h-48 mb-6 rounded-xl overflow-hidden cursor-zoom-in group-hover:scale-105 transition-transform duration-300 bg-white/5"
+                  onClick={() => setSelectedImage(container.image)}
+                >
                   <Image
                     src={container.image}
                     alt={container.name}
                     fill
-                    className="object-contain object-bottom drop-shadow-2xl"
+                    className="object-contain p-4"
                   />
+                  <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
+                    <span className="bg-black/50 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
+                      {locale === 'tr' ? 'Büyütmek için tıkla' : 'Click to enlarge'}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="mb-4 flex-grow relative z-0">
+                <div className="mb-4 flex-grow">
                   <div className="inline-block px-3 py-1 bg-primary-500/20 text-white rounded-full text-sm font-medium mb-3">
                     {container.type}
                   </div>
@@ -145,6 +155,41 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
           </Link>
         </div>
       </div>
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 cursor-zoom-out"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-5xl h-[80vh] bg-white/5 rounded-2xl overflow-hidden border border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <Image
+                src={selectedImage || ''}
+                alt="Enlarged view"
+                fill
+                className="object-contain p-8"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
