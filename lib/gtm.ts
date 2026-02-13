@@ -18,12 +18,13 @@ export const trackEvent = (event: string, data: Record<string, any> = {}) => {
 export interface QuoteFormData {
   transactionType: string;
   containerCategory: string;
-  containerType: string;
+  containerType?: string;
   quantity: number;
   fullName?: string;
   email?: string;
   phone?: string;
   company?: string;
+  companyName?: string;
   notes?: string;
 }
 
@@ -41,7 +42,7 @@ export const estimateLeadValue = (formData: QuoteFormData): number => {
     '45HC': 3200,
   };
 
-  const baseValue = baseValues[formData.containerType] || 2000;
+  const baseValue = formData.containerType ? baseValues[formData.containerType] || 2000 : 2000;
   return baseValue * formData.quantity;
 };
 
@@ -131,8 +132,8 @@ export const trackAddToCart = (formData: QuoteFormData) => {
     value: estimateLeadValue(formData),
     items: [
       {
-        item_id: formData.containerType,
-        item_name: `Container ${formData.containerType}`,
+        item_id: formData.containerType || 'unknown',
+        item_name: `Container ${formData.containerType || 'unknown'}`,
         item_category: formData.containerCategory,
         quantity: formData.quantity,
       },
