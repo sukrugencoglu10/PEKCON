@@ -3,10 +3,10 @@ import { z } from 'zod';
 // Quote form validation schema
 export const quoteFormSchema = z.object({
   transactionType: z.enum(['purchase', 'rental'] as const, {
-    required_error: 'Lütfen işlem türünü seçiniz',
+    error: 'Lütfen işlem türünü seçiniz',
   }),
   containerCategory: z.enum(['standard_cargo', 'refrigerated', 'custom'] as const, {
-    required_error: 'Lütfen konteyner kategorisini seçiniz',
+    error: 'Lütfen konteyner kategorisini seçiniz',
   }),
   containerType: z.string().optional(),
   quantity: z.number().min(1, 'Miktar en az 1 olmalıdır').max(1000),
