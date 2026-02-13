@@ -23,7 +23,7 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formInteracted, setFormInteracted] = useState(false);
   const abandonTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastFieldRef = useRef<string>('');
+  const lastFieldRef = useRef('');
   const t = getTranslations(locale);
   const f = t.quotePage.form;
 
