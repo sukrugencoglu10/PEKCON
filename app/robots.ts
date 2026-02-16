@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/_next/'],
       },
     ],
-    sitemap: 'https://pekcon.com.tr/sitemap.xml',
+    sitemap: 'https://pekcon.com/sitemap.xml',
   };
 }

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'PEKCON Container & Logistics',
     description: 'Küresel lojistikte güvenilir çözüm ortağınız',
-    url: 'https://pekcon.com.tr',
+    url: 'https://pekcon.com',
     siteName: 'PEKCON',
     locale: 'tr_TR',
     type: 'website',

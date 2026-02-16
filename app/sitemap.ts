@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://pekcon.com.tr';
+  const baseUrl = 'https://pekcon.com';
   const locales = ['tr', 'en'];
   const routes = [
     '',
