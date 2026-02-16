@@ -48,21 +48,21 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
       {/* Top Bar */}
-      <div className="bg-secondary-500 text-white py-2 hidden md:block">
+      <div className="bg-secondary-500 text-white py-2">
         <div className="container mx-auto px-4">
-          <div className="flex justify-end items-center space-x-6 text-sm font-medium">
+          <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-6 text-[11px] sm:text-xs md:text-sm font-medium">
             <a
               href="tel:+902122979758"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
-              <Phone size={14} />
+              <Phone size={14} className="w-3 h-3 md:w-3.5 md:h-3.5" />
               <span>+90 (212) 297 97 58</span>
             </a>
             <a
               href="mailto:info@pekcon.com.tr"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
-              <Mail size={14} />
+              <Mail size={14} className="w-3 h-3 md:w-3.5 md:h-3.5" />
               <span>info@pekcon.com.tr</span>
             </a>
           </div>
@@ -70,7 +70,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white shadow-md py-4">
+      <div className="bg-white border-b border-gray-200 shadow-sm py-2 md:py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -89,7 +89,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   alt="PEKCON Container & Logistics"
                   width={207}
                   height={69}
-                  className="h-[140px] w-auto"
+                  className="h-16 md:h-[140px] w-auto"
                   priority
                 />
                 <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
