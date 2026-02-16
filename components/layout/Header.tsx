@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { getTranslations, type Locale } from "@/lib/i18n";
 import { flagWave } from "@/lib/animations";
 import { trackLanguageSwitch } from "@/lib/gtm";
+import { TRFlag, UKFlag } from "@/components/ui/Flag";
 
 export default function Header({ locale = "tr" }: { locale?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -140,28 +141,30 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
               <div className="flex items-center space-x-2 ml-[40px]">
                 <Link href="/tr">
                   <button
+                    aria-label="Türkçe"
                     onClick={() => trackLanguageSwitch(locale, 'tr')}
                     className={cn(
-                      "px-3 py-1 text-sm font-medium rounded transition-colors",
+                      "p-0 text-sm font-medium rounded transition-colors",
                       locale === "tr"
-                        ? "text-white bg-red-600"
-                        : "text-red-600 border-2 border-red-600 hover:bg-red-600 hover:text-white",
+                        ? "border-2 border-red-600 shadow-md scale-110"
+                        : "border-2 border-transparent opacity-70 hover:opacity-100 hover:scale-105",
                     )}
                   >
-                    TR
+                    <TRFlag className="w-[47px] h-[31px]" />
                   </button>
                 </Link>
                 <Link href="/en">
                   <button
+                    aria-label="English"
                     onClick={() => trackLanguageSwitch(locale, 'en')}
                     className={cn(
-                      "px-3 py-1 text-sm font-medium rounded transition-colors",
+                      "p-0 text-sm font-medium rounded transition-colors",
                       locale === "en"
-                        ? "text-white bg-blue-600"
-                        : "text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white",
+                        ? "border-2 border-blue-600 shadow-md scale-110"
+                        : "border-2 border-transparent opacity-70 hover:opacity-100 hover:scale-105",
                     )}
                   >
-                    EN
+                    <UKFlag className="w-[47px] h-[31px]" />
                   </button>
                 </Link>
               </div>
@@ -207,34 +210,36 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                 <div className="flex items-center justify-center space-x-2 mt-4">
                   <Link href="/tr">
                     <button
+                      aria-label="Türkçe"
                       className={cn(
-                        "px-3 py-1 text-sm font-medium rounded transition-colors",
+                        "p-0 text-sm font-medium rounded transition-colors",
                         locale === "tr"
-                          ? "text-white bg-red-600"
-                          : "text-red-600 border-2 border-red-600 hover:bg-red-600 hover:text-white"
+                          ? "border-2 border-red-600 shadow-md scale-110"
+                          : "border-2 border-transparent opacity-70 hover:opacity-100 hover:scale-105"
                       )}
                       onClick={() => {
                         trackLanguageSwitch(locale, 'tr');
                         setIsMobileMenuOpen(false);
                       }}
                     >
-                      TR
+                      <TRFlag className="w-[47px] h-[31px]" />
                     </button>
                   </Link>
                   <Link href="/en">
                     <button
+                      aria-label="English"
                       className={cn(
-                        "px-3 py-1 text-sm font-medium rounded transition-colors",
+                        "p-0 text-sm font-medium rounded transition-colors",
                         locale === "en"
-                          ? "text-white bg-blue-600"
-                          : "text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white"
+                          ? "border-2 border-blue-600 shadow-md scale-110"
+                          : "border-2 border-transparent opacity-70 hover:opacity-100 hover:scale-105"
                       )}
                       onClick={() => {
                         trackLanguageSwitch(locale, 'en');
                         setIsMobileMenuOpen(false);
                       }}
                     >
-                      EN
+                      <UKFlag className="w-[47px] h-[31px]" />
                     </button>
                   </Link>
                 </div>
