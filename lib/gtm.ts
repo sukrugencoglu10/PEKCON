@@ -154,3 +154,11 @@ export const trackBeginCheckout = (containerType?: string) => {
     }),
   });
 };
+
+// Scroll Depth Tracking
+export const trackScrollDepth = (percentage: number) => {
+  trackEvent('scroll_depth', {
+    scroll_percentage: percentage,
+    page_location: typeof window !== 'undefined' ? window.location.pathname : '',
+  });
+};
