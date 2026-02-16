@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 
 export default function AnalyticsEvents() {
-  const pathname = usePathname();
-
   useEffect(() => {
+    const pathname = window.location.pathname;
     // Enhanced scroll tracking with multiple thresholds
     const scrollThresholds = [25, 50, 75, 90, 100];
     const triggered = new Set<number>();
@@ -75,7 +73,7 @@ export default function AnalyticsEvents() {
       document.removeEventListener('click', handleWhatsAppClick);
       observer.disconnect();
     };
-  }, [pathname]);
+  }, []);
 
   return null;
 }

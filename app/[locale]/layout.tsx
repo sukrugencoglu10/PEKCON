@@ -45,8 +45,8 @@ export default async function LocaleLayout({
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <GoogleTagManager gtmId="GTM-536W5D89" />
+          <AnalyticsEvents />
         </Suspense>
-        <AnalyticsEvents />
         <Header locale={locale} />
         <main>{children}</main>
         <Footer locale={locale} />
