@@ -47,6 +47,11 @@ export const estimateLeadValue = (formData: QuoteFormData): number => {
 };
 
 export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
+  // Split fullName into first and last name for Enhanced Conversions
+  const nameParts = formData.fullName?.split(' ') || [];
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
   trackEvent('form_submit', {
     form_name: 'quote_form',
     form_type: formData.transactionType,
@@ -54,7 +59,12 @@ export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
     container_type: formData.containerType,
     quantity: formData.quantity,
     estimated_value: estimateLeadValue(formData),
-    has_company: !!formData.company,
+    has_company: !!formData.companyName,
+    // Enhanced Conversions Data
+    email: formData.email,
+    phone: formData.phone,
+    first_name: firstName,
+    last_name: lastName,
   });
 };
 
@@ -94,6 +104,8 @@ export const trackFormAbandoned = (formName: string, lastField?: string) => {
   trackEvent('form_abandoned', {
     form_name: formName,
     last_field: lastField,
+    page_location: typeof window !== 'undefined' ? window.location.pathname : '',
+    timestamp: new Date().toISOString(),
   });
 };
 

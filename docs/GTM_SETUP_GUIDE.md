@@ -220,30 +220,86 @@ Her biri için:
 
 **ROAS (Return on Ad Spend) optimizasyonu için kritik!**
 
-**Google Ads → Tools → Conversions → New Conversion Action**
+### 🎯 ZORUNLU: GTM'den Direkt Google Ads Tag (ÖNERİLEN)
 
-### Yöntem 1: GA4'ten Import (Önerilen)
-1. Google Ads → Conversions → Import → Google Analytics 4
-2. Select: `generate_lead` event
-3. Conversion Action Settings:
+**Neden GA4 Import Değil?**
+- GTM üzerinden kurulan direkt etiketler Enhanced Conversions desteğiyle daha dayanıklı
+- Tarayıcı kısıtlamalarına (ITP, cookie blocking) karşı daha güçlü
+- `estimated_value` değerini daha hızlı Ads paneline yansıtır
+- Real-time conversion tracking
+
+**GTM Dashboard → Tags → New**
+
+#### A. Google Ads Conversion Tag
+
+- **Tag Name:** `Google Ads - Lead Conversion (Quote Form)`
+- **Tag Type:** Google Ads Conversion Tracking
+- **Configuration:**
+  - **Conversion ID:** `AW-XXXXXXXXX` (Google Ads hesabından al)
+  - **Conversion Label:** `xxxxxxxxxxxxx` (Conversion action'dan al)
+  - **Conversion Value:** `{{dlv - estimated_value}}` ✅
+  - **Currency Code:** `TRY`
+  - **Transaction ID:** Leave blank (or use order ID if available)
+- **Advanced Settings:**
+  - **Conversion Linker:** Enable (çok önemli!)
+- **Triggering:** Event - Form Submit
+
+#### B. Enhanced Conversions Aktif Et (Önemli!)
+
+Enhanced Conversions, conversion tracking doğruluğunu %30-40 artırır.
+
+**Aynı tag'de:**
+- **Enable Enhanced Conversions:** ✅ Aktif
+- **User-Provided Data:**
+  - Email: `{{dlv - user_email}}` (Data Layer Variable oluştur)
+  - Phone: `{{dlv - user_phone}}` (Data Layer Variable oluştur)
+  - First Name: `{{dlv - user_first_name}}`
+  - Last Name: `{{dlv - user_last_name}}`
+
+**Yeni Data Layer Variables Ekle:**
+| Variable Adı | Data Layer Variable Name |
+|-------------|-------------------------|
+| `dlv - user_email` | `email` |
+| `dlv - user_phone` | `phone` |
+| `dlv - user_first_name` | `first_name` |
+| `dlv - user_last_name` | `last_name` |
+
+#### C. Conversion Linker Tag (Zorunlu!)
+
+**GTM → Tags → New**
+
+- **Tag Name:** `Conversion Linker`
+- **Tag Type:** Conversion Linker
+- **Triggering:** All Pages
+- **Fire once per event:** ✅
+
+**Not:** Bu tag olmadan Google Ads tracking çalışmaz!
+
+---
+
+### 📊 Yöntem 2: GA4'ten Import (Opsiyonel - Yedek)
+
+**Google Ads → Tools → Conversions → Import → Google Analytics 4**
+
+1. Select: `generate_lead` event
+2. Conversion Action Settings:
    - Goal: **Lead**
    - Value: **Use different values for each conversion** ✅
    - Count: **One** (Her lead bir kez sayılsın)
    - Conversion window: **30 days**
    - Attribution model: **Data-driven** (veya Last click)
 
-### Yöntem 2: GTM'den Direkt Google Ads Tag
-- **Tag Type:** Google Ads Conversion Tracking
-- **Conversion ID:** [Google Ads Conversion ID]
-- **Conversion Label:** [Google Ads Conversion Label]
-- **Conversion Value:** `{{dlv - estimated_value}}` ✅
-- **Currency Code:** `TRY`
-- **Triggering:** Event - Form Submit
+**Not:** Bu yöntemi GTM direkt tag'ine ek olarak kullanabilirsin (double tracking için).
 
-**Neden önemli?**
-- Google Ads algoritması 2.500 TL lead ile 4.500 TL lead'i ayırt edebilecek
+---
+
+### 🎯 Beklenen Sonuç:
+
+✅ Google Ads algoritması:
+- 2.500 TL lead (20DC) ile 4.500 TL lead (40HC) arasındaki farkı öğrenecek
 - Değerli lead'lere daha fazla teklif verecek
 - ROAS maksimize olacak
+- Enhanced Conversions ile tracking doğruluğu %30-40 artacak
 
 ---
 
@@ -261,18 +317,75 @@ Her biri için:
 
 ## 🧪 6. ADIM: Test Et!
 
+### ⚠️ KRİTİK: Form Submit Redirect Kontrolü
+
+**QuoteForm.tsx Analizi:**
+- ✅ Form submit sonrası `reset()` ve `setSubmitStatus()` kullanılıyor
+- ✅ Sayfa yönlendirmesi YOK → Veri güvenle GTM'e ulaşıyor
+- ✅ 5 saniye sonra status'u "idle" yapıyor
+- ✅ Bu yapı GTM tracking için mükemmel!
+
+**Eğer Redirect Olsaydı Ne Yapardık?**
+```javascript
+// BAD: Veri gönderilmeden redirect olur
+window.location.href = '/thank-you';
+
+// GOOD: GTM'in veriyi göndermesini bekle
+setTimeout(() => {
+  window.location.href = '/thank-you';
+}, 500);
+```
+
+---
+
 ### GTM Preview Mode ile Test:
 
 1. **GTM → Preview** butonuna tıkla
 2. URL gir: `https://pekcon.com`
-3. Siteye git ve form doldur
-4. GTM Preview panelinde kontrol et:
-   - ✅ `form_submit` event tetiklendi mi?
-   - ✅ Variables doğru değerleri yakaladı mı?
-   - ✅ GA4 tag ateşlendi mi?
-   - ✅ `estimated_value` doğru mu?
+3. Siteye git ve **form doldur**
+
+**Form Submit Test Checklist:**
+- ✅ `form_started` event tetiklendi mi? (İlk alana tıklarken)
+- ✅ `form_field_focus` event'leri her alan için tetiklendi mi?
+- ✅ `form_submit` event tetiklendi mi? (Submit sonrası)
+- ✅ `generate_lead` GA4 tag'i ateşlendi mi?
+- ✅ Google Ads Conversion tag'i ateşlendi mi?
+- ✅ Variables doğru değerleri yakaladı mı?
+  - `estimated_value`: Doğru hesaplanmış mı?
+  - `email`: Form'daki email değerini aldı mı?
+  - `phone`: Form'daki telefon değerini aldı mı?
+  - `first_name` / `last_name`: İsim ayrıştırıldı mı?
+
+**Form Abandonment Test:**
+1. Formu doldurmaya başla
+2. Bir alanı doldur
+3. 60 saniye bekle (hiçbir şey yapma)
+4. ✅ `form_abandoned` event tetiklendi mi?
+5. ✅ `last_field` parametresi doğru alanı gösteriyor mu?
+
+**WhatsApp Test:**
+1. Sağ alttaki WhatsApp butonuna tıkla
+2. ✅ `whatsapp_click` event tetiklendi mi?
+3. ✅ `cta_location`: "floating_button" gösteriyor mu?
+
+**Scroll Depth Test:**
+1. Sayfayı yavaşça aşağı kaydır
+2. ✅ %25, %50, %75, %90, %100'de event'ler tetiklendi mi?
+
+---
 
 ### Chrome DevTools Console Test:
+
+**DataLayer İçeriğini Görüntüle:**
+```javascript
+// Tüm dataLayer'ı gör
+console.log(window.dataLayer);
+
+// Son event'i gör
+console.log(window.dataLayer[window.dataLayer.length - 1]);
+```
+
+**Manuel Event Tetikleme:**
 
 ```javascript
 // Form submit test
@@ -283,13 +396,69 @@ window.dataLayer.push({
   container_type: '40HC',
   container_category: 'standard_cargo',
   quantity: 5,
-  estimated_value: 14000
+  estimated_value: 14000,
+  email: 'test@example.com',
+  phone: '+905551234567',
+  first_name: 'Ahmet',
+  last_name: 'Yılmaz'
 });
 
 // WhatsApp click test
 window.dataLayer.push({
   event: 'whatsapp_click',
-  cta_location: 'header'
+  cta_location: 'floating_button',
+  phone_number: '+90 544 354 52 01',
+  method: 'whatsapp'
+});
+
+// Form abandoned test
+window.dataLayer.push({
+  event: 'form_abandoned',
+  form_name: 'quote_form',
+  last_field: 'companyName',
+  page_location: '/tr/teklif-al'
+});
+```
+
+---
+
+### GA4 Real-Time Report Kontrolü:
+
+**Google Analytics 4 → Reports → Realtime**
+
+1. Site üzerinde işlem yap (form gönder, WhatsApp'a tıkla)
+2. Real-time raporunda event'leri gör:
+   - ✅ `generate_lead`
+   - ✅ `form_submit`
+   - ✅ `whatsapp_click`
+   - ✅ `scroll_depth`
+
+**Event Parameters Kontrolü:**
+- Event Name'e tıkla
+- Parameters sekmesini aç
+- `value`, `email`, `phone` parametrelerini gör
+
+---
+
+### Google Ads Conversion Test:
+
+**Google Ads → Tools → Conversions → Click on your conversion action**
+
+1. Form gönder
+2. 10-30 dakika bekle
+3. Google Ads Conversions raporunda görünmeli
+4. ✅ Conversion value doğru mu? (estimated_value)
+5. ✅ Enhanced conversion data görünüyor mu?
+
+**Test Mode Aktif Et:**
+```javascript
+// Google Ads test conversion
+window.dataLayer.push({
+  event: 'form_submit',
+  form_name: 'quote_form',
+  estimated_value: 9999, // Test değeri
+  email: 'test@pekcon.com',
+  phone: '+905551234567'
 });
 ```
 
