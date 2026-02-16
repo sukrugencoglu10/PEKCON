@@ -44,7 +44,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || 'GTM-PEKCON'} />
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || 'GTM-536W5D89'} />
         </Suspense>
         <AnalyticsEvents />
         <Header locale={locale} />
