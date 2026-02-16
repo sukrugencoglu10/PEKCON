@@ -70,7 +70,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm py-2 md:py-4">
+      <div className="bg-white border-b-2 border-gray-300 shadow-md py-2 md:py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
