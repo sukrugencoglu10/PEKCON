@@ -60,7 +60,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-36 md:pt-[240px]">
+    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden py-12 md:py-20">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0">
         <Image
