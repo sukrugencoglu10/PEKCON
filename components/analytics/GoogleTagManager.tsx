@@ -1,27 +1,23 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 
 export default function GoogleTagManager({ gtmId }: { gtmId: string }) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-    if (pathname) {
-      pageview(pathname);
-    }
-  }, [pathname, searchParams]);
+    // Track pageview on mount and route changes
+    const handleRouteChange = () => {
+      if (typeof window !== 'undefined' && typeof window.dataLayer !== 'undefined') {
+        window.dataLayer.push({
+          event: 'pageview',
+          page: window.location.pathname,
+        });
+      }
+    };
 
-  const pageview = (url: string) => {
-    if (typeof window.dataLayer !== 'undefined') {
-      window.dataLayer.push({
-        event: 'pageview',
-        page: url,
-      });
-    }
-  };
+    // Initial pageview
+    handleRouteChange();
+  }, []);
 
   return (
     <>
