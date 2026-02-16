@@ -4,9 +4,8 @@ import Footer from '@/components/layout/Footer';
 import ChatWidget from '@/components/widgets/ChatWidget';
 import WhatsAppButton from '@/components/widgets/WhatsAppButton';
 import { Inter, Satisfy } from 'next/font/google';
-import GoogleTagManager from '@/components/analytics/GoogleTagManager';
 import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
-import { Suspense } from 'react';
+import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -44,8 +43,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
-      <head>
-        <script
+      <body className="font-sans antialiased">
+        <Script
+          id="gtm-script"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -56,8 +57,6 @@ export default async function LocaleLayout({
             `,
           }}
         />
-      </head>
-      <body className="font-sans antialiased">
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
