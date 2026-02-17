@@ -11,7 +11,8 @@
       "Bash(timeout 8 cmd:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git log:*)"
     ]
   }
 }
