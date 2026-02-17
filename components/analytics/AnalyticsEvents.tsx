@@ -4,6 +4,11 @@ import { useEffect } from 'react';
 
 export default function AnalyticsEvents() {
   useEffect(() => {
+    // Ensure dataLayer is initialized
+    if (typeof window !== 'undefined') {
+        window.dataLayer = window.dataLayer || [];
+    }
+    
     const pathname = window.location.pathname;
     // Enhanced scroll tracking with multiple thresholds
     const scrollThresholds = [25, 50, 75, 90, 100];

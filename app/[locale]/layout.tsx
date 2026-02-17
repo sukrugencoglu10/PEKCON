@@ -43,8 +43,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
       <body className="font-sans antialiased">
-        <GoogleTagManager gtmId="GTM-536W5D89" />
         <Suspense fallback={null}>
+          <GoogleTagManager gtmId="GTM-536W5D89" />
           <AnalyticsEvents />
         </Suspense>
         <Header locale={locale} />
