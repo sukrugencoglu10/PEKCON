@@ -90,8 +90,8 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <Phone size={20} className="text-primary-500 mt-1 flex-shrink-0" />
-                <a href="tel:+902122979758" className="text-dark-700 hover:text-primary-500 transition-colors">
-                  +90 (212) 297 97 58
+                <a href="tel:+905543545201" className="text-dark-700 hover:text-primary-500 transition-colors">
+                  +90 (554) 354 52 01
                 </a>
               </li>
               <li className="flex items-start space-x-3">

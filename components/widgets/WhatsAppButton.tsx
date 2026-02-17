@@ -1,18 +1,31 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useParams } from 'next/navigation';
 import { trackEvent } from '@/lib/gtm';
 
 export default function WhatsAppButton() {
-  const phoneNumber = '905443545201'; // +90 544 354 5201
-  const displayNumber = '+90 544 354 52 01';
-  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+  const params = useParams();
+  const locale = params?.locale as string || 'tr';
+
+  const phoneNumber = '905543545201'; // +90 554 354 52 01
+  const displayNumber = '+90 554 354 52 01';
+  
+  // Localized messages
+  const message = locale === 'en' 
+    ? "Hello, I would like to get information about containers."
+    : "Merhaba, konteyner hakkında bilgi almak istiyorum.";
+    
+  // Encode message for URL
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
   const handleClick = () => {
     trackEvent('whatsapp_click', {
       cta_location: 'floating_button',
       phone_number: displayNumber,
       method: 'whatsapp',
+      locale: locale
     });
   };
 

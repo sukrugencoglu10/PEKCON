@@ -53,11 +53,11 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-6 text-[11px] sm:text-xs md:text-sm font-medium">
             <a
-              href="tel:+902122979758"
+              href="tel:+905543545201"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
               <Phone size={14} className="w-3 h-3 md:w-3.5 md:h-3.5" />
-              <span>+90 (212) 297 97 58</span>
+              <span>+90 (554) 354 52 01</span>
             </a>
             <a
               href="mailto:info@pekcon.com.tr"
