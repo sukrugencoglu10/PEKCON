@@ -38,7 +38,13 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
+  const navLinks = locale === 'en' ? [
+    { href: `/en`, label: t.nav.home },
+    { href: `/en/containers`, label: t.nav.containers },
+    { href: `/en/services`, label: t.nav.services },
+    { href: `/en/about`, label: t.nav.about },
+    { href: `/en/contact`, label: t.nav.contact },
+  ] : [
     { href: `/${locale}`, label: t.nav.home },
     { href: `/${locale}/konteynerlar`, label: t.nav.containers },
     { href: `/${locale}/hizmetlerimiz`, label: t.nav.services },
@@ -53,11 +59,11 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-6 text-[11px] sm:text-xs md:text-sm font-medium">
             <a
-              href="tel:+905543545201"
+              href="tel:+902122979758"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
               <Phone size={14} className="w-3 h-3 md:w-3.5 md:h-3.5" />
-              <span>+90 (554) 354 52 01</span>
+              <span>+90 (212) 297 97 58</span>
             </a>
             <a
               href="mailto:info@pekcon.com.tr"
@@ -133,7 +139,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
 
             {/* CTA & Language Switcher */}
             <div className="hidden lg:flex items-center">
-              <Link href={`/${locale}/teklif-al`}>
+              <Link href={locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`}>
                 <Button variant="primary" size="md" className="scale-[1.15]">
                   {t.nav.quote}
                 </Button>
@@ -200,7 +206,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   </Link>
                 ))}
                 <Link
-                  href={`/${locale}/teklif-al`}
+                  href={locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Button variant="primary" size="md" className="w-full mt-2">

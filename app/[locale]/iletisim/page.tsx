@@ -28,10 +28,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             </div>
             <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.phone}</h3>
             <a
-              href="tel:+905543545201"
+              href="tel:+902122979758"
               className="text-primary-500 hover:text-primary-600 font-medium"
             >
-              +90 (554) 354 52 01
+              +90 (212) 297 97 58
             </a>
           </div>
 

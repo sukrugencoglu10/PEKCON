@@ -45,17 +45,17 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
             <h4 className="text-lg font-display font-bold mb-4">{t.footer.services}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${locale}/hizmetlerimiz`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/services' : `/${locale}/hizmetlerimiz`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.seaTransport}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/hizmetlerimiz`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/services' : `/${locale}/hizmetlerimiz`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.landTransport}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/konteynerlar`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/containers' : `/${locale}/konteynerlar`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.containerSales}
                 </Link>
               </li>
@@ -67,17 +67,17 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
             <h4 className="text-lg font-display font-bold mb-4">{t.footer.corporate}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${locale}/hakkimizda`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/about' : `/${locale}/hakkimizda`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.about}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/iletisim`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/contact' : `/${locale}/iletisim`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.contactPage}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/teklif-al`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.getQuote}
                 </Link>
               </li>
@@ -90,8 +90,8 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <Phone size={20} className="text-primary-500 mt-1 flex-shrink-0" />
-                <a href="tel:+905543545201" className="text-dark-700 hover:text-primary-500 transition-colors">
-                  +90 (554) 354 52 01
+                <a href="tel:+902122979758" className="text-dark-700 hover:text-primary-500 transition-colors">
+                  +90 (212) 297 97 58
                 </a>
               </li>
               <li className="flex items-start space-x-3">
@@ -102,7 +102,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
               </li>
               <li>
                 <Link 
-                  href={`/${locale}/iletisim`}
+                  href={locale === 'en' ? '/en/contact' : `/${locale}/iletisim`}
                   className="flex items-start space-x-3 group cursor-pointer"
                 >
                   <MapPin size={20} className="text-primary-500 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
