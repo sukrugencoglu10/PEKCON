@@ -1,5 +1,6 @@
 import HeroSection from '@/components/home/HeroSection';
 import StatsSection from '@/components/home/StatsSection';
+import SegmentationCards from '@/components/home/SegmentationCards';
 import ServicesOverview from '@/components/home/ServicesOverview';
 import ContainerShowcase from '@/components/home/ContainerShowcase';
 import CTASection from '@/components/home/CTASection';
@@ -15,9 +16,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
     <>
       <HeroSection locale={locale} />
       <StatsSection locale={locale} />
+      <SegmentationCards locale={locale} />
       <ContainerShowcase locale={locale} />
-      <CTASection locale={locale} />
       <ServicesOverview locale={locale} />
+      <CTASection locale={locale} />
     </>
   );
 }
