@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = await file.arrayBuffer();
-    const { rows, errors } = parseExcelBuffer(buffer);
+    const { rows, containerTypes, errors } = parseExcelBuffer(buffer);
 
     if (errors.length > 0 && rows.length === 0) {
       return NextResponse.json({ error: errors.join(' | ') }, { status: 422 });
@@ -41,13 +41,14 @@ export async function POST(request: NextRequest) {
 
     let session = getSession(sessionId);
     if (!session) session = createSession(sessionId);
-    updateSession(sessionId, { stock: rows });
+    updateSession(sessionId, { stock: rows, containerTypes });
 
     return NextResponse.json({
       success: true,
       sessionId,
       rowCount: rows.length,
       rows,
+      containerTypes,
       warnings: errors.length > 0 ? errors : undefined,
     });
   } catch (err) {

@@ -1,10 +1,98 @@
 import * as XLSX from 'xlsx';
 import type { StockRow, Contact } from './send-session';
 
-const KONTEYNER_ALIASES = ['konteyner tipi', 'konteyner_tipi', 'tip', 'type', 'container'];
-const ADET_ALIASES = ['mevcut adet', 'mevcut_adet', 'adet', 'quantity', 'stok', 'stock'];
+// ── Stok Excel Parser ────────────────────────────────────────────────────────
+// Format: Country | Location | 40HC CW | 20DC CW | 40DV CW | ...
+// Country sütunu birleştirilmiş hücre — boş satırlarda önceki ülke taşınır
 
-// Outlook CSV standart sütun adları
+export interface ParseResult {
+  rows: StockRow[];
+  containerTypes: string[];
+  errors: string[];
+}
+
+export function parseExcelBuffer(buffer: ArrayBuffer): ParseResult {
+  const errors: string[] = [];
+
+  try {
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    if (!sheetName) return { rows: [], containerTypes: [], errors: ['Excel dosyasında sayfa bulunamadı.'] };
+
+    const sheet = workbook.Sheets[sheetName];
+    const rawData = XLSX.utils.sheet_to_json<string[]>(sheet, {
+      header: 1,
+      defval: '',
+      blankrows: false,
+    });
+
+    if (rawData.length < 2) {
+      return { rows: [], containerTypes: [], errors: ['Dosya en az başlık + 1 veri satırı içermelidir.'] };
+    }
+
+    // Başlık satırını bul: "Country" veya "Location" içeren satır
+    let headerIdx = -1;
+    for (let i = 0; i < Math.min(rawData.length, 5); i++) {
+      const row = rawData[i];
+      const cells = row.map((c) => String(c ?? '').toLowerCase().trim());
+      if (
+        cells.some((c) => c.includes('country') || c.includes('ülke')) ||
+        cells.some((c) => c.includes('location') || c.includes('lokasyon'))
+      ) {
+        headerIdx = i;
+        break;
+      }
+    }
+    if (headerIdx === -1) headerIdx = 0; // fallback
+
+    const headerRow = rawData[headerIdx].map((h) => String(h ?? '').trim());
+
+    // İlk sütun = Country, ikinci sütun = Location, geri kalanlar konteyner tipleri
+    const containerTypes = headerRow.slice(2).filter((h) => h.length > 0);
+
+    if (containerTypes.length === 0) {
+      return { rows: [], containerTypes: [], errors: ['Konteyner tipi sütunları bulunamadı. Başlıkları kontrol edin.'] };
+    }
+
+    const rows: StockRow[] = [];
+    let lastCountry = '';
+
+    for (let i = headerIdx + 1; i < rawData.length; i++) {
+      const row = rawData[i];
+      const countryCell = String(row[0] ?? '').trim();
+      const location = String(row[1] ?? '').trim();
+
+      // Birleştirilmiş hücre taşıma: boş country = önceki ülke
+      if (countryCell) lastCountry = countryCell;
+      if (!location) continue; // Lokasyon boşsa satırı atla
+
+      const containers: Record<string, number> = {};
+      for (let c = 0; c < containerTypes.length; c++) {
+        const raw = row[c + 2];
+        const num = raw === '' || raw === undefined || raw === null ? 0 : Number(raw);
+        containers[containerTypes[c]] = isNaN(num) ? 0 : num;
+      }
+
+      rows.push({ country: lastCountry, location, containers });
+    }
+
+    if (rows.length === 0) {
+      return { rows: [], containerTypes, errors: ['Hiç veri satırı bulunamadı.'] };
+    }
+
+    return { rows, containerTypes, errors };
+  } catch (err) {
+    return {
+      rows: [],
+      containerTypes: [],
+      errors: [`Dosya okunamadı: ${err instanceof Error ? err.message : 'Bilinmeyen hata'}`],
+    };
+  }
+}
+
+// ── Outlook Kişi CSV Parser ──────────────────────────────────────────────────
+// Outlook standart export: First Name, Last Name, E-mail Address, Display Name
+
 const EMAIL_ALIASES = ['e-mail address', 'email address', 'e-mail', 'email', 'e_mail'];
 const FIRSTNAME_ALIASES = ['first name', 'firstname', 'ad', 'name'];
 const LASTNAME_ALIASES = ['last name', 'lastname', 'soyad', 'surname'];
@@ -37,10 +125,7 @@ export function parseContactsCsv(buffer: ArrayBuffer): ContactParseResult {
 
     const headerRow = rawData[0].map((h) => String(h).toLowerCase().trim());
 
-    // E-posta kolonu zorunlu
-    const emailIdx = headerRow.findIndex((h) =>
-      EMAIL_ALIASES.some((a) => h.includes(a))
-    );
+    const emailIdx = headerRow.findIndex((h) => EMAIL_ALIASES.some((a) => h.includes(a)));
     if (emailIdx === -1) {
       return {
         contacts: [],
@@ -48,16 +133,9 @@ export function parseContactsCsv(buffer: ArrayBuffer): ContactParseResult {
       };
     }
 
-    // Ad: önce display name, yoksa first+last
-    const displayIdx = headerRow.findIndex((h) =>
-      DISPLAY_ALIASES.some((a) => h === a)
-    );
-    const firstIdx = headerRow.findIndex((h) =>
-      FIRSTNAME_ALIASES.some((a) => h === a)
-    );
-    const lastIdx = headerRow.findIndex((h) =>
-      LASTNAME_ALIASES.some((a) => h === a)
-    );
+    const displayIdx = headerRow.findIndex((h) => DISPLAY_ALIASES.some((a) => h === a));
+    const firstIdx = headerRow.findIndex((h) => FIRSTNAME_ALIASES.some((a) => h === a));
+    const lastIdx = headerRow.findIndex((h) => LASTNAME_ALIASES.some((a) => h === a));
 
     for (let i = 1; i < rawData.length; i++) {
       const row = rawData[i];
@@ -65,9 +143,7 @@ export function parseContactsCsv(buffer: ArrayBuffer): ContactParseResult {
       if (!email || !email.includes('@')) continue;
 
       let displayName = '';
-      if (displayIdx !== -1) {
-        displayName = String(row[displayIdx] ?? '').trim();
-      }
+      if (displayIdx !== -1) displayName = String(row[displayIdx] ?? '').trim();
       if (!displayName && firstIdx !== -1) {
         const first = String(row[firstIdx] ?? '').trim();
         const last = lastIdx !== -1 ? String(row[lastIdx] ?? '').trim() : '';
@@ -88,72 +164,9 @@ export function parseContactsCsv(buffer: ArrayBuffer): ContactParseResult {
 
     return { contacts: unique, errors };
   } catch (err) {
-    return { contacts: [], errors: [`Dosya okunamadı: ${err instanceof Error ? err.message : 'Bilinmeyen hata'}`] };
+    return {
+      contacts: [],
+      errors: [`Dosya okunamadı: ${err instanceof Error ? err.message : 'Bilinmeyen hata'}`],
+    };
   }
-}
-
-export interface ParseResult {
-  rows: StockRow[];
-  errors: string[];
-}
-
-export function parseExcelBuffer(buffer: ArrayBuffer): ParseResult {
-  const errors: string[] = [];
-  const rows: StockRow[] = [];
-
-  try {
-    const workbook = XLSX.read(buffer, { type: 'array' });
-    const sheetName = workbook.SheetNames[0];
-
-    if (!sheetName) {
-      return { rows: [], errors: ['Excel dosyasında sayfa bulunamadı.'] };
-    }
-
-    const sheet = workbook.Sheets[sheetName];
-    const rawData = XLSX.utils.sheet_to_json<string[]>(sheet, {
-      header: 1,
-      defval: '',
-      blankrows: false,
-    });
-
-    if (rawData.length < 2) {
-      return { rows: [], errors: ['Dosya en az bir başlık satırı ve bir veri satırı içermelidir.'] };
-    }
-
-    const headerRow = rawData[0].map((h) => String(h).toLowerCase().trim());
-
-    const konteynerIdx = headerRow.findIndex((h) =>
-      KONTEYNER_ALIASES.some((alias) => h.includes(alias))
-    );
-    const adetIdx = headerRow.findIndex((h) =>
-      ADET_ALIASES.some((alias) => h.includes(alias))
-    );
-
-    if (konteynerIdx === -1) {
-      errors.push(`"Konteyner Tipi" kolonu bulunamadı. Mevcut başlıklar: ${headerRow.join(', ')}`);
-    }
-    if (adetIdx === -1) {
-      errors.push(`"Mevcut Adet" kolonu bulunamadı. Mevcut başlıklar: ${headerRow.join(', ')}`);
-    }
-    if (errors.length > 0) return { rows: [], errors };
-
-    for (let i = 1; i < rawData.length; i++) {
-      const row = rawData[i];
-      const tipi = String(row[konteynerIdx] ?? '').trim();
-      const adetRaw = row[adetIdx];
-      const adet = Number(adetRaw);
-
-      if (!tipi) continue;
-      if (isNaN(adet) || adet < 0) {
-        errors.push(`Satır ${i + 1}: Geçersiz adet değeri "${adetRaw}"`);
-        continue;
-      }
-
-      rows.push({ konteynerTipi: tipi, mevcutAdet: adet });
-    }
-  } catch (err) {
-    errors.push(`Dosya okunamadı: ${err instanceof Error ? err.message : 'Bilinmeyen hata'}`);
-  }
-
-  return { rows, errors };
 }
