@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { Users, FileDown, CheckCircle, AlertCircle } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Users, FileDown, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
 import type { Contact } from '@/lib/send-session';
 
 interface Props {
   sessionId: string;
   preloadedContacts?: Contact[];
   onComplete: (contacts: Contact[]) => void;
+  onBack: () => void;
 }
 
-export default function ContactsFetcher({ sessionId, preloadedContacts, onComplete }: Props) {
+export default function ContactsFetcher({ sessionId, preloadedContacts, onComplete, onBack }: Props) {
   const [contacts, setContacts] = useState<Contact[]>(preloadedContacts ?? []);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -18,6 +19,17 @@ export default function ContactsFetcher({ sessionId, preloadedContacts, onComple
   const [warnings, setWarnings] = useState<string[]>([]);
   const [localSessionId, setLocalSessionId] = useState(sessionId);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Tarayıcının dosyayı açmasını (navigate) engelle
+  useEffect(() => {
+    const prevent = (e: DragEvent) => { e.preventDefault(); e.stopPropagation(); };
+    document.addEventListener('dragover', prevent);
+    document.addEventListener('drop', prevent);
+    return () => {
+      document.removeEventListener('dragover', prevent);
+      document.removeEventListener('drop', prevent);
+    };
+  }, []);
 
   const handleFile = async (file: File) => {
     setError('');
@@ -33,6 +45,12 @@ export default function ContactsFetcher({ sessionId, preloadedContacts, onComple
         method: 'POST',
         body: formData,
       });
+
+      if (res.status === 401) {
+        window.location.href = '/admin';
+        return;
+      }
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -52,6 +70,7 @@ export default function ContactsFetcher({ sessionId, preloadedContacts, onComple
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
     if (file) handleFile(file);
@@ -98,21 +117,28 @@ export default function ContactsFetcher({ sessionId, preloadedContacts, onComple
 
         <div className="flex justify-between items-center">
           <button
-            onClick={() => {
-              setContacts([]);
-              setError('');
-            }}
-            className="text-sm text-gray-400 hover:text-gray-600 underline underline-offset-2"
+            onClick={onBack}
+            className="flex items-center gap-2 px-5 py-2.5 border border-gray-300
+                       text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
           >
-            Farklı bir CSV yükle
+            <ChevronLeft className="w-4 h-4" />
+            Geri
           </button>
-          <button
-            onClick={() => onComplete(contacts)}
-            className="px-6 py-2.5 bg-[#0069b4] text-white font-semibold rounded-lg
-                       hover:bg-[#005a9a] transition-colors"
-          >
-            Devam Et →
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => { setContacts([]); setError(''); }}
+              className="text-sm text-gray-400 hover:text-gray-600 underline underline-offset-2"
+            >
+              Farklı bir CSV yükle
+            </button>
+            <button
+              onClick={() => onComplete(contacts)}
+              className="px-6 py-2.5 bg-[#0069b4] text-white font-semibold rounded-lg
+                         hover:bg-[#005a9a] transition-colors"
+            >
+              Devam Et →
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -175,6 +201,17 @@ export default function ContactsFetcher({ sessionId, preloadedContacts, onComple
           {error}
         </div>
       )}
+
+      <div className="mt-6">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 px-5 py-2.5 border border-gray-300
+                     text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Geri
+        </button>
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import type { StockRow, Contact } from '@/lib/send-session';
 interface Props {
   sessionId: string;
   stock: StockRow[];
+  containerTypes: string[];
   contacts: Contact[];
   onConfirm: () => void;
   onBack: () => void;
@@ -14,6 +15,7 @@ interface Props {
 export default function EmailTemplatePreview({
   sessionId,
   stock,
+  containerTypes,
   contacts,
   onConfirm,
   onBack,
@@ -31,7 +33,7 @@ export default function EmailTemplatePreview({
           {contacts.length} alıcı
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 rounded-full text-sm text-green-700 font-medium">
-          {stock.length} konteyner tipi
+          {stock.length} lokasyon · {containerTypes.length} konteyner tipi
         </div>
       </div>
 

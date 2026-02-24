@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FileSpreadsheet, AlertCircle } from 'lucide-react';
 import type { StockRow } from '@/lib/send-session';
 
 interface Props {
   sessionId: string;
-  onComplete: (sessionId: string, rows: StockRow[]) => void;
+  onComplete: (sessionId: string, rows: StockRow[], containerTypes: string[]) => void;
 }
 
 export default function StockUploader({ sessionId, onComplete }: Props) {
@@ -18,6 +18,17 @@ export default function StockUploader({ sessionId, onComplete }: Props) {
   const [warnings, setWarnings] = useState<string[]>([]);
   const [localSessionId, setLocalSessionId] = useState(sessionId);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Tarayıcının dosyayı açmasını (navigate) engelle
+  useEffect(() => {
+    const prevent = (e: DragEvent) => { e.preventDefault(); e.stopPropagation(); };
+    document.addEventListener('dragover', prevent);
+    document.addEventListener('drop', prevent);
+    return () => {
+      document.removeEventListener('dragover', prevent);
+      document.removeEventListener('drop', prevent);
+    };
+  }, []);
 
   const handleFile = async (file: File) => {
     setError('');
@@ -31,6 +42,12 @@ export default function StockUploader({ sessionId, onComplete }: Props) {
 
     try {
       const res = await fetch('/api/admin/stock', { method: 'POST', body: formData });
+
+      if (res.status === 401) {
+        window.location.href = '/admin';
+        return;
+      }
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -51,6 +68,7 @@ export default function StockUploader({ sessionId, onComplete }: Props) {
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
     if (file) handleFile(file);
@@ -147,7 +165,7 @@ export default function StockUploader({ sessionId, onComplete }: Props) {
 
           <div className="mt-6 flex justify-end">
             <button
-              onClick={() => onComplete(localSessionId, preview)}
+              onClick={() => onComplete(localSessionId, preview, containerTypes)}
               className="px-6 py-2.5 bg-[#0069b4] text-white font-semibold rounded-lg
                         hover:bg-[#005a9a] transition-colors"
             >

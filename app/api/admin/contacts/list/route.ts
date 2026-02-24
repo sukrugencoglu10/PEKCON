@@ -1,11 +1,12 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/admin-auth';
+import { requireAdminOrUnauthorized } from '@/lib/admin-auth';
 import { getSession } from '@/lib/send-session';
 
 export async function GET(request: NextRequest) {
-  await requireAdmin();
+  const authError = await requireAdminOrUnauthorized();
+  if (authError) return authError;
 
   const sessionId = request.nextUrl.searchParams.get('sessionId');
   if (!sessionId) {

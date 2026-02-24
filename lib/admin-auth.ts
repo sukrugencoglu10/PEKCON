@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { NextResponse } from 'next/server';
 
 const SECRET = process.env.ADMIN_COOKIE_SECRET ?? 'fallback-dev-secret-change-in-prod';
 export const COOKIE_NAME = 'pekcon_admin';
@@ -24,12 +25,27 @@ export function verifyToken(token: string): boolean {
   }
 }
 
+// Sayfa route'ları için — auth başarısız → /admin'e redirect
 export async function requireAdmin(): Promise<void> {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
   if (!token || !verifyToken(token)) {
     redirect('/admin');
   }
+}
+
+// API route'ları için — auth başarısız → 401 JSON döndür (redirect değil)
+// Kullanım: const authError = await requireAdminOrUnauthorized(); if (authError) return authError;
+export async function requireAdminOrUnauthorized(): Promise<NextResponse | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (!token || !verifyToken(token)) {
+    return NextResponse.json(
+      { error: 'Oturum süresi doldu. Lütfen tekrar giriş yapın.' },
+      { status: 401 }
+    );
+  }
+  return null;
 }
 
 export function buildAuthCookie(value: string) {

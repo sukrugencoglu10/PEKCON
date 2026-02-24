@@ -1,14 +1,15 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/admin-auth';
+import { requireAdminOrUnauthorized } from '@/lib/admin-auth';
 import { parseExcelBuffer } from '@/lib/excel-parser';
 import { getSession, updateSession, createSession, generateSessionId } from '@/lib/send-session';
 
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(request: NextRequest) {
-  await requireAdmin();
+  const authError = await requireAdminOrUnauthorized();
+  if (authError) return authError;
 
   try {
     const formData = await request.formData();

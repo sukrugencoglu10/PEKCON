@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [sessionId, setSessionId] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [stock, setStock] = useState<StockRow[]>([]);
+  const [containerTypes, setContainerTypes] = useState<string[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [oauthError, setOauthError] = useState('');
 
@@ -68,6 +69,7 @@ export default function AdminDashboard() {
   const handleReset = () => {
     setSessionId('');
     setStock([]);
+    setContainerTypes([]);
     setContacts([]);
     setCurrentStep(1);
     setOauthError('');
@@ -108,9 +110,10 @@ export default function AdminDashboard() {
           {currentStep === 1 && (
             <StockUploader
               sessionId={sessionId}
-              onComplete={(newSid, rows) => {
+              onComplete={(newSid, rows, types) => {
                 setSessionId(newSid);
                 setStock(rows);
+                setContainerTypes(types);
                 setCurrentStep(2);
               }}
             />
@@ -124,6 +127,7 @@ export default function AdminDashboard() {
                 setContacts(fetched);
                 setCurrentStep(3);
               }}
+              onBack={() => setCurrentStep(1)}
             />
           )}
 
@@ -131,6 +135,7 @@ export default function AdminDashboard() {
             <EmailTemplatePreview
               sessionId={sessionId}
               stock={stock}
+              containerTypes={containerTypes}
               contacts={contacts}
               onConfirm={() => setCurrentStep(4)}
               onBack={() => setCurrentStep(2)}
@@ -142,6 +147,7 @@ export default function AdminDashboard() {
               sessionId={sessionId}
               totalContacts={contacts.length}
               onReset={handleReset}
+              onBack={() => setCurrentStep(3)}
             />
           )}
         </div>

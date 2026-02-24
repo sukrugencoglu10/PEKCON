@@ -1,22 +1,24 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { CheckCircle, XCircle, Loader2, RotateCcw } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, RotateCcw, ChevronLeft, Home } from 'lucide-react';
 
 interface ProgressState {
   status: 'idle' | 'sending' | 'done' | 'error';
   totalCount: number;
   sentCount: number;
   failedEmails: string[];
+  errorMessage?: string;
 }
 
 interface Props {
   sessionId: string;
   totalContacts: number;
   onReset: () => void;
+  onBack: () => void;
 }
 
-export default function SendProgress({ sessionId, totalContacts, onReset }: Props) {
+export default function SendProgress({ sessionId, totalContacts, onReset, onBack }: Props) {
   const [progress, setProgress] = useState<ProgressState>({
     status: 'idle',
     totalCount: totalContacts,
@@ -51,6 +53,18 @@ export default function SendProgress({ sessionId, totalContacts, onReset }: Prop
     return () => { es.close(); };
   }, [started, sessionId]);
 
+  const handleRetry = () => {
+    setStarted(false);
+    setStarting(false);
+    setStartError('');
+    setProgress({
+      status: 'idle',
+      totalCount: totalContacts,
+      sentCount: 0,
+      failedEmails: [],
+    });
+  };
+
   const handleStart = async () => {
     setStarting(true);
     setStartError('');
@@ -83,27 +97,40 @@ export default function SendProgress({ sessionId, totalContacts, onReset }: Prop
       <h2 className="text-lg font-bold text-gray-900 mb-1">Adım 4: Gönderim</h2>
 
       {!started && (
-        <div className="text-center py-10">
-          <p className="text-gray-600 mb-2">
-            <strong>{totalContacts}</strong> alıcıya e-posta gönderilecek.
-          </p>
-          <p className="text-sm text-gray-400 mb-6">
-            Gönderimler sırayla yapılır. İşlem alıcı sayısına göre birkaç dakika sürebilir.
-          </p>
-          {startError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-              {startError}
-            </div>
-          )}
-          <button
-            onClick={handleStart}
-            disabled={starting}
-            className="px-8 py-3 bg-[#aa1917] text-white font-bold rounded-lg
-                       hover:bg-[#8f1412] disabled:opacity-50 disabled:cursor-not-allowed
-                       transition-colors text-lg"
-          >
-            {starting ? 'Başlatılıyor...' : 'Gönderimi Başlat'}
-          </button>
+        <div className="py-10">
+          <div className="text-center">
+            <p className="text-gray-600 mb-2">
+              <strong>{totalContacts}</strong> alıcıya e-posta gönderilecek.
+            </p>
+            <p className="text-sm text-gray-400 mb-6">
+              Tüm alıcılara tek e-posta gönderilecek (BCC). Birbirlerini göremezler.
+            </p>
+            {startError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                {startError}
+              </div>
+            )}
+            <button
+              onClick={handleStart}
+              disabled={starting}
+              className="px-8 py-3 bg-[#aa1917] text-white font-bold rounded-lg
+                         hover:bg-[#8f1412] disabled:opacity-50 disabled:cursor-not-allowed
+                         transition-colors text-lg"
+            >
+              {starting ? 'Başlatılıyor...' : 'Gönderimi Başlat'}
+            </button>
+          </div>
+
+          <div className="mt-8">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-5 py-2.5 border border-gray-300
+                         text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Geri
+            </button>
+          </div>
         </div>
       )}
 
@@ -139,7 +166,7 @@ export default function SendProgress({ sessionId, totalContacts, onReset }: Prop
               <>
                 <CheckCircle className="w-5 h-5 text-green-600" />
                 <span className="text-green-700 font-semibold">
-                  Tüm e-postalar başarıyla gönderildi!
+                  Başarılı bir şekilde gönderim tamamlandı!
                 </span>
               </>
             )}
@@ -153,28 +180,39 @@ export default function SendProgress({ sessionId, totalContacts, onReset }: Prop
             )}
           </div>
 
-          {progress.failedEmails.length > 0 && (
+          {progress.status === 'error' && (
             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm font-semibold text-red-800 mb-2">
-                Gönderilemeyen e-postalar ({progress.failedEmails.length}):
+              <p className="text-sm font-semibold text-red-800 mb-1">
+                Gönderim hatası:
               </p>
-              <ul className="text-xs text-red-700 space-y-0.5 font-mono">
-                {progress.failedEmails.map((email, i) => (
-                  <li key={i}>{email}</li>
-                ))}
-              </ul>
+              <p className="text-xs text-red-700 font-mono break-all">
+                {progress.errorMessage ?? 'Bilinmeyen hata — sunucu konsolunu kontrol edin.'}
+              </p>
             </div>
           )}
 
-          {(progress.status === 'done' || progress.status === 'error') && (
+          {progress.status === 'done' && (
             <div className="mt-6 flex justify-center">
               <button
                 onClick={onReset}
-                className="flex items-center gap-2 px-5 py-2.5 border border-gray-300
-                           text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#0069b4] text-white
+                           font-medium rounded-lg hover:bg-[#005a9a] transition-colors"
+              >
+                <Home className="w-4 h-4" />
+                Başa Dön
+              </button>
+            </div>
+          )}
+
+          {progress.status === 'error' && (
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={handleRetry}
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#aa1917] text-white
+                           font-medium rounded-lg hover:bg-[#8f1412] transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
-                Yeniden Başlat
+                Yeniden Gönder
               </button>
             </div>
           )}

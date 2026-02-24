@@ -13,6 +13,9 @@ function getTransporter(): Transporter {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
       },
+      tls: {
+        rejectUnauthorized: false, // Kurumsal proxy/firewall SSL denetimi için
+      },
     });
   }
   return transporter;
@@ -37,72 +40,63 @@ function generateStockTable(stock: StockRow[]): string {
   // Konteyner tiplerini ilk satırdan türet
   const types = Object.keys(stock[0].containers);
 
-  const headerCells = types
-    .map(
-      (t) =>
-        `<th style="padding:8px 10px;text-align:center;font-size:11px;color:#ffffff;
-                    font-weight:600;text-transform:uppercase;letter-spacing:0.3px;
-                    white-space:nowrap;border-right:1px solid #1e6fa3;">
-           ${escapeHtml(t)}
-         </th>`
-    )
-    .join('');
+  // Country gruplaması — aynı ülke tekrar yazılmaz
+  let lastCountry = '';
 
   const bodyRows = stock
-    .map(
-      (row, idx) => `
+    .map((row, idx) => {
+      const showCountry = row.country !== lastCountry;
+      if (showCountry) lastCountry = row.country;
+
+      const countryCell = showCountry
+        ? `<td style="padding:7px 10px;font-size:11px;font-weight:700;color:#0069b4;
+                      border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;
+                      white-space:nowrap;text-transform:uppercase;letter-spacing:0.5px;">
+             ${escapeHtml(row.country)}
+           </td>`
+        : `<td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;"></td>`;
+
+      return `
       <tr style="background-color:${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
-        <td style="padding:7px 12px;font-size:12px;font-weight:600;color:#334155;
-                   border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;
-                   white-space:nowrap;">${escapeHtml(row.country)}</td>
-        <td style="padding:7px 12px;font-size:12px;color:#475569;
+        ${countryCell}
+        <td style="padding:7px 10px;font-size:11px;font-weight:600;color:#334155;
                    border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;
                    white-space:nowrap;">${escapeHtml(row.location)}</td>
         ${types
           .map(
             (t) =>
-              `<td style="padding:7px 10px;text-align:center;font-size:12px;
+              `<td style="padding:7px 8px;text-align:center;font-size:11px;
                           border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;">
                  ${cell(row.containers[t] ?? 0)}
                </td>`
           )
           .join('')}
-      </tr>`
-    )
+      </tr>`;
+    })
     .join('');
 
+  const thStyle = `padding:8px 10px;text-align:center;font-size:10px;color:#ffffff;
+                   font-weight:700;text-transform:uppercase;letter-spacing:0.4px;
+                   white-space:nowrap;border-right:1px solid #1e6fa3;`;
+
   return `
-  <table width="100%" cellpadding="0" cellspacing="0"
-         style="border-collapse:collapse;border:1px solid #e2e8f0;overflow:hidden;
-                font-size:12px;margin-bottom:28px;">
+  <div style="overflow-x:auto;margin-bottom:24px;">
+  <table cellpadding="0" cellspacing="0"
+         style="border-collapse:collapse;border:1px solid #e2e8f0;font-size:11px;min-width:100%;">
     <thead>
       <tr style="background-color:#0069b4;">
-        <th style="padding:10px 12px;text-align:left;font-size:11px;color:#ffffff;
-                   font-weight:600;text-transform:uppercase;letter-spacing:0.3px;
-                   border-right:1px solid #1e6fa3;white-space:nowrap;">Ülke</th>
-        <th style="padding:10px 12px;text-align:left;font-size:11px;color:#ffffff;
-                   font-weight:600;text-transform:uppercase;letter-spacing:0.3px;
-                   border-right:1px solid #1e6fa3;white-space:nowrap;">Lokasyon</th>
-        ${headerCells}
+        <th style="${thStyle}text-align:left;">COUNTRY</th>
+        <th style="${thStyle}text-align:left;">DEPOTS</th>
+        ${types.map((t) => `<th style="${thStyle}">${escapeHtml(t)}</th>`).join('')}
       </tr>
     </thead>
     <tbody>${bodyRows}</tbody>
-  </table>`;
+  </table>
+  </div>`;
 }
 
-export function generateEmailHtml(stock: StockRow[], recipientName?: string): string {
-  const today = new Intl.DateTimeFormat('tr-TR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date());
-
-  const greeting = recipientName
-    ? `Sayın ${escapeHtml(recipientName)},`
-    : 'Değerli İş Ortağımız,';
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://pekcon.com';
-
+export function generateEmailHtml(stock: StockRow[], _recipientName?: string, baseUrl?: string): string {
+  const logoBase = baseUrl ?? process.env.NEXT_PUBLIC_BASE_URL ?? 'https://pekcon.com';
   return `<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -110,57 +104,32 @@ export function generateEmailHtml(stock: StockRow[], recipientName?: string): st
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>PEKCON Konteyner Stok Listesi</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;">
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
     <tr>
-      <td align="center" style="padding:40px 16px;">
-        <table width="700" cellpadding="0" cellspacing="0"
-               style="max-width:700px;background-color:#ffffff;border-radius:8px;
-                      overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.07);">
+      <td align="center" style="padding:30px 12px;">
 
-          <!-- Header -->
+        <!-- Ana kart -->
+        <table cellpadding="0" cellspacing="0"
+               style="max-width:720px;width:100%;background-color:#ffffff;
+                      border:1px solid #d9d9d9;">
+
+          <!-- Üst logo bandı -->
           <tr>
-            <td style="background:linear-gradient(135deg,#0069b4 0%,#004f8a 100%);padding:28px 36px;">
+            <td style="background-color:#0069b4;padding:16px 28px;">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td>
-                    <div style="font-size:26px;font-weight:900;color:#ffffff;letter-spacing:2px;">PEKCON</div>
-                    <div style="font-size:11px;color:#93c5fd;letter-spacing:1px;margin-top:2px;text-transform:uppercase;">
+                    <span style="font-size:22px;font-weight:900;color:#ffffff;letter-spacing:3px;">PEKCON</span>
+                    <span style="font-size:10px;color:#a8d4f5;margin-left:8px;
+                                 letter-spacing:1px;text-transform:uppercase;">
                       Container &amp; Logistics
-                    </div>
+                    </span>
                   </td>
                   <td align="right">
-                    <div style="font-size:12px;color:#bfdbfe;">${today}</div>
-                    <div style="font-size:12px;color:#bfdbfe;margin-top:2px;">Stok Güncellemesi</div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Body -->
-          <tr>
-            <td style="padding:32px 36px 20px;">
-              <p style="margin:0 0 16px;font-size:15px;color:#334155;line-height:1.6;">${greeting}</p>
-              <p style="margin:0 0 24px;font-size:15px;color:#334155;line-height:1.6;">
-                Mevcut konteyner stoğumuzu bilginize sunmak istiyoruz.
-                Aşağıdaki tabloda güncel stok durumumuzu görebilirsiniz.
-              </p>
-
-              ${generateStockTable(stock)}
-
-              <p style="margin:0 0 20px;font-size:15px;color:#334155;line-height:1.6;">
-                Talep ve teklifleriniz için bizimle iletişime geçmekten lütfen çekinmeyiniz.
-              </p>
-
-              <!-- CTA -->
-              <table cellpadding="0" cellspacing="0" style="margin:0 auto 28px;">
-                <tr>
-                  <td style="background-color:#aa1917;border-radius:6px;">
-                    <a href="${baseUrl}/tr/teklif-al"
-                       style="display:inline-block;padding:12px 28px;font-size:14px;
-                              font-weight:700;color:#ffffff;text-decoration:none;">
-                      Teklif Al
+                    <a href="http://www.pekcon.com"
+                       style="font-size:11px;color:#a8d4f5;text-decoration:none;">
+                      www.pekcon.com
                     </a>
                   </td>
                 </tr>
@@ -168,20 +137,90 @@ export function generateEmailHtml(stock: StockRow[], recipientName?: string): st
             </td>
           </tr>
 
-          <!-- Footer -->
+          <!-- Gövde -->
           <tr>
-            <td style="background-color:#1e293b;padding:20px 36px;">
-              <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.7;">
-                <strong style="color:#cbd5e1;">PEKCON Denizcilik Konteyner ve Lojistik</strong><br>
-                Dap Vadi, Merkez Mh. Seçkin Sokak No:2-4A, Z Ofis Kat:172 — 34406 Kağıthane / İstanbul<br>
-                <a href="mailto:${process.env.SMTP_USER}" style="color:#60a5fa;text-decoration:none;">${process.env.SMTP_USER}</a>
-                &nbsp;|&nbsp;
-                <a href="${baseUrl}" style="color:#60a5fa;text-decoration:none;">pekcon.com</a>
+            <td style="padding:28px 28px 20px;color:#333333;font-size:13px;line-height:1.7;">
+
+              <!-- Başlık -->
+              <p style="margin:0 0 16px;font-size:15px;font-weight:bold;color:#0069b4;letter-spacing:0.5px;">
+                CURRENT STOCK LIST &nbsp;|&nbsp; GÜNCEL STOK LİSTESİ
               </p>
-              <p style="margin:12px 0 0;font-size:10px;color:#64748b;line-height:1.5;">
+
+              <!-- İngilizce -->
+              <p style="margin:0 0 4px;"><strong>Dear Colleague,</strong></p>
+              <p style="margin:0 0 4px;">Our current stock list as below.</p>
+              <p style="margin:0 0 16px;">We are looking forward to your valuable requests.</p>
+
+              <!-- Türkçe -->
+              <p style="margin:0 0 4px;"><strong>Değerli İlgili,</strong></p>
+              <p style="margin:0 0 4px;">Güncel stok bilgilerimiz aşağıdaki gibidir.</p>
+              <p style="margin:0 0 4px;">Bilginize sunar, değerli taleplerinizi bekleriz.</p>
+              <p style="margin:0 0 18px;">
+                <a href="mailto:marketing@pekcon.com" style="color:#0069b4;">marketing@pekcon.com</a>
+              </p>
+
+              ${generateStockTable(stock)}
+
+            </td>
+          </tr>
+
+          <!-- İmza -->
+          <tr>
+            <td style="padding:0 28px 28px;font-size:13px;color:#333333;line-height:1.8;">
+              <p style="margin:0 0 10px;">Best Regards,</p>
+
+              <!-- PEKCON Logo -->
+              <table cellpadding="0" cellspacing="0" style="margin-bottom:14px;">
+                <tr>
+                  <td>
+                    <img
+                      src="${logoBase}/pekcon-logo.png"
+                      alt="PEKCON Container &amp; Logistics"
+                      width="160"
+                      style="display:block;border:0;outline:none;text-decoration:none;max-width:160px;"
+                    />
+                  </td>
+                </tr>
+              </table>
+
+              <!-- İletişim bilgileri -->
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding-right:16px;font-size:12px;color:#555555;">
+                    <strong>Mobile:</strong> +90 537 632 24 30
+                  </td>
+                  <td style="padding-right:16px;font-size:12px;color:#555555;">
+                    <strong>Phone:</strong> +90 212 297 97 58
+                  </td>
+                  <td style="font-size:12px;color:#555555;">
+                    <strong>Fax:</strong> +90 212 297 97 68
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" style="padding-top:4px;font-size:12px;color:#555555;">
+                    <strong>Email:</strong>
+                    <a href="mailto:marketing@pekcon.com" style="color:#0069b4;">
+                      marketing@pekcon.com
+                    </a>
+                    &nbsp;&nbsp;
+                    <strong>Web:</strong>
+                    <a href="http://www.pekcon.com" style="color:#0069b4;text-decoration:none;">
+                      www.pekcon.com
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Alt bant -->
+          <tr>
+            <td style="background-color:#0069b4;padding:10px 28px;">
+              <p style="margin:0;font-size:10px;color:#a8d4f5;text-align:center;">
                 Bu e-posta PEKCON Denizcilik Konteyner ve Lojistik tarafından gönderilmiştir.
-                Aboneliğinizi iptal etmek için
-                <a href="mailto:${process.env.SMTP_USER}?subject=Abonelik İptali" style="color:#64748b;">buraya tıklayın</a>.
+                &nbsp;|&nbsp;
+                <a href="mailto:marketing@pekcon.com?subject=Unsubscribe"
+                   style="color:#a8d4f5;text-decoration:underline;">Aboneliği iptal et</a>
               </p>
             </td>
           </tr>
@@ -194,30 +233,29 @@ export function generateEmailHtml(stock: StockRow[], recipientName?: string): st
 </html>`;
 }
 
-export async function sendSingleEmail(
-  to: string,
-  displayName: string,
-  stock: StockRow[]
+const BATCH_SIZE = 490; // Gmail: mesaj başına maks 500 alıcı (To + CC dahil)
+
+export async function sendBulkBcc(
+  contacts: Array<{ email: string; displayName: string }>,
+  stock: StockRow[],
+  onBatchSent?: (sentSoFar: number) => void
 ): Promise<void> {
   const transport = getTransporter();
-  const html = generateEmailHtml(stock, displayName);
+  const html = generateEmailHtml(stock);
+  const subject = 'PEKCON – Güncel Konteyner Stok Listesi';
+  const from = `"${process.env.SMTP_FROM_NAME ?? 'PEKCON'}" <${process.env.SMTP_USER}>`;
+  const to   = `"${process.env.SMTP_FROM_NAME ?? 'PEKCON Container & Logistics'}" <${process.env.SMTP_USER}>`;
+  const cc   = process.env.SMTP_CC ?? 'murat@pekcon.com';
 
-  const textLines = stock.map(
-    (r) =>
-      `${r.country} / ${r.location}: ` +
-      Object.entries(r.containers)
-        .filter(([, v]) => v > 0)
-        .map(([k, v]) => `${k}=${v}`)
-        .join(', ')
-  );
+  for (let i = 0; i < contacts.length; i += BATCH_SIZE) {
+    const batch = contacts.slice(i, i + BATCH_SIZE);
+    const bcc = batch
+      .map((c) => c.displayName ? `"${c.displayName}" <${c.email}>` : c.email)
+      .join(', ');
 
-  await transport.sendMail({
-    from: `"${process.env.SMTP_FROM_NAME ?? 'PEKCON'}" <${process.env.SMTP_USER}>`,
-    to: `"${displayName}" <${to}>`,
-    subject: 'PEKCON – Güncel Konteyner Stok Listesi',
-    html,
-    text: `PEKCON Konteyner Stok Listesi\n\n${textLines.join('\n')}\n\nTeklif için: ${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://pekcon.com'}/tr/teklif-al`,
-  });
+    await transport.sendMail({ from, to, cc, bcc, subject, html });
+    onBatchSent?.(Math.min(i + BATCH_SIZE, contacts.length));
+  }
 }
 
 export const delay = (ms: number): Promise<void> =>

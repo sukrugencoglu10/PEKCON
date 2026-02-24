@@ -1,12 +1,13 @@
 export const runtime = 'nodejs';
 
 import { NextRequest } from 'next/server';
-import { requireAdmin } from '@/lib/admin-auth';
+import { requireAdminOrUnauthorized } from '@/lib/admin-auth';
 import { getSession } from '@/lib/send-session';
 import { generateEmailHtml } from '@/lib/email';
 
 export async function GET(request: NextRequest) {
-  await requireAdmin();
+  const authError = await requireAdminOrUnauthorized();
+  if (authError) return authError;
 
   const sessionId = request.nextUrl.searchParams.get('sessionId');
   if (!sessionId) {
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
     return new Response('Stok verisi yüklenmemiş', { status: 400 });
   }
 
-  const html = generateEmailHtml(session.stock, 'Değerli Müşteri');
+  const html = generateEmailHtml(session.stock, 'Değerli Müşteri', request.nextUrl.origin);
   return new Response(html, {
     headers: { 'Content-Type': 'text/html; charset=utf-8' },
   });

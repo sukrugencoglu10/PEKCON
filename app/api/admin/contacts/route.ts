@@ -1,14 +1,15 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/admin-auth';
+import { requireAdminOrUnauthorized } from '@/lib/admin-auth';
 import { parseContactsCsv } from '@/lib/excel-parser';
 import { getSession, createSession, updateSession, generateSessionId } from '@/lib/send-session';
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB (Outlook CSV büyük olabilir)
 
 export async function POST(request: NextRequest) {
-  await requireAdmin();
+  const authError = await requireAdminOrUnauthorized();
+  if (authError) return authError;
 
   try {
     const formData = await request.formData();
