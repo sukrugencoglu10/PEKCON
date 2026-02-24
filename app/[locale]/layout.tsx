@@ -41,7 +41,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
 
   return (
-    <html lang={locale} className={`${inter.variable} ${satisfy.variable}`} style={{ zoom: 0.65 }}>
+    <html lang={locale} className={`${inter.variable} ${satisfy.variable}`} style={{ zoom: 1 }}>
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <GoogleTagManager gtmId="GTM-536W5D89" />
