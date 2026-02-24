@@ -96,7 +96,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   alt="PEKCON Container & Logistics"
                   width={207}
                   height={69}
-                  className="h-10 md:h-14 w-auto"
+                  className="h-16 md:h-[140px] w-auto"
                   priority
                 />
                 <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
