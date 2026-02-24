@@ -221,7 +221,7 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
           <div className="absolute top-[45px] left-0 right-0 h-[2px] bg-gray-200 -z-0 mx-10 sm:mx-20" />
           <div 
             className="absolute top-[45px] left-0 h-[2px] bg-primary-500 -z-0 mx-10 sm:mx-20 transition-all duration-500" 
-            style={{ width: `${((currentStep - 1) / 2) * (100 - (window.innerWidth < 640 ? 40 : 20))}%` }} // Approximate dynamic width
+            style={{ width: `${((currentStep - 1) / 2) * (100 - ((typeof window !== 'undefined' ? window.innerWidth : 1024) < 640 ? 40 : 20))}%` }}
           /> 
         </div>
       </div>
