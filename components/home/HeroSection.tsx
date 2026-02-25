@@ -140,7 +140,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
 
           <motion.p
             variants={slideUp}
-            className="text-base md:text-lg text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md"
+            className="text-base md:text-lg text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md whitespace-pre-line"
           >
             {t.hero.description}
           </motion.p>
