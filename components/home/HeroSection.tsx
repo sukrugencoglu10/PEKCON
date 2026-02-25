@@ -123,7 +123,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="max-w-5xl mx-auto flex flex-col items-center"
+          className="max-w-5xl mx-auto flex flex-col items-center -mt-16 md:-mt-24"
         >
 
 
