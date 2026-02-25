@@ -90,11 +90,13 @@ export function parseExcelBuffer(buffer: ArrayBuffer): ParseResult {
   }
 }
 
-// ── Outlook Kişi CSV Parser ──────────────────────────────────────────────────
-// Outlook standart export: First Name, Last Name, E-mail Address, Display Name
+// ── Outlook / Google Contacts CSV Parser ─────────────────────────────────────
+// Outlook export  : First Name, Last Name, E-mail Address, Display Name
+// Google Contacts : First Name, Middle Name, Last Name, ..., E-mail 1 - Label, E-mail 1 - Value
 
-const EMAIL_ALIASES = ['e-mail address', 'email address', 'e-mail', 'email', 'e_mail'];
+const EMAIL_ALIASES = ['e-mail address', 'email address', 'e-mail', 'email', 'e_mail', 'e-posta'];
 const FIRSTNAME_ALIASES = ['first name', 'firstname', 'ad', 'name'];
+const MIDDLENAME_ALIASES = ['middle name', 'middlename', 'orta ad'];
 const LASTNAME_ALIASES = ['last name', 'lastname', 'soyad', 'surname'];
 const DISPLAY_ALIASES = ['display name', 'full name', 'fullname', 'displayname', 'ad soyad'];
 
@@ -125,17 +127,31 @@ export function parseContactsCsv(buffer: ArrayBuffer): ContactParseResult {
 
     const headerRow = rawData[0].map((h) => String(h).toLowerCase().trim());
 
-    const emailIdx = headerRow.findIndex((h) => EMAIL_ALIASES.some((a) => h.includes(a)));
+    // E-posta sütununu bul — Google Contacts'ta "E-mail 1 - Label" ve "E-mail 1 - Value"
+    // gibi çift sütun olabilir. "value" içereni tercih et, "label" olanı atla.
+    let emailIdx = headerRow.findIndex(
+      (h) => EMAIL_ALIASES.some((a) => h.includes(a)) && h.includes('value')
+    );
+    if (emailIdx === -1) {
+      emailIdx = headerRow.findIndex(
+        (h) => EMAIL_ALIASES.some((a) => h.includes(a)) && !h.includes('label')
+      );
+    }
+    if (emailIdx === -1) {
+      emailIdx = headerRow.findIndex((h) => EMAIL_ALIASES.some((a) => h.includes(a)));
+    }
+
     if (emailIdx === -1) {
       return {
         contacts: [],
-        errors: [`"E-mail Address" kolonu bulunamadı. Mevcut başlıklar: ${rawData[0].join(', ')}`],
+        errors: [`E-posta kolonu bulunamadı. Mevcut başlıklar: ${rawData[0].slice(0, 10).join(', ')}`],
       };
     }
 
     const displayIdx = headerRow.findIndex((h) => DISPLAY_ALIASES.some((a) => h === a));
-    const firstIdx = headerRow.findIndex((h) => FIRSTNAME_ALIASES.some((a) => h === a));
-    const lastIdx = headerRow.findIndex((h) => LASTNAME_ALIASES.some((a) => h === a));
+    const firstIdx   = headerRow.findIndex((h) => FIRSTNAME_ALIASES.some((a) => h === a));
+    const middleIdx  = headerRow.findIndex((h) => MIDDLENAME_ALIASES.some((a) => h === a));
+    const lastIdx    = headerRow.findIndex((h) => LASTNAME_ALIASES.some((a) => h === a));
 
     for (let i = 1; i < rawData.length; i++) {
       const row = rawData[i];
@@ -145,9 +161,10 @@ export function parseContactsCsv(buffer: ArrayBuffer): ContactParseResult {
       let displayName = '';
       if (displayIdx !== -1) displayName = String(row[displayIdx] ?? '').trim();
       if (!displayName && firstIdx !== -1) {
-        const first = String(row[firstIdx] ?? '').trim();
-        const last = lastIdx !== -1 ? String(row[lastIdx] ?? '').trim() : '';
-        displayName = [first, last].filter(Boolean).join(' ');
+        const first  = String(row[firstIdx]  ?? '').trim();
+        const middle = middleIdx !== -1 ? String(row[middleIdx] ?? '').trim() : '';
+        const last   = lastIdx   !== -1 ? String(row[lastIdx]   ?? '').trim() : '';
+        displayName  = [first, middle, last].filter(Boolean).join(' ');
       }
       if (!displayName) displayName = email;
 

@@ -25,8 +25,11 @@ export interface SendSession {
   errorMessage?: string;
 }
 
-// Module-level singleton — sunucu süreci boyunca yaşar
-const sessions = new Map<string, SendSession>();
+// globalThis kullanarak hot-reload'da session verisinin kaybolmasını önle
+// (Next.js dev modunda modüller hot-reload'da yeniden değerlendirilebilir)
+const g = globalThis as typeof globalThis & { __pekconSessions?: Map<string, SendSession> };
+if (!g.__pekconSessions) g.__pekconSessions = new Map();
+const sessions = g.__pekconSessions;
 
 export function createSession(id: string): SendSession {
   const session: SendSession = {

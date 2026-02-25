@@ -55,9 +55,9 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
   return (
     <header className="sticky top-0 left-0 right-0 z-50 transition-all duration-300 bg-white">
       {/* Top Bar */}
-      <div className="bg-secondary-500 text-white py-2">
+      <div className="bg-secondary-500 text-white py-1.5">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-6 text-[11px] sm:text-xs md:text-sm font-medium">
+          <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-4 text-[10px] sm:text-[11px] md:text-xs font-medium">
             <a
               href="tel:+902122979758"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
@@ -77,7 +77,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white border-b-2 border-gray-300 shadow-md py-2 md:py-4">
+      <div className="bg-white border-b-2 border-gray-300 shadow-md py-1.5 md:py-2">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -96,7 +96,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   alt="PEKCON Container & Logistics"
                   width={207}
                   height={69}
-                  className="h-16 md:h-[140px] w-auto"
+                  className="h-10 md:h-[70px] w-auto"
                   priority
                 />
                 <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
@@ -107,8 +107,8 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                         className={cn(
                           "block whitespace-nowrap",
                           idx === 0 && arr.length > 1
-                            ? "text-[10px] uppercase tracking-wider font-sans font-bold text-gray-500"
-                            : "font-signature text-lg text-secondary-600",
+                            ? "text-[9px] uppercase tracking-wider font-sans font-bold text-gray-500"
+                            : "font-signature text-base text-secondary-600",
                         )}
                       >
                         {line}
@@ -126,7 +126,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "px-4 py-2 rounded-md font-medium transition-all duration-300",
+                    "px-3 py-1.5 text-sm rounded-md font-medium transition-all duration-300",
                     isActive(link.href)
                       ? "bg-secondary-500 text-white"
                       : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
@@ -140,11 +140,11 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
             {/* CTA & Language Switcher */}
             <div className="hidden lg:flex items-center">
               <Link href={locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`}>
-                <Button variant="primary" size="md" className="scale-[1.15]">
+                <Button variant="primary" size="md" className="scale-100 text-sm py-1.5 px-4 hidden md:block">
                   {t.nav.quote}
                 </Button>
               </Link>
-              <div className="flex items-center space-x-2 ml-[40px]">
+              <div className="flex items-center space-x-2 ml-[20px]">
                 <Link href="/tr">
                   <button
                     aria-label="Türkçe"
@@ -156,7 +156,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                         : "border-2 border-transparent opacity-70 hover:opacity-100 hover:scale-105",
                     )}
                   >
-                    <TRFlag className="w-[47px] h-[31px]" />
+                    <TRFlag className="w-[36px] h-[24px]" />
                   </button>
                 </Link>
                 <Link href="/en">
@@ -170,7 +170,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                         : "border-2 border-transparent opacity-70 hover:opacity-100 hover:scale-105",
                     )}
                   >
-                    <UKFlag className="w-[47px] h-[31px]" />
+                    <UKFlag className="w-[36px] h-[24px]" />
                   </button>
                 </Link>
               </div>

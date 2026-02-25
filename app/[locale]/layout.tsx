@@ -7,6 +7,11 @@ import { Inter, Satisfy } from 'next/font/google';
 import GoogleTagManager from '@/components/analytics/GoogleTagManager';
 import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
 import { Suspense } from 'react';
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+  themeColor: '#0069b4',
+};
 
 const inter = Inter({
   subsets: ['latin'],

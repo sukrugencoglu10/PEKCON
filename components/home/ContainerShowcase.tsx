@@ -56,7 +56,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
-    <section ref={ref} className="relative py-32 overflow-hidden bg-dark-900">
+    <section ref={ref} className="relative py-20 md:py-24 overflow-hidden bg-dark-900">
       {/* ... (background images remain same) */}
       <div className="absolute inset-0 z-0">
         <Image 
@@ -76,14 +76,14 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-white font-bold tracking-widest uppercase text-sm mb-3 block opacity-90">
+          <span className="text-white font-bold tracking-widest uppercase text-xs mb-3 block opacity-90">
             {locale === 'tr' ? 'KONTEYNERLARIMIZ' : 'OUR CONTAINERS'}
           </span>
-          <h2 className="text-4xl md:text-5xl font-display font-black text-white mb-6 whitespace-pre-line">
+          <h2 className="text-3xl md:text-4xl font-display font-black text-white mb-6 whitespace-pre-line">
             {t.containers.title.replace('Standartlarda ', 'Standartlarda\n')}
           </h2>
           <div className="w-24 h-1.5 bg-secondary-500 mx-auto mb-8 rounded-full" />
-          <p className="text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-200 max-w-2xl px-4 mx-auto leading-relaxed">
             {t.containers.subtitle}
           </p>
         </motion.div>
@@ -92,7 +92,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto"
         >
           {containers.map((container, index) => (
             <motion.div
@@ -100,7 +100,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
               variants={slideUp}
               className="group h-full"
             >
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative">
                 <div 
                   className="relative w-full h-48 mb-6 rounded-xl overflow-hidden cursor-zoom-in group-hover:scale-105 transition-transform duration-300 bg-white/5"
                   onClick={() => setSelectedImage(container.image)}
@@ -119,13 +119,13 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
                 </div>
 
                 <div className="mb-4 flex-grow">
-                  <div className="inline-block px-3 py-1 bg-primary-500/20 text-white rounded-full text-sm font-medium mb-3">
+                  <div className="inline-block px-2 py-1 bg-primary-500/20 text-white rounded-full text-xs font-medium mb-2">
                     {container.type}
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3 group-hover:text-primary-400 transition-colors">
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-2 group-hover:text-primary-400 transition-colors">
                     {container.name}
                   </h3>
-                  <p className="text-gray-300 mb-4 leading-relaxed">{container.description}</p>
+                  <p className="text-sm text-gray-300 mb-4 leading-relaxed">{container.description}</p>
                 </div>
 
                 <ul className="space-y-3 mb-8">

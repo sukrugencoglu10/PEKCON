@@ -60,7 +60,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
   };
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden py-12 md:py-20">
+    <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-center justify-center overflow-hidden py-10 md:py-16">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0">
         <Image
@@ -129,7 +129,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
 
           <motion.h1
             variants={slideUp}
-            className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-white mb-6 leading-tight flex flex-col drop-shadow-lg"
+            className="text-3xl md:text-5xl lg:text-[4rem] font-display font-black text-white mb-6 leading-[1.1] flex flex-col drop-shadow-lg"
           >
             <span>{t.hero.title1}</span>
             <span className="bg-gradient-to-r from-primary-400 via-primary-200 to-accent-400 bg-clip-text text-transparent pb-2">
@@ -140,7 +140,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
 
           <motion.p
             variants={slideUp}
-            className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md"
+            className="text-base md:text-lg text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md"
           >
             {t.hero.description}
           </motion.p>
@@ -184,8 +184,8 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
           >
             <Link href="https://wa.me/905543545201" target="_blank" rel="noopener noreferrer">
               <Button
-                size="lg"
-                className="min-w-[200px] !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-lg hover:shadow-red-600/30"
+                size="md"
+                className="min-w-[180px] !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-lg hover:shadow-red-600/30 text-sm"
                 onClick={() => trackCTAClick('whatsapp_direct', 'hero')}
               >
                 {t.hero.cta3}

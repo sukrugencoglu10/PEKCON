@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* Scale down the entire site by replacing the root font-size on desktop.
+     Since Tailwind uses 'rem' for everything, changing the root font size from 16px to 11px 
+     effectively applies a ~68% zoom-out universally without breaking standard CSS layouts. */
+  html {
+    font-size: 16px; /* Mobil için varsayılan büyüklük korunsun */
+  }
+  
+  @media (min-width: 1024px) {
+    html {
+      font-size: 10px; /* Masaüstünde biraz daha küçültme (~%62 zoom out) */
+    }
+  }
+
+  @media (min-width: 1536px) {
+    html {
+      font-size: 11px; /* 2K ve üzeri çok geniş ekranlarda dengeli küçültme */
+    }
+  }
+}
 @layer utilities {
   /* PEKCON Gradient Utilities */
   .gradient-pekcon-primary {
@@ -62,8 +82,12 @@
 }
 
 @keyframes shine {
-  from { transform: translateX(-100%) skewX(-15deg); }
-  to { transform: translateX(200%) skewX(-15deg); }
+  from {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  to {
+    transform: translateX(200%) skewX(-15deg);
+  }
 }
 
 .animate-shine {

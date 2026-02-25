@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import type { Viewport } from 'next';
 
+export const viewport: Viewport = {
+  themeColor: '#0069b4',
+};
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
