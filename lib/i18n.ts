@@ -257,7 +257,7 @@
       title1: 'for Sale',
       title2: 'SOC Containers',
       title3: 'in International Circulation',
-      description: 'Your reliable solution partner in all sizes and conditions in global logistics; we stand by you with new and used containers.',
+      description: 'Your reliable solution partner in all sizes and conditions in global logistics;\nwe stand by you with new and used containers.',
       cta1: 'Get Free Quote',
       cta3: 'Contact Us',
       quickQuote: {
