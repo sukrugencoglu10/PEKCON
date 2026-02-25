@@ -77,7 +77,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white border-b-2 border-gray-300 shadow-md py-1.5 md:py-2">
+      <div className="bg-white border-b-2 border-gray-300 shadow-md py-3 md:py-2">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -96,7 +96,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   alt="PEKCON Container & Logistics"
                   width={207}
                   height={69}
-                  className="h-10 md:h-[70px] w-auto"
+                  className="h-14 md:h-[70px] w-auto"
                   priority
                 />
                 <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
