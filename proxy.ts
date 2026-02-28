@@ -5,6 +5,12 @@ const defaultLocale = 'tr';
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const hostname = request.headers.get('host') ?? '';
+
+  // admin.pekcon.com → /admin'e yönlendir
+  if (hostname.startsWith('admin.') && pathname === '/') {
+    return NextResponse.redirect(new URL('/admin', request.url));
+  }
 
   // Check if pathname already has a locale
   const pathnameHasLocale = locales.some(
