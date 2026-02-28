@@ -5,7 +5,7 @@
       title1: 'Satılık',
       title2: 'Uluslararası Dolaşımda',
       title3: 'Yük Konteynerleri',
-      description: 'İhtiyacınız olan her ebatta, yüksek kondisyonda konteyner çözümleri. Sıfır ve ikinci el seçeneklerimizle küresel ve yerel operasyonlarınızın güvencesiyiz.\n',
+      description: 'Sıfır ve İkinci El Seçeneklerimizle\nİhtiyacınız Olan Her Ebatta, Yüksek Kondisyonda Konteyner Çözümleri ile\nKüresel ve Yerel Operasyonlarınızın Güvencesiyiz.',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
       cta3: 'İletişime Geçiniz',

@@ -61,9 +61,11 @@ export default function SegmentationCards({ locale = 'tr' }: { locale?: Locale }
                 </p>
                 
                 <Link href={card.href} className="w-full">
-                  <Button 
-                    variant={card.color === 'secondary' ? 'outline' : 'primary'} 
-                    className="w-full"
+                  <Button
+                    variant={card.color === 'secondary' ? 'outline' : 'primary'}
+                    className={card.color === 'primary'
+                      ? 'w-full !bg-white !bg-none border-2 border-[#aa1917] !text-[#aa1917] hover:!bg-[#aa1917] hover:!text-white hover:shadow-none hover:scale-100'
+                      : 'w-full'}
                   >
                     {card.cta}
                   </Button>
