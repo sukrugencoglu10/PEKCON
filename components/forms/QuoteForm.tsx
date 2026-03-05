@@ -321,6 +321,14 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
                 min={1}
                 max={1000}
               />
+
+              <FormInput
+                type="text"
+                label={f.region}
+                placeholder={f.regionPlaceholder}
+                {...register('region')}
+                error={errors.region?.message}
+              />
             </motion.div>
           )}
 

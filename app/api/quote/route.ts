@@ -12,6 +12,7 @@ function buildEmailHtml(data: {
   containerCategory: string;
   containerType?: string;
   quantity: number;
+  region?: string;
   fullName?: string;
   email?: string;
   phone?: string;
@@ -76,6 +77,11 @@ function buildEmailHtml(data: {
                   <td style="padding:6px 0;color:#6b7a8d;font-size:14px;">Miktar</td>
                   <td style="padding:6px 0;color:#0069b4;font-size:18px;font-weight:700;">${data.quantity} adet</td>
                 </tr>
+                ${data.region ? `
+                <tr>
+                  <td style="padding:6px 0;color:#6b7a8d;font-size:14px;">Bölge</td>
+                  <td style="padding:6px 0;color:#1a2e44;font-size:14px;font-weight:600;">${data.region}</td>
+                </tr>` : ''}
               </table>
             </td>
           </tr>
