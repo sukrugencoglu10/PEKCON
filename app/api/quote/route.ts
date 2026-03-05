@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { quoteFormSchema } from '@/lib/validators';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const RECIPIENT_EMAILS = ['info@pekcon.com', 'sukrugencoglu10@gmail.com'];
 const FROM_EMAIL = 'teklif@pekcon.com';
 
@@ -169,6 +167,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = quoteFormSchema.parse(body);
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
       from: FROM_EMAIL,
