@@ -12,12 +12,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     <div className="min-h-screen bg-white py-20">
       <div className="container mx-auto px-4 pt-20">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-12 text-center lg:text-left">
-            {t.about.title}
-          </h1>
-          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div>
+              <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-12 text-center">
+                {t.about.title}
+              </h1>
               <div className="prose prose-lg max-w-none">
                 {t.about.description.split('\n\n').map((para, i) => (
                   <p key={i} className="text-lg text-dark-700 leading-relaxed mb-6 indent-8">
