@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const RECIPIENT_EMAIL = 'info@pekcon.com.tr';
+const RECIPIENT_EMAILS = ['info@pekcon.com', 'sukrugencoglu10@gmail.com'];
 const FROM_EMAIL = 'teklif@pekcon.com';
 
 function buildEmailHtml(data: {
@@ -166,7 +166,7 @@ export async function POST(request: NextRequest) {
 
     await resend.emails.send({
       from: FROM_EMAIL,
-      to: RECIPIENT_EMAIL,
+      to: RECIPIENT_EMAILS,
       subject: `Yeni Teklif Talebi — ${validatedData.fullName ?? 'Misafir'} | ${validatedData.quantity} adet`,
       html: buildEmailHtml(validatedData),
       replyTo: validatedData.email,
