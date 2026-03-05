@@ -29,6 +29,9 @@ const satisfy = Satisfy({
 export const metadata: Metadata = {
   title: 'PEKCON Container & Logistics',
   description: 'Küresel lojistikte güvenilir çözüm ortağınız',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 // Generate static params for locales

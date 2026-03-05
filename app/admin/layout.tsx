@@ -4,6 +4,9 @@ import '../globals.css';
 export const metadata: Metadata = {
   title: 'PEKCON Admin Paneli',
   robots: { index: false, follow: false },
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
