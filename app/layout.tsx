@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: 'Uluslararası taşımacılık ve konteyner tedariğinde güvenilir çözüm ortağınız',
 
   icons: {
-    icon: '/favicon.svg',
+    icon: '/favicon.png',
   },
 
   openGraph: {

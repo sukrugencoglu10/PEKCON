@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'PEKCON Admin Paneli',
   robots: { index: false, follow: false },
   icons: {
-    icon: '/favicon.svg',
+    icon: '/favicon.png',
   },
 };
 
