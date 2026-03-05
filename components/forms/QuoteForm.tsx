@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronRight, ChevronLeft, Edit2 } from 'lucide-react';
 import {
   trackQuoteFormSubmit,
+  trackLeadConversion,
   trackFormFieldFocus,
   trackFormError,
   trackFormStarted,
@@ -135,9 +136,6 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
     }
 
     try {
-      trackQuoteFormSubmit(data);
-      trackAddToCart(data);
-
       const response = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -145,6 +143,11 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
       });
 
       if (!response.ok) throw new Error('Submission failed');
+
+      // Fire tracking only after successful submission
+      trackQuoteFormSubmit(data);
+      trackAddToCart(data);
+      trackLeadConversion(data);
 
       setSubmitStatus('success');
       setFormInteracted(false);

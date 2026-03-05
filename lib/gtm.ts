@@ -22,6 +22,19 @@ export const trackEvent = (event: string, data: Record<string, any> = {}) => {
   }
 };
 
+// Lead form conversion — Google Ads conversion event
+export const trackLeadConversion = (formData: QuoteFormData) => {
+  if (typeof window === 'undefined') return;
+
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'generate_lead', {
+      currency: 'TRY',
+      value: estimateLeadValue(formData),
+      method: 'quote_form',
+    });
+  }
+};
+
 // WhatsApp conversion — Google Ads conversion event
 export const trackWhatsAppConversion = (locale: string) => {
   if (typeof window === 'undefined') return;
