@@ -1,17 +1,46 @@
 /**
- * Google Tag Manager (GTM) Tracking Library
+ * Google Tag / Google Ads Tracking Library
  * Centralized event tracking for PEKCON website
  */
 
-// Base tracking function
+// Base tracking function (dataLayer + gtag)
 export const trackEvent = (event: string, data: Record<string, any> = {}) => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  if (typeof window === 'undefined') return;
+
+  // Push to dataLayer
+  if (window.dataLayer) {
     window.dataLayer.push({
       event,
       timestamp: new Date().toISOString(),
       ...data,
     });
   }
+
+  // Also fire via gtag for GA4
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', event, data);
+  }
+};
+
+// WhatsApp conversion — Google Ads conversion event
+export const trackWhatsAppConversion = (locale: string) => {
+  if (typeof window === 'undefined') return;
+
+  // GA4 + Google Ads: generate_lead event
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'generate_lead', {
+      currency: 'TRY',
+      method: 'whatsapp',
+      locale,
+    });
+  }
+
+  // DataLayer fallback
+  trackEvent('whatsapp_click', {
+    cta_location: 'floating_button',
+    method: 'whatsapp',
+    locale,
+  });
 };
 
 // Form Tracking Events

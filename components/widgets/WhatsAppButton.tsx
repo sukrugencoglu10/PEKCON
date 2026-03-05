@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
-import { trackEvent } from '@/lib/gtm';
+import { trackWhatsAppConversion } from '@/lib/gtm';
 
 export default function WhatsAppButton() {
   const params = useParams();
@@ -21,12 +21,7 @@ export default function WhatsAppButton() {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
   const handleClick = () => {
-    trackEvent('whatsapp_click', {
-      cta_location: 'floating_button',
-      phone_number: displayNumber,
-      method: 'whatsapp',
-      locale: locale
-    });
+    trackWhatsAppConversion(locale);
   };
 
   return (
