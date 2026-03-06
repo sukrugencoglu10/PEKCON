@@ -41,7 +41,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
           </div>
 
           {/* Hizmetler */}
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="text-lg font-display font-bold mb-4">{t.footer.services}</h4>
             <ul className="space-y-2">
               <li>
@@ -63,7 +63,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
           </div>
 
           {/* Kurumsal */}
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="text-lg font-display font-bold mb-4">{t.footer.corporate}</h4>
             <ul className="space-y-2">
               <li>
@@ -85,28 +85,28 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
           </div>
 
           {/* İletişim */}
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="text-lg font-display font-bold mb-4">{t.footer.contact}</h4>
             <ul className="space-y-3">
-              <li className="flex items-start space-x-3">
-                <Phone size={20} className="text-primary-500 mt-1 flex-shrink-0" />
+              <li className="flex items-center justify-center md:justify-start space-x-3">
+                <Phone size={20} className="text-primary-500 flex-shrink-0" />
                 <a href="tel:+902122979758" className="text-dark-700 hover:text-primary-500 transition-colors">
                   +90 (212) 297 97 58
                 </a>
               </li>
-              <li className="flex items-start space-x-3">
-                <Mail size={20} className="text-primary-500 mt-1 flex-shrink-0" />
+              <li className="flex items-center justify-center md:justify-start space-x-3">
+                <Mail size={20} className="text-primary-500 flex-shrink-0" />
                 <a href="mailto:info@pekcon.com.tr" className="text-dark-700 hover:text-primary-500 transition-colors">
                   info@pekcon.com.tr
                 </a>
               </li>
               <li>
-                <Link 
+                <Link
                   href={locale === 'en' ? '/en/contact' : `/${locale}/iletisim`}
-                  className="flex items-start space-x-3 group cursor-pointer"
+                  className="flex items-start justify-center md:justify-start space-x-3 group cursor-pointer"
                 >
                   <MapPin size={20} className="text-primary-500 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="text-dark-700 group-hover:text-primary-500 transition-colors">
+                  <span className="text-dark-700 group-hover:text-primary-500 transition-colors text-center md:text-left">
                     Dap vadi, Merkez mh. Seçkin sokak<br />
                     no2-4a iç kapı:172, Z Ofis<br />
                     34406 Kağıthane/İstanbul
