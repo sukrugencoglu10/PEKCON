@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { trackWhatsAppConversion } from '@/lib/gtm';
 
@@ -10,12 +9,12 @@ export default function WhatsAppButton() {
 
   const phoneNumber = '905543545201'; // +90 554 354 52 01
   const displayNumber = '+90 554 354 52 01';
-  
+
   // Localized messages
-  const message = locale === 'en' 
+  const message = locale === 'en'
     ? "Hello, I would like to get information about containers."
     : "Merhaba, konteyner hakkında bilgi almak istiyorum.";
-    
+
   // Encode message for URL
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -25,17 +24,12 @@ export default function WhatsAppButton() {
   };
 
   return (
-    <motion.a
+    <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
-      className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all group"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all group hover:scale-110 active:scale-95 animate-[fadeInUp_0.3s_ease_forwards]"
       aria-label="WhatsApp ile iletişime geç"
     >
       {/* WhatsApp Logo SVG */}
@@ -59,6 +53,6 @@ export default function WhatsAppButton() {
 
       {/* Pulse animation ring */}
       <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-75 animate-ping" />
-    </motion.a>
+    </a>
   );
 }

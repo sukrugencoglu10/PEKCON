@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useScroll, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,11 +13,12 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
   const t = getTranslations(locale);
   const [quoteInput, setQuoteInput] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
-  // Mouse parallax tracking
+  // Mouse parallax tracking (desktop only)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+
   // Transform mouse position to parallax movement (reverse direction)
   const parallaxX1 = useTransform(mouseX, [-1000, 1000], [30, -30]);
   const parallaxY1 = useTransform(mouseY, [-1000, 1000], [30, -30]);
@@ -25,12 +26,16 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
   const parallaxY2 = useTransform(mouseY, [-1000, 1000], [-20, 20]);
   const parallaxX3 = useTransform(mouseX, [-1000, 1000], [15, -15]);
   const parallaxY3 = useTransform(mouseY, [-1000, 1000], [15, -15]);
-  
+
   // Scroll-triggered anti-gravity
   const { scrollY } = useScroll();
   const scrollFloat = useTransform(scrollY, [0, 500], [0, -150]);
-  
+
   useEffect(() => {
+    // Only add mouse listener on desktop (no pointer/mouse on mobile)
+    const isDesktop = window.matchMedia('(pointer: fine)').matches;
+    if (!isDesktop) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       // Center-based coordinates
       const centerX = window.innerWidth / 2;
@@ -38,8 +43,8 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
       mouseX.set(e.clientX - centerX);
       mouseY.set(e.clientY - centerY);
     };
-    
-    window.addEventListener('mousemove', handleMouseMove);
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
@@ -74,47 +79,49 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
         {/* Gradient Overlay - Enhanced for text readability and premium feel */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-secondary-900/80 to-dark-900/90 z-0" />
 
-        {/* Floating Geometric Shapes - Layered with Depth */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          {/* Far Layer - Most Blurred */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-64 h-32 bg-primary-500/10 rounded-lg blur-xl"
-            style={{ x: parallaxX1, y: parallaxY1, rotateZ: 12 }}
-            variants={antiGravityFloat}
-            animate="animate"
-          />
-          
-          {/* Mid Layer - Moderate Blur */}
-          <motion.div
-            className="absolute top-1/3 right-1/4 w-48 h-48 bg-accent-500/15 rounded-lg blur-lg"
-            style={{ x: parallaxX2, y: parallaxY2, rotateZ: -12 }}
-            variants={floatSlow}
-            animate="animate"
-          />
-          
-          {/* Near Layer - Minimal Blur */}
-          <motion.div
-            className="absolute bottom-1/4 left-1/3 w-56 h-24 bg-primary-500/20 rounded-lg blur-sm"
-            style={{ x: parallaxX3, y: parallaxY3, rotateZ: 6 }}
-            variants={floatFast}
-            animate="animate"
-          />
-          
-          {/* Additional Floating Elements for Richness */}
-          <motion.div
-            className="absolute top-1/2 right-1/3 w-40 h-40 bg-secondary-500/10 rounded-full blur-md"
-            style={{ x: useTransform(mouseX, [-1000, 1000], [-25, 25]), y: useTransform(mouseY, [-1000, 1000], [20, -20]) }}
-            variants={floatComplex}
-            animate="animate"
-          />
-          
-          <motion.div
-            className="absolute bottom-1/3 right-1/4 w-32 h-64 bg-accent-500/10 rounded-lg blur-lg"
-            style={{ x: useTransform(mouseX, [-1000, 1000], [35, -35]), y: scrollFloat, rotateZ: -8 }}
-            variants={antiGravityFloat}
-            animate="animate"
-          />
-        </div>
+        {/* Floating Geometric Shapes - Desktop only to preserve mobile performance */}
+        {!prefersReducedMotion && (
+          <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none hidden md:block">
+            {/* Far Layer - Most Blurred */}
+            <motion.div
+              className="absolute top-1/4 left-1/4 w-64 h-32 bg-primary-500/10 rounded-lg blur-xl"
+              style={{ x: parallaxX1, y: parallaxY1, rotateZ: 12 }}
+              variants={antiGravityFloat}
+              animate="animate"
+            />
+
+            {/* Mid Layer - Moderate Blur */}
+            <motion.div
+              className="absolute top-1/3 right-1/4 w-48 h-48 bg-accent-500/15 rounded-lg blur-lg"
+              style={{ x: parallaxX2, y: parallaxY2, rotateZ: -12 }}
+              variants={floatSlow}
+              animate="animate"
+            />
+
+            {/* Near Layer - Minimal Blur */}
+            <motion.div
+              className="absolute bottom-1/4 left-1/3 w-56 h-24 bg-primary-500/20 rounded-lg blur-sm"
+              style={{ x: parallaxX3, y: parallaxY3, rotateZ: 6 }}
+              variants={floatFast}
+              animate="animate"
+            />
+
+            {/* Additional Floating Elements for Richness */}
+            <motion.div
+              className="absolute top-1/2 right-1/3 w-40 h-40 bg-secondary-500/10 rounded-full blur-md"
+              style={{ x: parallaxX2, y: parallaxY1 }}
+              variants={floatComplex}
+              animate="animate"
+            />
+
+            <motion.div
+              className="absolute bottom-1/3 right-1/4 w-32 h-64 bg-accent-500/10 rounded-lg blur-lg"
+              style={{ x: parallaxX1, y: scrollFloat, rotateZ: -8 }}
+              variants={antiGravityFloat}
+              animate="animate"
+            />
+          </div>
+        )}
       </div>
 
       {/* Content */}
