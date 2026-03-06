@@ -17,7 +17,18 @@
       "Bash(npx tsc:*)",
       "mcp__Claude_Preview__preview_start",
       "Bash(curl:*)",
-      "Bash(npx next build:*)"
+      "Bash(npx next build:*)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(npm run build)",
+      "Bash(npx vercel ls)",
+      "Bash(git checkout 5713989 -- public/favicon.svg)",
+      "Bash(grep -r \"icons\\\\|favicon\" /c/Users/sukru/OneDrive/PEKCON/app/[locale]/ --include=\"*.tsx\" -l)",
+      "Bash(grep -r \"icons\\\\|favicon\" /c/Users/sukru/OneDrive/PEKCON/app/[locale]/ --include=\"*.tsx\")",
+      "Bash(du -h C:/Users/sukru/OneDrive/PEKCON/public/*.jpeg C:/Users/sukru/OneDrive/PEKCON/public/*.webp)",
+      "Bash(node -e \":*)",
+      "Bash(cmd /c \"taskkill /IM OneDrive.exe /F\")",
+      "Bash(cmd /c \"netstat -ano | findstr :3000\")"
     ]
   }
 }

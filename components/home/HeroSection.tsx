@@ -69,7 +69,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0">
         <Image
-          src="/x.jpeg"
+          src="/x.webp"
           alt="Yük Konteynerleri - PEKCON"
           fill
           className="object-cover"

@@ -60,7 +60,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
       {/* ... (background images remain same) */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/Free Cargo Stock Images _ StockCake.jpeg"
+          src="/Free Cargo Stock Images _ StockCake.webp"
           alt="Konteyner Stokları"
           fill
           className="object-cover opacity-100"

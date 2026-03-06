@@ -51,7 +51,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {/* Image on the right */}
             <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/x2.jpeg"
+                src="/x2.webp"
                 alt="PEKCON Container & Logistics"
                 fill
                 className="object-cover"
