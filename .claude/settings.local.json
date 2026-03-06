@@ -28,7 +28,15 @@
       "Bash(du -h C:/Users/sukru/OneDrive/PEKCON/public/*.jpeg C:/Users/sukru/OneDrive/PEKCON/public/*.webp)",
       "Bash(node -e \":*)",
       "Bash(cmd /c \"taskkill /IM OneDrive.exe /F\")",
-      "Bash(cmd /c \"netstat -ano | findstr :3000\")"
+      "Bash(cmd /c \"netstat -ano | findstr :3000\")",
+      "Bash(cmd /c \"powershell -Command \"\"Copy-Item ''C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_20.webp'' ''C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\20.webp'' -Force; Copy-Item ''C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_40.webp'' ''C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\40.webp'' -Force; Copy-Item ''C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_40h.webp'' ''C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\40h.webp'' -Force; Write-Host ''Tamam''\"\"\")",
+      "Bash(cmd /c \"move /y C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_20.webp C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\20.webp && move /y C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_40.webp C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\40.webp && move /y C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_40h.webp C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\40h.webp && echo Tamam\")",
+      "Bash(cmd /c \"del /f /q C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\20.webp 2>&1 && echo deleted\")",
+      "Bash(cmd /c \"del /f /q C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_20.webp C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_40.webp C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\opt_40h.webp 2>&1 && echo opt silindi\")",
+      "Bash(cmd /c \"del /f /q \"\"C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\x.jpeg\"\" \"\"C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\public\\\\x2.jpeg\"\" && echo silindi\")",
+      "Bash(git restore --staged \"public/20.webp.tmp\" \"public/_tmp_20.webp\")",
+      "Bash(git rm --cached \"public/20.webp.tmp\" \"public/_tmp_20.webp\")",
+      "Bash(git restore --staged public/)"
     ]
   }
 }
