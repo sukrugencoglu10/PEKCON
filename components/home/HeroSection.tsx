@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useMotionValue, useTransform, useScroll, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
@@ -14,30 +14,27 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
   const [quoteInput, setQuoteInput] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const isDesktopRef = useRef<boolean | null>(null);
 
-  // Mouse parallax tracking (desktop only)
+  // Animations only initialized on desktop (md breakpoint = 768px)
+  // useMotionValue/useScroll hooks must be called unconditionally (React rules),
+  // but we only set values and attach listeners when on desktop.
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-
-  // Transform mouse position to parallax movement (reverse direction)
   const parallaxX1 = useTransform(mouseX, [-1000, 1000], [30, -30]);
   const parallaxY1 = useTransform(mouseY, [-1000, 1000], [30, -30]);
   const parallaxX2 = useTransform(mouseX, [-1000, 1000], [-20, 20]);
   const parallaxY2 = useTransform(mouseY, [-1000, 1000], [-20, 20]);
   const parallaxX3 = useTransform(mouseX, [-1000, 1000], [15, -15]);
   const parallaxY3 = useTransform(mouseY, [-1000, 1000], [15, -15]);
-
-  // Scroll-triggered anti-gravity
   const { scrollY } = useScroll();
   const scrollFloat = useTransform(scrollY, [0, 500], [0, -150]);
 
   useEffect(() => {
-    // Only add mouse listener on desktop (no pointer/mouse on mobile)
-    const isDesktop = window.matchMedia('(pointer: fine)').matches;
-    if (!isDesktop) return;
+    isDesktopRef.current = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
+    if (!isDesktopRef.current) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Center-based coordinates
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
       mouseX.set(e.clientX - centerX);
