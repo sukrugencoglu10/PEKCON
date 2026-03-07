@@ -63,6 +63,7 @@ const config: Config = {
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite',
         'fadeInUp': 'fadeInUp 0.3s ease forwards',
+        'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
       },
       keyframes: {
         fadeInUp: {
@@ -92,6 +93,12 @@ const config: Config = {
         glow: {
           '0%, 100%': { boxShadow: '0 0 20px rgba(0, 102, 255, 0.3)' },
           '50%': { boxShadow: '0 0 40px rgba(0, 212, 255, 0.6)' },
+        },
+        heartbeat: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '25%': { transform: 'scale(1.1)' },
+          '50%': { transform: 'scale(1)' },
+          '75%': { transform: 'scale(1.1)' },
         },
       },
       backdropBlur: {

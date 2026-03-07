@@ -21,6 +21,8 @@ function buildEmailHtml(data: {
   const categoryMap: Record<string, string> = {
     standard_cargo: 'Standart Yük',
     refrigerated: 'Soğutmalı',
+    flat_rack: 'Flat Rack',
+    open_top: 'Open Top',
     custom: 'Özel',
   };
   const categoryLabel = categoryMap[data.containerCategory] ?? data.containerCategory;

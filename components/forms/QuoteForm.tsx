@@ -109,7 +109,12 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
     
     if (step === 1) {
       fieldsToValidate = ['transactionType', 'containerCategory', 'quantity'];
-      if (containerCategory === 'standard_cargo') {
+      if (
+        containerCategory === 'standard_cargo' ||
+        containerCategory === 'refrigerated' ||
+        containerCategory === 'flat_rack' ||
+        containerCategory === 'open_top'
+      ) {
         fieldsToValidate.push('containerType');
       }
     } else if (step === 2) {
@@ -287,6 +292,8 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
                   { value: '', label: f.select },
                   { value: 'standard_cargo', label: f.standard },
                   { value: 'refrigerated', label: f.refrigerated },
+                  { value: 'flat_rack', label: f.flat_rack },
+                  { value: 'open_top', label: f.open_top },
                   { value: 'custom', label: f.custom },
                 ]}
               />
@@ -306,8 +313,24 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
                       { value: '40DC', label: "40' DC (Dry Container)" },
                       { value: '40HC', label: "40' HC (High Cube)" },
                       { value: '45HC', label: "45' HC (High Cube)" },
-                      { value: '20OT', label: "20' OT (Open Top)" },
-                      { value: '40OT', label: "40' OT (Open Top)" },
+                    ]}
+                  />
+                </motion.div>
+              )}
+
+              {(containerCategory === 'refrigerated' || containerCategory === 'flat_rack' || containerCategory === 'open_top') && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                >
+                  <FormSelect
+                    label={`${f.type} *`}
+                    {...register('containerType')}
+                    error={errors.containerType?.message}
+                    options={[
+                      { value: '', label: f.select },
+                      { value: '20', label: "20'" },
+                      { value: '40', label: "40'" },
                     ]}
                   />
                 </motion.div>

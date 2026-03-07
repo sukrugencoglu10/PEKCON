@@ -5,7 +5,7 @@ export const quoteFormSchema = z.object({
   transactionType: z.enum(['purchase', 'rental'] as const, {
     error: 'Lütfen işlem türünü seçiniz',
   }),
-  containerCategory: z.enum(['standard_cargo', 'refrigerated', 'custom'] as const, {
+  containerCategory: z.enum(['standard_cargo', 'refrigerated', 'flat_rack', 'open_top', 'custom'] as const, {
     error: 'Lütfen konteyner kategorisini seçiniz',
   }),
   containerType: z.string().optional(),
