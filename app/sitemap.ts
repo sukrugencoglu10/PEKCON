@@ -1,28 +1,43 @@
 import { MetadataRoute } from 'next';
 
+const trRoutes = [
+  { slug: '',           changeFreq: 'weekly' as const, priority: 1.0 },
+  { slug: 'hakkimizda', changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'hizmetlerimiz', changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'konteynerlar',  changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'iletisim',      changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'teklif-al',     changeFreq: 'daily' as const,  priority: 0.9 },
+];
+
+const enRoutes = [
+  { slug: '',          changeFreq: 'weekly' as const, priority: 1.0 },
+  { slug: 'about',     changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'services',  changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'containers',changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'contact',   changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'quote',     changeFreq: 'daily' as const,  priority: 0.9 },
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://pekcon.com';
-  const locales = ['tr', 'en'];
-  const routes = [
-    '',
-    'hakkimizda',
-    'hizmetlerimiz',
-    'konteynerlar',
-    'iletisim',
-    'teklif-al',
-  ];
-
+  const lastModified = new Date();
   const urls: MetadataRoute.Sitemap = [];
 
-  locales.forEach((locale) => {
-    routes.forEach((route) => {
-      const path = route ? `/${route}` : '';
-      urls.push({
-        url: `${baseUrl}/${locale}${path}`,
-        lastModified: new Date(),
-        changeFrequency: route === 'teklif-al' ? 'daily' : route === '' ? 'weekly' : 'weekly',
-        priority: route === '' ? 1.0 : route === 'teklif-al' ? 0.9 : 0.8,
-      });
+  trRoutes.forEach(({ slug, changeFreq, priority }) => {
+    urls.push({
+      url: `${baseUrl}/tr${slug ? `/${slug}` : ''}`,
+      lastModified,
+      changeFrequency: changeFreq,
+      priority,
+    });
+  });
+
+  enRoutes.forEach(({ slug, changeFreq, priority }) => {
+    urls.push({
+      url: `${baseUrl}/en${slug ? `/${slug}` : ''}`,
+      lastModified,
+      changeFrequency: changeFreq,
+      priority,
     });
   });
 
