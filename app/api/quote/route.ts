@@ -165,6 +165,76 @@ function buildEmailHtml(data: {
   `.trim();
 }
 
+async function syncToHubSpot(data: {
+  transactionType: string;
+  containerCategory: string;
+  containerType?: string;
+  quantity: number;
+  region?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  companyName?: string;
+  notes?: string;
+}): Promise<void> {
+  const token = process.env.HUBSPOT_ACCESS_TOKEN;
+  if (!token) return;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+
+  // 1. Contact oluştur (409 = zaten var, devam et)
+  let contactId: string | null = null;
+  const contactRes = await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      properties: {
+        email: data.email ?? '',
+        phone: data.phone ?? '',
+        firstname: data.fullName?.split(' ')[0] ?? '',
+        lastname: data.fullName?.split(' ').slice(1).join(' ') ?? '',
+        company: data.companyName ?? '',
+      },
+    }),
+  });
+  if (contactRes.ok) {
+    const c = await contactRes.json();
+    contactId = c.id ?? null;
+  }
+
+  // 2. Deal oluştur
+  const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
+  const dealName = `${typeLabel} — ${data.containerType ?? data.containerCategory} x${data.quantity}${data.region ? ` (${data.region})` : ''}`;
+  const dealRes = await fetch('https://api.hubapi.com/crm/v3/objects/deals', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      properties: {
+        dealname: dealName,
+        dealstage: 'appointmentscheduled',
+        pipeline: 'default',
+        description: data.notes ?? '',
+      },
+    }),
+  });
+  if (!dealRes.ok || !contactId) return;
+  const deal = await dealRes.json();
+  const dealId = deal.id;
+
+  // 3. Deal ↔ Contact ilişkilendir
+  await fetch(
+    `https://api.hubapi.com/crm/v4/objects/deals/${dealId}/associations/contacts/${contactId}/labels`,
+    {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify([{ associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 3 }]),
+    }
+  );
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -179,6 +249,11 @@ export async function POST(request: NextRequest) {
       html: buildEmailHtml(validatedData),
       replyTo: validatedData.email,
     });
+
+    // Fire-and-forget — HubSpot hatası e-postayı engellemez
+    syncToHubSpot(validatedData).catch((err) =>
+      console.error('[HubSpot sync error]', err)
+    );
 
     return NextResponse.json(
       { success: true, message: 'Quote request received' },

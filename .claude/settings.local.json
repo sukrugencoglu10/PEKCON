@@ -38,7 +38,12 @@
       "Bash(git rm --cached \"public/20.webp.tmp\" \"public/_tmp_20.webp\")",
       "Bash(git restore --staged public/)",
       "Bash(git fetch origin)",
-      "Bash(git pull origin main)"
+      "Bash(git pull origin main)",
+      "WebFetch(domain:www.pekcon.com.tr)",
+      "WebFetch(domain:pekcon.com.tr)",
+      "WebFetch(domain:www.pekcon.com)",
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/api -name *.ts -o -name *.tsx)",
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON/lib -name *.ts)"
     ]
   }
 }

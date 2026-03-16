@@ -56,20 +56,20 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
     <header className="sticky top-0 left-0 right-0 z-50 transition-all duration-300 bg-white">
       {/* Top Bar */}
       <div className="bg-secondary-500 text-white py-1.5">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-4 text-[10px] sm:text-[11px] md:text-xs font-medium">
+        <div className="container mx-auto px-4 lg:px-12 xl:px-20">
+          <div className="flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-1 md:space-x-4 text-[12px] sm:text-[13px] md:text-sm font-medium">
             <a
               href="tel:+902122979758"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
-              <Phone size={14} className="w-3 h-3 md:w-3.5 md:h-3.5" />
+              <Phone size={16} className="w-3.5 h-3.5 md:w-4 md:h-4" />
               <span>+90 (212) 297 97 58</span>
             </a>
             <a
               href="mailto:info@pekcon.com.tr"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
-              <Mail size={14} className="w-3 h-3 md:w-3.5 md:h-3.5" />
+              <Mail size={16} className="w-3.5 h-3.5 md:w-4 md:h-4" />
               <span>info@pekcon.com.tr</span>
             </a>
           </div>
@@ -78,7 +78,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
 
       {/* Main Header */}
       <div className="bg-white border-b-2 border-gray-300 shadow-md py-3 md:py-2">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-12 xl:px-20">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link
@@ -126,7 +126,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "px-3 py-1.5 text-sm rounded-md font-medium transition-all duration-300",
+                    "px-3 py-1.5 text-lg rounded-md font-medium transition-all duration-300",
                     isActive(link.href)
                       ? "bg-secondary-500 text-white"
                       : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
@@ -139,11 +139,6 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
 
             {/* CTA & Language Switcher */}
             <div className="hidden lg:flex items-center">
-              <Link href={locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`}>
-                <Button variant="primary" size="md" className="scale-100 text-sm py-1.5 px-4 hidden md:block">
-                  {t.nav.quote}
-                </Button>
-              </Link>
               <div className="flex items-center space-x-2 ml-[20px]">
                 <Link href="/tr">
                   <button
@@ -205,14 +200,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                     {link.label}
                   </Link>
                 ))}
-                <Link
-                  href={locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Button variant="primary" size="md" className="w-full mt-2">
-                    {t.nav.quote}
-                  </Button>
-                </Link>
+                {/* Removed Get Quote button from mobile menu */}
                 <div className="flex items-center justify-center space-x-2 mt-4">
                   <Link href="/tr">
                     <button

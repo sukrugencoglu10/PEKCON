@@ -1,11 +1,11 @@
-﻿export const translations = {
+export const translations = {
   tr: {
     // Hero Section
     hero: {
       title1: 'Satılık',
       title2: 'Uluslararası Dolaşımda',
       title3: 'Yük Konteynerleri',
-      description: 'Sıfır ve İkinci El Seçeneklerimizle\nİhtiyacınız Olan Her Ebatta, Yüksek Kondisyonda Konteyner Çözümleri ile\nKüresel ve Yerel Operasyonlarınızın Güvencesiyiz.',
+      description: 'Sıfır ve İkinci El Seçeneklerimizle İhtiyacınız Olan Her Ebatta,\nYüksek Kondisyonda Konteyner Çözümleri ile Küresel ve Yerel Operasyonlarınızın Güvencesiyiz.',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
       cta3: 'İletişime Geçiniz',
@@ -261,7 +261,7 @@
       title1: 'for Sale',
       title2: 'SOC Containers',
       title3: 'in International Circulation',
-      description: 'Your reliable solution partner in all sizes and conditions in global logistics;\nWe stand by you with new and used containers.',
+      description: 'Your reliable solution partner in all sizes and conditions in global logistics; We stand by you with new and used containers.',
       cta1: 'Get Free Quote',
       cta3: 'Contact Us',
       quickQuote: {

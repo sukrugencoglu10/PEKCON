@@ -207,8 +207,8 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
       {/* Progress Header */}
-      <div className="bg-gray-50 border-b border-gray-200 p-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-gray-50 border-b border-gray-200 p-4 md:p-6">
+        <div className="flex justify-between items-center mb-2 relative">
           {steps.map((step, index) => (
             <div key={step.id} className="flex flex-col items-center relative z-10 w-1/3">
               <div 
@@ -220,16 +220,16 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
               >
                 {step.id < currentStep ? <Check size={16} /> : step.id}
               </div>
-              <span className={`text-xs mt-2 font-medium ${currentStep >= step.id ? 'text-primary-700' : 'text-gray-400'}`}>
+              <span className={`text-[10px] sm:text-xs mt-2 font-medium text-center leading-tight px-1 ${currentStep >= step.id ? 'text-primary-700' : 'text-gray-400'}`}>
                 {step.title}
               </span>
             </div>
           ))}
-          {/* Connecting Line */}
-          <div className="absolute top-[45px] left-0 right-0 h-[2px] bg-gray-200 -z-0 mx-10 sm:mx-20" />
+          {/* Connecting Line - Precisely centered between circle centers (16.6% to 83.3%) */}
+          <div className="absolute top-4 left-[16.6%] right-[16.6%] h-[2px] bg-gray-200 -z-0" />
           <div 
-            className="absolute top-[45px] left-0 h-[2px] bg-primary-500 -z-0 mx-10 sm:mx-20 transition-all duration-500" 
-            style={{ width: `${((currentStep - 1) / 2) * (100 - ((typeof window !== 'undefined' ? window.innerWidth : 1024) < 640 ? 40 : 20))}%` }}
+            className="absolute top-4 left-[16.6%] h-[2px] bg-primary-500 -z-0 transition-all duration-500" 
+            style={{ width: `${((currentStep - 1) / 2) * 66.8}%` }}
           /> 
         </div>
       </div>
@@ -345,12 +345,25 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
                 max={1000}
               />
 
-              <FormInput
-                type="text"
-                label={f.region}
-                placeholder={f.regionPlaceholder}
+              <FormSelect
+                label={`${f.region} *`}
                 {...register('region')}
                 error={errors.region?.message}
+                options={[
+                  { value: '', label: f.select },
+                  { value: 'istanbul_avrupa', label: 'İstanbul (Avrupa)' },
+                  { value: 'istanbul_anadolu', label: 'İstanbul (Anadolu)' },
+                  { value: 'kocaeli_gebze', label: 'Kocaeli (Gebze)' },
+                  { value: 'izmir_aliaga', label: 'İzmir (Aliağa)' },
+                  { value: 'mersin', label: 'Mersin' },
+                  { value: 'gemlik', label: 'Bursa (Gemlik)' },
+                  { value: 'iskenderun', label: 'İskenderun' },
+                  { value: 'samsun', label: 'Samsun' },
+                  { value: 'hamburg', label: 'Hamburg (Almanya)' },
+                  { value: 'rotterdam', label: 'Rotterdam (Hollanda)' },
+                  { value: 'antwerp', label: 'Antalya' },
+                  { value: 'diger', label: 'Diğer / Belirtilmemiş' },
+                ]}
               />
             </motion.div>
           )}
