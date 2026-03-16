@@ -259,8 +259,8 @@ export const translations = {
     // Hero Section
     hero: {
       title1: 'for Sale',
-      title2: 'International SOC',
-      title3: 'Cargo Containers',
+      title2: 'International',
+      title3: 'SOC Containers',
       description: 'Your Reliable Solution Partner <br class="sm:hidden" /> in Global Logistics; <br class="sm:hidden" /> With New and Used Containers <br class="sm:hidden" /> in All Sizes and Conditions.',
       cta1: 'Get Free Quote',
       cta3: 'Contact Us',
