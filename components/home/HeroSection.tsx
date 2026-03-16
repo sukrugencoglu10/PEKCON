@@ -96,7 +96,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
             <motion.h1 variants={slideUp} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-black text-white mb-6 leading-[1.1] flex flex-col drop-shadow-lg">
               <span>{t.hero.title1}</span>
               <span className="bg-gradient-to-r from-primary-400 via-primary-200 to-accent-400 bg-clip-text text-transparent pb-2">{t.hero.title2}</span>
-              <span className="whitespace-nowrap">{t.hero.title3}</span>
+              <span className="sm:whitespace-nowrap">{t.hero.title3}</span>
             </motion.h1>
 
             <motion.p 

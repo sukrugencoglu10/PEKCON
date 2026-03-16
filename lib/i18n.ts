@@ -259,9 +259,9 @@ export const translations = {
     // Hero Section
     hero: {
       title1: 'for Sale',
-      title2: 'SOC Containers',
-      title3: 'in International Circulation',
-      description: 'Your reliable solution partner in all sizes and conditions in global logistics; We stand by you with new and used containers.',
+      title2: 'International SOC',
+      title3: 'Cargo Containers',
+      description: 'Your Reliable Solution Partner <br class="sm:hidden" /> in Global Logistics; <br class="sm:hidden" /> With New and Used Containers <br class="sm:hidden" /> in All Sizes and Conditions.',
       cta1: 'Get Free Quote',
       cta3: 'Contact Us',
       quickQuote: {
