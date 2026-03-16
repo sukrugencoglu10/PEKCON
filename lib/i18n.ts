@@ -221,7 +221,7 @@ export const translations = {
         category: 'Konteyner Kategorisi',
         select: 'Seçiniz',
         standard: 'Standart Yük Konteyneri',
-        refrigerated: 'Buzdolabı Konteyneri',
+        refrigerated: 'Reefer Konteyneri',
         flat_rack: 'Flat Rack Konteyneri',
         open_top: 'Open Top Konteyneri',
         custom: 'Özel Üretim',
