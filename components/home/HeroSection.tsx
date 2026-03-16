@@ -90,7 +90,7 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 -mt-10 lg:-mt-20"
+          className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 -mt-4 lg:-mt-10"
         >
           <div className="flex-1 text-center lg:text-left max-w-2xl">
             <motion.h1 variants={slideUp} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-black text-white mb-6 leading-[1.1] flex flex-col drop-shadow-lg">
