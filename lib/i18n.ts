@@ -5,7 +5,7 @@ export const translations = {
       title1: 'Satılık',
       title2: 'Uluslararası Dolaşımda',
       title3: 'Yük Konteynerleri',
-      description: 'Sıfır ve İkinci El Seçeneklerimizle İhtiyacınız Olan Her Ebatta,\nYüksek Kondisyonda Konteyner Çözümleri ile Küresel ve Yerel Operasyonlarınızın Güvencesiyiz.',
+      description: 'Sıfır ve İkinci El Seçeneklerimizle <br class="sm:hidden" /> İhtiyacınız Olan Her Ebatta,\nYüksek Kondisyonda Konteyner Çözümleri ile Küresel ve Yerel Operasyonlarınızın Güvencesiyiz.',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
       cta3: 'İletişime Geçiniz',

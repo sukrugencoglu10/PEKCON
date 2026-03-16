@@ -99,9 +99,11 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
               <span className="whitespace-nowrap">{t.hero.title3}</span>
             </motion.h1>
 
-            <motion.p variants={slideUp} className="text-lg md:text-xl text-gray-200 mb-10 max-w-4xl leading-relaxed drop-shadow-md whitespace-pre-line">
-              {t.hero.description}
-            </motion.p>
+            <motion.p 
+              variants={slideUp} 
+              className="text-lg md:text-xl text-gray-200 mb-10 max-w-4xl leading-relaxed drop-shadow-md whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t.hero.description }}
+            />
 
             <motion.div variants={slideUp} className="flex flex-col sm:flex-row items-center lg:justify-start gap-4">
               <Link href="https://wa.me/905543545201" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
