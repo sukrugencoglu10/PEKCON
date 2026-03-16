@@ -46,6 +46,14 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
     if (animState !== 'idle') return;
     
     e.preventDefault();
+    
+    // Only animate on mobile/tablet, skip on desktop as requested
+    if (isDesktopRef.current) {
+      document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' });
+      trackCTAClick('hero_quote_scroll', 'hero');
+      return;
+    }
+
     setAnimState('transforming');
     
     // Step 1: Transforming to Ship (0.6s)
