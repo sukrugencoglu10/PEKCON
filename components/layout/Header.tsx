@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, Mail, ChevronDown, Calculator } from "lucide-react";
+import { Menu, X, Phone, Mail, ChevronDown, Calculator, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { getTranslations, type Locale } from "@/lib/i18n";
@@ -60,14 +60,24 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
 
   const servicesDropdown: DropdownItem[] = locale === 'en' ? [
     {
+      href: `/en/services`,
+      label: t.nav.services || 'Our Services',
+      icon: <Layers size={16} />,
+    },
+    {
       href: `/en/cost-calculator`,
       label: t.calculator?.title || 'Cost Calculator',
       icon: <Calculator size={16} />,
     },
   ] : [
     {
+      href: `/${locale}/hizmetlerimiz`,
+      label: t.nav.services || 'Hizmetlerimiz',
+      icon: <Layers size={16} />,
+    },
+    {
       href: `/${locale}/maliyet-hesaplayici`,
-      label: t.calculator?.title || 'Maliyet Hesaplayıcı',
+      label: t.calculator?.title || 'Yurt İçi Konteyner Taşıma Maliyet Hesaplayıcı',
       icon: <Calculator size={16} />,
     },
   ];
@@ -154,7 +164,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-2" ref={dropdownRef}>
+            <nav className="hidden lg:flex items-center space-x-5" ref={dropdownRef}>
               {navLinks.map((link) => (
                 <div key={link.href} className="relative">
                   {link.dropdown ? (
@@ -165,20 +175,13 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                       <Link
                         href={link.href}
                         className={cn(
-                          "px-3 py-1.5 text-lg rounded-md font-medium transition-all duration-300 flex items-center gap-1",
+                          "px-3 py-1.5 text-lg rounded-md font-medium transition-all duration-300",
                           isActive(link.href)
                             ? "bg-secondary-500 text-white"
                             : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
                         )}
                       >
                         {link.label}
-                        <ChevronDown
-                          size={15}
-                          className={cn(
-                            "transition-transform duration-200",
-                            openDropdown === link.href ? "rotate-180" : ""
-                          )}
-                        />
                       </Link>
 
                       <AnimatePresence>

@@ -287,10 +287,16 @@ export const translations = {
     exitPopup: {
       title: 'Gitmeden Önce...',
       subtitle: 'Size özel konteyner fiyat teklifi almak ister misiniz? Uzmanlarımız hemen yardımcı olsun.',
-      whatsapp: 'WhatsApp ile Teklif Al',
-      call: 'Hemen Ara: 0554 354 52 01',
-      form: 'Online Teklif Formu',
-      trust: '7+ yıl tecrübe • 100+ mutlu müşteri • Türkiye geneli hizmet',
+      whatsapp: "WhatsApp'dan Hızlı Teklif Al",
+      dismiss: 'Hayır, Teşekkürler',
+      trust: '15+ yıl tecrübe • 100+ mutlu müşteri • Türkiye geneli hizmet',
+    },
+    containerComparison: {
+      title: 'Hızlı Karşılaştırma',
+      length: 'Uzunluk',
+      volume: 'Hacim',
+      payload: 'Maks. Yük',
+      popular: 'En Popüler',
     },
   },
   en: {
@@ -580,10 +586,16 @@ export const translations = {
     exitPopup: {
       title: 'Before You Go...',
       subtitle: 'Would you like a personalized container price quote? Our experts are ready to help.',
-      whatsapp: 'Get Quote via WhatsApp',
-      call: 'Call Now: +90 554 354 52 01',
-      form: 'Online Quote Form',
-      trust: '7+ years experience • 100+ happy customers • Nationwide service',
+      whatsapp: 'Get a Quick Quote via WhatsApp',
+      dismiss: 'No, Thanks',
+      trust: '15+ years experience • 100+ happy customers • Nationwide service',
+    },
+    containerComparison: {
+      title: 'Quick Comparison',
+      length: 'Length',
+      volume: 'Volume',
+      payload: 'Max Payload',
+      popular: 'Most Popular',
     },
   },
 };

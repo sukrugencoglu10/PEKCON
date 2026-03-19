@@ -1,23 +1,45 @@
 'use client';
 
 import { useRef, useEffect, useCallback } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, animate } from 'framer-motion';
+import Image from 'next/image';
 
-// Container box dimensions (px) — roughly 40HC aspect ratio
-const W = 340;
-const H = 90;
-const D = 90;
+// Container dimension presets (px) — proportional to real dimensions
+const PRESETS = {
+  '20dc': { W: 180, H: 88, D: 88, label: '20\' DC' },
+  '40dc': { W: 340, H: 88, D: 88, label: '40\' DC' },
+  '40hc': { W: 340, H: 100, D: 88, label: '40\' HC' },
+} as const;
 
-export default function KonteynerScene() {
+export type ContainerType = keyof typeof PRESETS;
+
+interface Props {
+  containerType?: ContainerType;
+}
+
+export default function KonteynerScene({ containerType = '40hc' }: Props) {
   const dragging = useRef(false);
   const drag0 = useRef<{ mx: number; my: number; ry: number; rx: number } | null>(null);
+
+  const preset = PRESETS[containerType];
+  const W = useMotionValue(preset.W);
+  const H = useMotionValue(preset.H);
+  const D = useMotionValue(preset.D);
+
+  // Animate dimensions on containerType change
+  useEffect(() => {
+    const p = PRESETS[containerType];
+    animate(W, p.W, { duration: 0.6, ease: 'easeInOut' });
+    animate(H, p.H, { duration: 0.6, ease: 'easeInOut' });
+    animate(D, p.D, { duration: 0.6, ease: 'easeInOut' });
+  }, [containerType, W, H, D]);
 
   const ry = useMotionValue(28);
   const rx = useMotionValue(-12);
   const sry = useSpring(ry, { stiffness: 30, damping: 12 });
   const srx = useSpring(rx, { stiffness: 30, damping: 12 });
 
-  // Auto-rotate (paused while dragging)
+  // Auto-rotate
   useEffect(() => {
     let id: number;
     let t0 = 0;
@@ -59,20 +81,19 @@ export default function KonteynerScene() {
     drag0.current = null;
   }, []);
 
-  // Corrugation texture patterns
+  // Light corrugation textures
   const ch =
-    'repeating-linear-gradient(to right,transparent 0,transparent 9px,rgba(255,255,255,0.05) 9px,rgba(255,255,255,0.05) 10px)';
+    'repeating-linear-gradient(to right,transparent 0,transparent 9px,rgba(0,0,0,0.04) 9px,rgba(0,0,0,0.04) 10px)';
   const cv =
-    'repeating-linear-gradient(to bottom,transparent 0,transparent 9px,rgba(255,255,255,0.05) 9px,rgba(255,255,255,0.05) 10px)';
+    'repeating-linear-gradient(to bottom,transparent 0,transparent 9px,rgba(0,0,0,0.04) 9px,rgba(0,0,0,0.04) 10px)';
 
-  // Shared base style for every face
   const face: React.CSSProperties = {
     position: 'absolute',
     backfaceVisibility: 'hidden',
     WebkitBackfaceVisibility: 'hidden',
   };
 
-  // Corner casting helper
+  // Corner casting helper — lighter style
   const castings = (w: number, h: number) =>
     (
       [
@@ -90,23 +111,28 @@ export default function KonteynerScene() {
           top: t,
           width: 11,
           height: 11,
-          background: '#334155',
-          border: '1px solid #4b5563',
+          background: '#94a3b8',
+          border: '1px solid #b0bec5',
           borderRadius: 1,
         }}
       />
     ));
 
+  // Current dimensions (for static rendering — motion values drive 3D)
+  const cW = preset.W;
+  const cH = preset.H;
+  const cD = preset.D;
+
   return (
-    <div className="relative w-full h-[440px] flex items-center justify-center select-none">
-      {/* Cyan floor glow */}
+    <div className="relative w-full h-[280px] flex items-center justify-center select-none">
+      {/* Soft blue floor glow */}
       <div
         className="absolute pointer-events-none"
         style={{
           bottom: '22%',
           width: 380,
           height: 50,
-          background: 'radial-gradient(ellipse, rgba(6,182,212,0.22) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(0,105,180,0.12) 0%, transparent 70%)',
           filter: 'blur(22px)',
         }}
       />
@@ -121,224 +147,123 @@ export default function KonteynerScene() {
       >
         <motion.div
           style={{
-            width: W,
-            height: H,
+            width: cW,
+            height: cH,
             position: 'relative',
             transformStyle: 'preserve-3d',
             rotateY: sry,
             rotateX: srx,
           }}
+          animate={{ width: cW, height: cH }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
         >
           {/* ─── FRONT ─ Doors ─── */}
-          <div
+          <motion.div
             style={{
               ...face,
               left: 0,
               top: 0,
-              width: W,
-              height: H,
-              transform: `translateZ(${D / 2}px)`,
-              background: `${ch}, linear-gradient(170deg, #1e3a5f 0%, #0f2040 60%, #091628 100%)`,
-              border: '1px solid rgba(6,182,212,0.38)',
+              background: `${ch}, linear-gradient(170deg, #4a90c4 0%, #2a6fa8 60%, #1a5a8f 100%)`,
+              border: '1px solid rgba(0,105,180,0.4)',
             }}
+            animate={{ width: cW, height: cH, transform: `translateZ(${cD / 2}px)` }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
-            {/* Door center gap */}
-            <div
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: 0,
-                bottom: 0,
-                width: 2,
-                transform: 'translateX(-50%)',
-                background: 'rgba(6,182,212,0.55)',
-              }}
-            />
-            {/* Left lock rod */}
-            <div
-              style={{
-                position: 'absolute',
-                left: '23%',
-                top: '20%',
-                width: 5,
-                height: '60%',
-                background: 'linear-gradient(#475569, #64748b)',
-                borderRadius: 3,
-              }}
-            />
-            {/* Right lock rod */}
-            <div
-              style={{
-                position: 'absolute',
-                right: '23%',
-                top: '20%',
-                width: 5,
-                height: '60%',
-                background: 'linear-gradient(#475569, #64748b)',
-                borderRadius: 3,
-              }}
-            />
-            {/* Left hinges */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 5,
-                top: '22%',
-                width: 7,
-                height: 10,
-                background: '#334155',
-                borderRadius: 1,
-                boxShadow: '0 0 6px rgba(6,182,212,0.55)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                left: 5,
-                top: '62%',
-                width: 7,
-                height: 10,
-                background: '#334155',
-                borderRadius: 1,
-                boxShadow: '0 0 6px rgba(6,182,212,0.55)',
-              }}
-            />
-            {/* Right hinges */}
-            <div
-              style={{
-                position: 'absolute',
-                right: 5,
-                top: '22%',
-                width: 7,
-                height: 10,
-                background: '#334155',
-                borderRadius: 1,
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                right: 5,
-                top: '62%',
-                width: 7,
-                height: 10,
-                background: '#334155',
-                borderRadius: 1,
-              }}
-            />
-            {castings(W, H)}
-          </div>
+            {/* PEKCON favicon — big */}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Image src="/favicon.png" alt="PEKCON" width={48} height={48} style={{ opacity: 0.9, filter: 'brightness(1.8) drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} />
+            </div>
+            {castings(cW, cH)}
+          </motion.div>
 
           {/* ─── BACK ─── */}
-          <div
+          <motion.div
             style={{
               ...face,
               left: 0,
               top: 0,
-              width: W,
-              height: H,
-              transform: `rotateY(180deg) translateZ(${D / 2}px)`,
-              background: `${ch}, linear-gradient(170deg, #0a1520, #060f1a)`,
-              border: '1px solid rgba(6,182,212,0.15)',
+              background: `${ch}, linear-gradient(170deg, #3a7fb3, #1a5a8f)`,
+              border: '1px solid rgba(0,105,180,0.2)',
             }}
+            animate={{ width: cW, height: cH, transform: `rotateY(180deg) translateZ(${cD / 2}px)` }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
-            {castings(W, H)}
-          </div>
+            {/* PEKCON full logo — big */}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Image src="/pekcon-logo.png" alt="PEKCON" width={140} height={40} style={{ opacity: 0.9, filter: 'brightness(2) drop-shadow(0 2px 4px rgba(0,0,0,0.3))', objectFit: 'contain', maxHeight: '60%' }} />
+            </div>
+            {castings(cW, cH)}
+          </motion.div>
 
           {/* ─── RIGHT ─── */}
-          <div
+          <motion.div
             style={{
               ...face,
-              left: (W - D) / 2,
-              top: 0,
-              width: D,
-              height: H,
-              transform: `rotateY(90deg) translateZ(${W / 2}px)`,
-              background: `${cv}, linear-gradient(to right, #091628, #0f2040)`,
-              border: '1px solid rgba(6,182,212,0.22)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              background: `${cv}, linear-gradient(to right, #1a5a8f, #2a6fa8)`,
+              border: '1px solid rgba(0,105,180,0.25)',
             }}
-          >
-            <span
-              style={{
-                fontSize: 9,
-                letterSpacing: '0.14em',
-                color: 'rgba(6,182,212,0.75)',
-                fontFamily: 'monospace',
-              }}
-            >
-              PEKCON
-            </span>
-          </div>
+            animate={{
+              left: (cW - cD) / 2,
+              top: 0,
+              width: cD,
+              height: cH,
+              transform: `rotateY(90deg) translateZ(${cW / 2}px)`,
+            }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+          />
 
           {/* ─── LEFT ─── */}
-          <div
+          <motion.div
             style={{
               ...face,
-              left: (W - D) / 2,
-              top: 0,
-              width: D,
-              height: H,
-              transform: `rotateY(-90deg) translateZ(${W / 2}px)`,
-              background: `${cv}, linear-gradient(to left, #091628, #0f2040)`,
-              border: '1px solid rgba(6,182,212,0.22)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              background: `${cv}, linear-gradient(to left, #1a5a8f, #2a6fa8)`,
+              border: '1px solid rgba(0,105,180,0.25)',
             }}
-          >
-            <span
-              style={{
-                fontSize: 8,
-                letterSpacing: '0.12em',
-                color: 'rgba(6,182,212,0.4)',
-                fontFamily: 'monospace',
-              }}
-            >
-              ISO 668
-            </span>
-          </div>
+            animate={{
+              left: (cW - cD) / 2,
+              top: 0,
+              width: cD,
+              height: cH,
+              transform: `rotateY(-90deg) translateZ(${cW / 2}px)`,
+            }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+          />
 
           {/* ─── TOP ─── */}
-          <div
+          <motion.div
             style={{
               ...face,
               left: 0,
-              top: (H - D) / 2,
-              width: W,
-              height: D,
-              transform: `rotateX(-90deg) translateZ(${H / 2}px)`,
-              background: 'linear-gradient(to bottom, #1a3050, #0d1e35)',
-              border: '1px solid rgba(6,182,212,0.2)',
+              background: 'linear-gradient(to bottom, #5a9fd4, #3a85ba)',
+              border: '1px solid rgba(0,105,180,0.2)',
             }}
+            animate={{
+              top: (cH - cD) / 2,
+              width: cW,
+              height: cD,
+              transform: `rotateX(-90deg) translateZ(${cH / 2}px)`,
+            }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
           />
 
           {/* ─── BOTTOM ─── */}
-          <div
+          <motion.div
             style={{
               ...face,
               left: 0,
-              top: (H - D) / 2,
-              width: W,
-              height: D,
-              transform: `rotateX(90deg) translateZ(${H / 2}px)`,
-              background: '#060f1a',
+              background: '#2a5f8f',
             }}
+            animate={{
+              top: (cH - cD) / 2,
+              width: cW,
+              height: cD,
+              transform: `rotateX(90deg) translateZ(${cH / 2}px)`,
+            }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
           />
         </motion.div>
       </div>
 
-      {/* Model info badge */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl border border-white/10 bg-black/70 backdrop-blur-sm whitespace-nowrap">
-        <p className="text-[9px] text-cyan-400 uppercase tracking-[0.25em] font-mono text-center">
-          Model: PEKCON-40HC
-        </p>
-        <p className="text-[10px] text-zinc-500 mt-0.5 italic text-center">
-          Tüm açılardan inceleyin.
-        </p>
-      </div>
     </div>
   );
 }
