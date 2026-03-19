@@ -8,11 +8,13 @@ import Button from '@/components/ui/Button';
 import { slideUp, staggerContainer, floatSlow, floatFast, antiGravityFloat } from '@/lib/animations';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { trackCTAClick } from '@/lib/gtm';
+import { getKeywordConfig } from '@/lib/keyword-config';
 import QuoteForm from '@/components/forms/QuoteForm';
 import { ChevronRight, ChevronDown, Ship } from 'lucide-react';
 
-export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
+export default function HeroSection({ locale = 'tr', keyword }: { locale?: Locale; keyword?: string }) {
   const t = getTranslations(locale);
+  const kwConfig = getKeywordConfig(locale, keyword || null);
   const prefersReducedMotion = useReducedMotion();
   const isDesktopRef = useRef<boolean | null>(null);
   
@@ -102,21 +104,21 @@ export default function HeroSection({ locale = 'tr' }: { locale?: Locale }) {
         >
           <div className="flex-1 text-center lg:text-left max-w-2xl">
             <motion.h1 variants={slideUp} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-black text-white mb-6 leading-[1.1] flex flex-col drop-shadow-lg">
-              <span dangerouslySetInnerHTML={{ __html: t.hero.title1 }} />
+              <span dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle1 || t.hero.title1 }} />
               <span 
                 className="bg-gradient-to-r from-primary-400 via-primary-200 to-accent-400 bg-clip-text text-transparent pb-2"
-                dangerouslySetInnerHTML={{ __html: t.hero.title2 }}
+                dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle2 || t.hero.title2 }}
               />
               <span 
                 className="sm:whitespace-nowrap"
-                dangerouslySetInnerHTML={{ __html: t.hero.title3 }}
+                dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle3 || t.hero.title3 }}
               />
             </motion.h1>
 
             <motion.p 
               variants={slideUp} 
               className="text-lg md:text-xl text-gray-200 mb-10 max-w-4xl leading-relaxed drop-shadow-md whitespace-pre-line"
-              dangerouslySetInnerHTML={{ __html: t.hero.description }}
+              dangerouslySetInnerHTML={{ __html: kwConfig?.heroDescription || t.hero.description }}
             />
 
             <motion.div variants={slideUp} className="flex flex-col sm:flex-row items-center lg:justify-start gap-4">

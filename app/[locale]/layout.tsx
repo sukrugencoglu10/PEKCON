@@ -9,6 +9,8 @@ import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
 import { Suspense } from 'react';
 import type { Viewport } from 'next';
 
+import ExitIntentPopup from '@/components/widgets/ExitIntentPopup';
+
 export const viewport: Viewport = {
   themeColor: '#0069b4',
 };
@@ -58,6 +60,7 @@ export default async function LocaleLayout({
         <Header locale={locale} />
         <main>{children}</main>
         <Footer locale={locale} />
+        <ExitIntentPopup locale={locale as 'tr' | 'en'} />
         <ChatWidget />
         <WhatsAppButton />
       </body>

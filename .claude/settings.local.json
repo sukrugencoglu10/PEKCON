@@ -43,7 +43,18 @@
       "WebFetch(domain:pekcon.com.tr)",
       "WebFetch(domain:www.pekcon.com)",
       "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/api -name *.ts -o -name *.tsx)",
-      "Bash(find /c/Users/sukru/OneDrive/PEKCON/lib -name *.ts)"
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON/lib -name *.ts)",
+      "Bash(netstat -ano)",
+      "Bash(del /F /Q \"C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\.next\\\\dev\\\\lock\")",
+      "Bash(cmd /c \"taskkill /PID 72740 /F\")",
+      "Bash(cmd /c \"del /F /Q C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\.next\\\\dev\\\\lock 2>nul && echo lock_removed || echo no_lock\")",
+      "Bash(cmd /c \"wmic process where \"\"name=''''node.exe''''\"\" get processid,commandline 2>nul\")",
+      "Bash(cmd /c \"tasklist | findstr node\")",
+      "Bash(cmd /c \"if exist \"\"C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\.next\\\\dev\\\\lock\"\" \\(echo EXISTS\\) else \\(echo NOT_EXISTS\\)\")",
+      "Bash(kill -9 72740)",
+      "Bash(cat /c/Users/sukru/OneDrive/PEKCON/.next/dev/logs/*.log)",
+      "Bash(kill -9 34760 33312 73672 76048 77732)",
+      "Bash(kill -9 33312 73672 77860 74484 76100)"
     ]
   }
 }

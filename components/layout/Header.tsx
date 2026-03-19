@@ -1,31 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, Mail } from "lucide-react";
-import { motion } from "framer-motion";
-import Button from "@/components/ui/Button";
+import { Menu, X, Phone, Mail, ChevronDown, Calculator } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { getTranslations, type Locale } from "@/lib/i18n";
 import { flagWave } from "@/lib/animations";
 import { trackLanguageSwitch } from "@/lib/gtm";
 import { TRFlag, UKFlag } from "@/components/ui/Flag";
 
+interface DropdownItem {
+  href: string;
+  label: string;
+  icon?: React.ReactNode;
+}
+
+interface NavLink {
+  href: string;
+  label: string;
+  dropdown?: DropdownItem[];
+}
+
 export default function Header({ locale = "tr" }: { locale?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const t = getTranslations(locale as Locale);
 
-  // Check if a link is active
   const isActive = (href: string) => {
-    // Exact match for home page
     if (href === `/${locale}`) {
       return pathname === `/${locale}` || pathname === `/${locale}/`;
     }
-    // For other pages, check if pathname starts with the href
     return pathname.startsWith(href);
   };
 
@@ -33,21 +44,44 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = locale === 'en' ? [
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const servicesDropdown: DropdownItem[] = locale === 'en' ? [
+    {
+      href: `/en/cost-calculator`,
+      label: t.calculator?.title || 'Cost Calculator',
+      icon: <Calculator size={16} />,
+    },
+  ] : [
+    {
+      href: `/${locale}/maliyet-hesaplayici`,
+      label: t.calculator?.title || 'Maliyet Hesaplayıcı',
+      icon: <Calculator size={16} />,
+    },
+  ];
+
+  const navLinks: NavLink[] = locale === 'en' ? [
     { href: `/en`, label: t.nav.home },
     { href: `/en/containers`, label: t.nav.containers },
-    { href: `/en/services`, label: t.nav.services },
+    { href: `/en/services`, label: t.nav.services, dropdown: servicesDropdown },
     { href: `/en/about`, label: t.nav.about },
     { href: `/en/contact`, label: t.nav.contact },
   ] : [
     { href: `/${locale}`, label: t.nav.home },
     { href: `/${locale}/konteynerlar`, label: t.nav.containers },
-    { href: `/${locale}/hizmetlerimiz`, label: t.nav.services },
+    { href: `/${locale}/hizmetlerimiz`, label: t.nav.services, dropdown: servicesDropdown },
     { href: `/${locale}/hakkimizda`, label: t.nav.about },
     { href: `/${locale}/iletisim`, label: t.nav.contact },
   ];
@@ -120,20 +154,77 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-2">
+            <nav className="hidden lg:flex items-center space-x-2" ref={dropdownRef}>
               {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "px-3 py-1.5 text-lg rounded-md font-medium transition-all duration-300",
-                    isActive(link.href)
-                      ? "bg-secondary-500 text-white"
-                      : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                <div key={link.href} className="relative">
+                  {link.dropdown ? (
+                    <div
+                      onMouseEnter={() => setOpenDropdown(link.href)}
+                      onMouseLeave={() => setOpenDropdown(null)}
+                    >
+                      <Link
+                        href={link.href}
+                        className={cn(
+                          "px-3 py-1.5 text-lg rounded-md font-medium transition-all duration-300 flex items-center gap-1",
+                          isActive(link.href)
+                            ? "bg-secondary-500 text-white"
+                            : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                        )}
+                      >
+                        {link.label}
+                        <ChevronDown
+                          size={15}
+                          className={cn(
+                            "transition-transform duration-200",
+                            openDropdown === link.href ? "rotate-180" : ""
+                          )}
+                        />
+                      </Link>
+
+                      <AnimatePresence>
+                        {openDropdown === link.href && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute top-full left-0 mt-1 min-w-[280px] bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50"
+                          >
+                            {link.dropdown.map((item) => (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                className={cn(
+                                  "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-150",
+                                  isActive(item.href)
+                                    ? "bg-secondary-50 text-secondary-600"
+                                    : "text-gray-700 hover:bg-secondary-50 hover:text-secondary-600"
+                                )}
+                              >
+                                {item.icon && (
+                                  <span className="flex-shrink-0 text-secondary-400">{item.icon}</span>
+                                )}
+                                {item.label}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "px-3 py-1.5 text-lg rounded-md font-medium transition-all duration-300",
+                        isActive(link.href)
+                          ? "bg-secondary-500 text-white"
+                          : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
                   )}
-                >
-                  {link.label}
-                </Link>
+                </div>
               ))}
             </nav>
 
@@ -186,21 +277,80 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
             <div className="lg:hidden mt-4 pb-4">
               <nav className="flex flex-col space-y-2">
                 {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                      "px-4 py-2 rounded-md font-medium transition-all",
-                      isActive(link.href)
-                        ? "bg-secondary-500 text-white"
-                        : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                  <div key={link.href}>
+                    {link.dropdown ? (
+                      <>
+                        <div className="flex items-center">
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "flex-1 px-4 py-2 rounded-md font-medium transition-all",
+                              isActive(link.href)
+                                ? "bg-secondary-500 text-white"
+                                : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                            )}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {link.label}
+                          </Link>
+                          <button
+                            onClick={() =>
+                              setMobileDropdownOpen(
+                                mobileDropdownOpen === link.href ? null : link.href
+                              )
+                            }
+                            className="p-2 text-secondary-500"
+                            aria-label="Alt menüyü aç"
+                          >
+                            <ChevronDown
+                              size={18}
+                              className={cn(
+                                "transition-transform duration-200",
+                                mobileDropdownOpen === link.href ? "rotate-180" : ""
+                              )}
+                            />
+                          </button>
+                        </div>
+                        <AnimatePresence>
+                          {mobileDropdownOpen === link.href && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              {link.dropdown.map((item) => (
+                                <Link
+                                  key={item.href}
+                                  href={item.href}
+                                  className="flex items-center gap-2 pl-8 pr-4 py-2 text-sm text-gray-600 hover:text-secondary-500 transition-colors"
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                  {item.icon && <span className="text-secondary-400">{item.icon}</span>}
+                                  {item.label}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className={cn(
+                          "px-4 py-2 rounded-md font-medium transition-all",
+                          isActive(link.href)
+                            ? "bg-secondary-500 text-white"
+                            : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
+                        )}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
                     )}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
+                  </div>
                 ))}
-                {/* Removed Get Quote button from mobile menu */}
                 <div className="flex items-center justify-center space-x-2 mt-4">
                   <Link href="/tr">
                     <button
