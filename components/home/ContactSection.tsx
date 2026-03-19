@@ -24,7 +24,7 @@ export default function ContactSection({ locale = 'tr' }: { locale?: Locale }) {
   const isTr = locale === 'tr';
 
   return (
-    <section ref={ref} className="relative pt-8 pb-24 px-4 overflow-hidden bg-[#f8f7f4]">
+    <section ref={ref} className="relative pt-4 pb-16 px-4 overflow-hidden bg-[#f8f7f4]">
       {/* Soft ambient glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
@@ -87,7 +87,7 @@ export default function ContactSection({ locale = 'tr' }: { locale?: Locale }) {
 
           {/* Heading — centered */}
           <div className="space-y-3 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-primary-500 leading-tight whitespace-nowrap">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-primary-500 leading-tight lg:whitespace-nowrap">
               {isTr ? (
                 <>
                   Doğru Konteyner,{' '}

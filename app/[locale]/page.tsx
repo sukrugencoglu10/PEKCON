@@ -5,7 +5,7 @@ import SegmentationCards from '@/components/home/SegmentationCards';
 import ServicesOverview from '@/components/home/ServicesOverview';
 import ContainerShowcase from '@/components/home/ContainerShowcase';
 import CTASection from '@/components/home/CTASection';
-import TransportCalculator from '@/components/widgets/TransportCalculator';
+
 import { getKeywordConfig } from '@/lib/keyword-config';
 import type { Locale } from '@/lib/i18n';
 import type { Metadata } from 'next';
@@ -57,7 +57,6 @@ export default async function HomePage({
       <StatsSection locale={locale} />
       <SegmentationCards locale={locale} />
       <ContainerShowcase locale={locale} />
-      <TransportCalculator locale={locale} />
       <ServicesOverview locale={locale} />
       <CTASection locale={locale} />
     </>

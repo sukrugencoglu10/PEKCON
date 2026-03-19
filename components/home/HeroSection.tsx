@@ -114,7 +114,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           className="max-w-[1400px] mx-auto flex flex-col lg:grid lg:grid-cols-3 items-center lg:items-start gap-8 lg:gap-5 xl:gap-8 -mt-4 lg:mt-0"
         >
           {/* ─── COL 1: Text + Buttons ─── */}
-          <div className="text-center lg:text-left lg:self-center">
+          <div className="text-center lg:text-left lg:self-center order-1 lg:order-none">
             <motion.h1 variants={slideUp} className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-display font-black text-white mb-4 leading-[1.1] flex flex-col drop-shadow-lg">
               <span dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle1 || t.hero.title1 }} />
               <span
@@ -208,7 +208,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           </div>
 
           {/* ─── COL 2: Quote Form ─── */}
-          <motion.div variants={slideUp} className="w-full order-first lg:order-none" id="quote-form">
+          <motion.div variants={slideUp} className="w-full order-2 lg:order-none" id="quote-form">
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
@@ -218,7 +218,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           </motion.div>
 
           {/* ─── COL 3: 3D Container + Comparison ─── */}
-          <motion.div variants={slideUp} className="hidden lg:block">
+          <motion.div variants={slideUp} className="order-3 lg:order-none">
             <KonteynerScene containerType={selectedContainer} />
             <ContainerComparison locale={locale} selected={selectedContainer} onSelect={setSelectedContainer} variant="dark" />
           </motion.div>

@@ -8,7 +8,7 @@ export default async function QuotePage({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
 
   return (
-    <div className="min-h-screen bg-[#f8f7f4] pt-12">
+    <div className="min-h-screen bg-[#f8f7f4] pt-4 md:pt-8">
       <ContactSection locale={locale} />
     </div>
   );
