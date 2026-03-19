@@ -41,8 +41,8 @@ function ContainerSVG({ id, className }: { id: string; className?: string }) {
         {/* Floor beam */}
         <rect x="18" y="73" width="164" height="3" rx="0.5" fill="#0069b4" opacity="0.25" />
         {/* Forklift pockets */}
-        <rect x="50" y="76" width="18" height="6" rx="1" fill="#0069b4" opacity="0.15" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
-        <rect x="132" y="76" width="18" height="6" rx="1" fill="#0069b4" opacity="0.15" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
+        <rect x="50" y="76" width="18" height="6" rx="1" fill="#0069b4" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
+        <rect x="132" y="76" width="18" height="6" rx="1" fill="#0069b4" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
         {/* Ground line */}
         <line x1="10" y1="84" x2="190" y2="84" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="3 3" />
       </svg>
@@ -64,8 +64,8 @@ function ContainerSVG({ id, className }: { id: string; className?: string }) {
         <rect x="8" y="68" width="6" height="4" rx="0.8" fill="#0069b4" opacity="0.35" />
         <rect x="186" y="68" width="6" height="4" rx="0.8" fill="#0069b4" opacity="0.35" />
         <rect x="6" y="72" width="188" height="3" rx="0.5" fill="#0069b4" opacity="0.25" />
-        <rect x="40" y="75" width="18" height="5" rx="1" fill="#0069b4" opacity="0.15" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
-        <rect x="142" y="75" width="18" height="5" rx="1" fill="#0069b4" opacity="0.15" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
+        <rect x="40" y="75" width="18" height="5" rx="1" fill="#0069b4" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
+        <rect x="142" y="75" width="18" height="5" rx="1" fill="#0069b4" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
         <line x1="2" y1="82" x2="198" y2="82" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="3 3" />
       </svg>
     ),
@@ -89,8 +89,8 @@ function ContainerSVG({ id, className }: { id: string; className?: string }) {
         <rect x="8" y="66" width="6" height="4" rx="0.8" fill="#0069b4" opacity="0.35" />
         <rect x="186" y="66" width="6" height="4" rx="0.8" fill="#0069b4" opacity="0.35" />
         <rect x="6" y="70" width="188" height="3" rx="0.5" fill="#0069b4" opacity="0.25" />
-        <rect x="40" y="73" width="18" height="5" rx="1" fill="#0069b4" opacity="0.15" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
-        <rect x="142" y="73" width="18" height="5" rx="1" fill="#0069b4" opacity="0.15" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
+        <rect x="40" y="73" width="18" height="5" rx="1" fill="#0069b4" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
+        <rect x="142" y="73" width="18" height="5" rx="1" fill="#0069b4" stroke="#0069b4" strokeWidth="0.5" opacity="0.3" />
         <line x1="2" y1="80" x2="198" y2="80" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="3 3" />
       </svg>
     ),
@@ -193,8 +193,8 @@ function ContainerSVG({ id, className }: { id: string; className?: string }) {
         <rect x="20" y="62" width="8" height="4" rx="0.8" fill="#059669" opacity="0.4" />
         <rect x="172" y="62" width="8" height="4" rx="0.8" fill="#059669" opacity="0.4" />
         {/* Forklift pockets */}
-        <rect x="50" y="66" width="18" height="6" rx="1" fill="#059669" opacity="0.12" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
-        <rect x="132" y="66" width="18" height="6" rx="1" fill="#059669" opacity="0.12" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
+        <rect x="50" y="66" width="18" height="6" rx="1" fill="#059669" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
+        <rect x="132" y="66" width="18" height="6" rx="1" fill="#059669" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
         <line x1="10" y1="78" x2="190" y2="78" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="3 3" />
       </svg>
     ),
@@ -216,8 +216,8 @@ function ContainerSVG({ id, className }: { id: string; className?: string }) {
         <rect x="184" y="12" width="8" height="4" rx="0.8" fill="#059669" opacity="0.4" />
         <rect x="8" y="62" width="8" height="4" rx="0.8" fill="#059669" opacity="0.4" />
         <rect x="184" y="62" width="8" height="4" rx="0.8" fill="#059669" opacity="0.4" />
-        <rect x="40" y="66" width="18" height="5" rx="1" fill="#059669" opacity="0.12" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
-        <rect x="142" y="66" width="18" height="5" rx="1" fill="#059669" opacity="0.12" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
+        <rect x="40" y="66" width="18" height="5" rx="1" fill="#059669" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
+        <rect x="142" y="66" width="18" height="5" rx="1" fill="#059669" stroke="#059669" strokeWidth="0.5" opacity="0.3" />
         <line x1="2" y1="78" x2="198" y2="78" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="3 3" />
       </svg>
     ),
