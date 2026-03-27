@@ -11,6 +11,7 @@ import Button from '../ui/Button';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronRight, ChevronLeft, Edit2 } from 'lucide-react';
+import type { ContainerType } from '@/components/home/KonteynerScene';
 import {
   trackQuoteFormSubmit,
   trackLeadConversion,
@@ -21,7 +22,34 @@ import {
   trackAddToCart,
 } from '@/lib/gtm';
 
-export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
+const FORM_TO_SCENE_TYPE: Record<string, Record<string, ContainerType>> = {
+  standard_cargo: {
+    '20DC': '20dc',
+    '40DC': '40dc',
+    '40HC': '40hc',
+    '45HC': '45hc',
+  },
+  refrigerated: {
+    '20': '20rf',
+    '40': '40rf',
+  },
+  flat_rack: {
+    '20': '20fr',
+    '40': '40fr',
+  },
+  open_top: {
+    '20': '20ot',
+    '40': '40ot',
+  },
+};
+
+export default function QuoteForm({
+  locale = 'tr',
+  onContainerTypeChange,
+}: {
+  locale?: Locale;
+  onContainerTypeChange?: (type: ContainerType | null) => void;
+}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -52,6 +80,18 @@ export default function QuoteForm({ locale = 'tr' }: { locale?: Locale }) {
 
   const formValues = watch();
   const containerCategory = watch('containerCategory');
+  const containerTypeValue = watch('containerType');
+
+  // Sync selected container type with parent (3D scene)
+  useEffect(() => {
+    const categoryMap = FORM_TO_SCENE_TYPE[containerCategory];
+    if (!categoryMap) {
+      onContainerTypeChange?.(null);
+      return;
+    }
+    const mapped = containerTypeValue ? categoryMap[containerTypeValue] ?? null : null;
+    onContainerTypeChange?.(mapped);
+  }, [containerTypeValue, containerCategory, onContainerTypeChange]);
 
   // Form abandonment tracking
   useEffect(() => {
