@@ -12,7 +12,7 @@ import { trackCTAClick } from '@/lib/gtm';
 import { getKeywordConfig } from '@/lib/keyword-config';
 import QuoteForm from '@/components/forms/QuoteForm';
 import ContainerComparison from './ContainerComparison';
-import type { ContainerType } from './KonteynerScene';
+import { getCategoryFromType, type ContainerType } from './KonteynerScene';
 import { ChevronRight, ChevronDown, Ship } from 'lucide-react';
 
 const KonteynerScene = dynamic(() => import('./KonteynerScene'), {
@@ -30,6 +30,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   
   const [animState, setAnimState] = useState<'idle' | 'transforming' | 'swimming'>('idle');
   const [selectedContainer, setSelectedContainer] = useState<ContainerType>('40hc');
+  const containerCategory = getCategoryFromType(selectedContainer);
   
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -212,7 +213,10 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
-                <QuoteForm locale={locale} />
+                <QuoteForm
+                  locale={locale}
+                  onContainerTypeChange={(t) => { if (t) setSelectedContainer(t); }}
+                />
               </div>
             </div>
           </motion.div>
@@ -220,7 +224,13 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           {/* ─── COL 3: 3D Container + Comparison ─── */}
           <motion.div variants={slideUp} className="order-3 lg:order-none">
             <KonteynerScene containerType={selectedContainer} />
-            <ContainerComparison locale={locale} selected={selectedContainer} onSelect={setSelectedContainer} variant="dark" />
+            <ContainerComparison
+              locale={locale}
+              selected={selectedContainer}
+              containerCategory={containerCategory}
+              onSelect={setSelectedContainer}
+              variant="dark"
+            />
           </motion.div>
         </motion.div>
       </div>
