@@ -5,6 +5,7 @@ import SegmentationCards from '@/components/home/SegmentationCards';
 import ServicesOverview from '@/components/home/ServicesOverview';
 import ContainerShowcase from '@/components/home/ContainerShowcase';
 import CTASection from '@/components/home/CTASection';
+import StickyQuoteBar from '@/components/home/StickyQuoteBar';
 
 import { getKeywordConfig } from '@/lib/keyword-config';
 import type { Locale } from '@/lib/i18n';
@@ -59,6 +60,7 @@ export default async function HomePage({
       <ContainerShowcase locale={locale} />
       <ServicesOverview locale={locale} />
       <CTASection locale={locale} />
+      <StickyQuoteBar locale={locale} />
     </>
   );
 }
