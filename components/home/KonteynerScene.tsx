@@ -337,6 +337,7 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
           <motion.div
             style={{
               ...face,
+              ...(isFlatRack && { backfaceVisibility: 'visible', WebkitBackfaceVisibility: 'visible' }),
               background: isFlatRack
                 ? `${cv}, ${colors.front}`
                 : `${cv}, linear-gradient(to right, ${colors.sideFrom}, ${colors.sideTo})`,
@@ -358,6 +359,7 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
           <motion.div
             style={{
               ...face,
+              ...(isFlatRack && { backfaceVisibility: 'visible', WebkitBackfaceVisibility: 'visible' }),
               background: isFlatRack
                 ? `${cv}, ${colors.back}`
                 : `${cv}, linear-gradient(to left, ${colors.sideFrom}, ${colors.sideTo})`,
@@ -400,6 +402,7 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
           <motion.div
             style={{
               ...face,
+              ...((isFlatRack || isOpenTop) && { backfaceVisibility: 'visible', WebkitBackfaceVisibility: 'visible' }),
               left: 0,
               background: colors.bottom,
             }}
@@ -407,10 +410,74 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
               top: (cH - cD) / 2,
               width: cW,
               height: cD,
-              transform: `rotateX(90deg) translateZ(${cH / 2}px)`,
+              transform: isFlatRack
+                ? `rotateX(-90deg) translateZ(${cH / 2}px)`
+                : `rotateX(90deg) translateZ(${cH / 2}px)`,
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           />
+
+          {/* ─── OPEN TOP: İç yüzeyler (üstten bakınca görünen gölgeli iç duvarlar) ─── */}
+          {isOpenTop && (
+            <>
+              {/* İç arka duvar — +Z yönüne bakıyor, önden/üstten görünür */}
+              <motion.div
+                style={{
+                  ...face,
+                  left: 0,
+                  top: 0,
+                  background: `${ch}, linear-gradient(170deg, #6b7f87 0%, #546e78 60%, #425c65 100%)`,
+                  border: `1px solid rgba(84,110,122,0.5)`,
+                }}
+                animate={{ width: cW, height: cH, transform: `translateZ(-${cD / 2 - 1}px)` }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+              />
+              {/* İç ön duvar — konteynere doğru bakıyor */}
+              <motion.div
+                style={{
+                  ...face,
+                  left: 0,
+                  top: 0,
+                  background: `${ch}, linear-gradient(170deg, #425c65 0%, #546e78 100%)`,
+                  border: `1px solid rgba(84,110,122,0.5)`,
+                }}
+                animate={{ width: cW, height: cH, transform: `rotateY(180deg) translateZ(-${cD / 2 - 1}px)` }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+              />
+              {/* İç sağ duvar */}
+              <motion.div
+                style={{
+                  ...face,
+                  background: `${cv}, linear-gradient(to right, #425c65, #5a7880)`,
+                  border: `1px solid rgba(84,110,122,0.5)`,
+                }}
+                animate={{
+                  left: (cW - cD) / 2,
+                  top: 0,
+                  width: cD,
+                  height: cH,
+                  transform: `rotateY(-90deg) translateZ(-${cW / 2 - 1}px)`,
+                }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+              />
+              {/* İç sol duvar */}
+              <motion.div
+                style={{
+                  ...face,
+                  background: `${cv}, linear-gradient(to left, #425c65, #5a7880)`,
+                  border: `1px solid rgba(84,110,122,0.5)`,
+                }}
+                animate={{
+                  left: (cW - cD) / 2,
+                  top: 0,
+                  width: cD,
+                  height: cH,
+                  transform: `rotateY(90deg) translateZ(-${cW / 2 - 1}px)`,
+                }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+              />
+            </>
+          )}
         </motion.div>
       </div>
     </div>
