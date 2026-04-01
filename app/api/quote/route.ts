@@ -166,57 +166,57 @@ function buildEmailHtml(data: {
   `.trim();
 }
 
-async function syncToGoogleSheets(data: {
-  transactionType: string;
-  containerCategory: string;
-  containerType?: string;
-  quantity: number;
-  region?: string;
-  fullName?: string;
-  email?: string;
-  phone?: string;
-  companyName?: string;
-  notes?: string;
-  utmSource?: string;
-  utmMedium?: string;
-  utmCampaign?: string;
-  utmTerm?: string;
-  gclid?: string;
-  originalReferrer?: string;
-}): Promise<void> {
-  if (!GOOGLE_SHEET_WEBHOOK_URL) return;
+async function syncToGoogleSheets(data: any): Promise<void> {
+  if (!GOOGLE_SHEET_WEBHOOK_URL) {
+    console.error('[Google Sheets] Error: URL is not defined in environment variables.');
+    return;
+  }
 
-  const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
-  const categoryMap: Record<string, string> = {
-    standard_cargo: 'Standart Yük',
-    refrigerated: 'Soğutmalı',
-    flat_rack: 'Flat Rack',
-    open_top: 'Open Top',
-    custom: 'Özel',
-  };
+  try {
+    const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
+    const categoryMap: Record<string, string> = {
+      standard_cargo: 'Standart Yük',
+      refrigerated: 'Soğutmalı',
+      flat_rack: 'Flat Rack',
+      open_top: 'Open Top',
+      custom: 'Özel',
+    };
 
-  const row = {
-    tarih: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
-    islemTuru: typeLabel,
-    kategori: categoryMap[data.containerCategory] ?? data.containerCategory,
-    konteynerTipi: data.containerType ?? '',
-    miktar: data.quantity,
-    bolge: data.region ?? '',
-    adSoyad: data.fullName ?? '',
-    sirket: data.companyName ?? '',
-    telefon: data.phone ?? '',
-    eposta: data.email ?? '',
-    notlar: data.notes ?? '',
-    aramaTermi: data.utmTerm ?? '',
-    gclid: data.gclid ?? '',
-    referrer: data.originalReferrer ?? '',
-  };
+    const row = {
+      tarih: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
+      islemTuru: typeLabel,
+      kategori: categoryMap[data.containerCategory] ?? data.containerCategory,
+      konteynerTipi: data.containerType ?? '',
+      miktar: data.quantity,
+      bolge: data.region ?? '',
+      adSoyad: data.fullName ?? '',
+      sirket: data.companyName ?? '',
+      telefon: data.phone ?? '',
+      eposta: data.email ?? '',
+      notlar: data.notes ?? '',
+      aramaTermi: data.utmTerm ?? '',
+      gclid: data.gclid ?? '',
+      referrer: data.originalReferrer ?? '',
+    };
 
-  await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(row),
-  });
+    console.log('[Google Sheets] Sending data to:', GOOGLE_SHEET_WEBHOOK_URL.substring(0, 45) + '...');
+    
+    const response = await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(row),
+      redirect: 'follow', // Ensure we follow Google's redirects
+    });
+
+    if (response.ok) {
+      console.log('[Google Sheets] Success: Data successfully sent.');
+    } else {
+      const errorText = await response.text();
+      console.error(`[Google Sheets] Failed: Status ${response.status}. Response: ${errorText}`);
+    }
+  } catch (error) {
+    console.error('[Google Sheets] Connection Error:', error);
+  }
 }
 
 async function syncToHubSpot(data: {
