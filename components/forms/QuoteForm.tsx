@@ -181,10 +181,27 @@ export default function QuoteForm({
     }
 
     try {
+      // Read tracking data from localStorage (set by TrackingProvider)
+      let trackingData: Record<string, string> = {};
+      try {
+        const raw = localStorage.getItem('site_tracking_data');
+        if (raw) trackingData = JSON.parse(raw);
+      } catch {}
+
+      const payload = {
+        ...data,
+        utmSource: trackingData.utmSource,
+        utmMedium: trackingData.utmMedium,
+        utmCampaign: trackingData.utmCampaign,
+        utmTerm: trackingData.utmTerm,
+        gclid: trackingData.gclid,
+        originalReferrer: trackingData.originalReferrer,
+      };
+
       const response = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) throw new Error('Submission failed');

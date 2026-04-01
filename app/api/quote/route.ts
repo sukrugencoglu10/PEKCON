@@ -4,6 +4,7 @@ import { Resend } from 'resend';
 
 const RECIPIENT_EMAILS = ['info@pekcon.com', 'sukrugencoglu10@gmail.com'];
 const FROM_EMAIL = 'teklif@pekcon.com';
+const GOOGLE_SHEET_WEBHOOK_URL = process.env.GOOGLE_SHEET_WEBHOOK_URL ?? '';
 
 function buildEmailHtml(data: {
   transactionType: string;
@@ -165,6 +166,62 @@ function buildEmailHtml(data: {
   `.trim();
 }
 
+async function syncToGoogleSheets(data: {
+  transactionType: string;
+  containerCategory: string;
+  containerType?: string;
+  quantity: number;
+  region?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  companyName?: string;
+  notes?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmTerm?: string;
+  gclid?: string;
+  originalReferrer?: string;
+}): Promise<void> {
+  if (!GOOGLE_SHEET_WEBHOOK_URL) return;
+
+  const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
+  const categoryMap: Record<string, string> = {
+    standard_cargo: 'Standart Yük',
+    refrigerated: 'Soğutmalı',
+    flat_rack: 'Flat Rack',
+    open_top: 'Open Top',
+    custom: 'Özel',
+  };
+
+  const row = {
+    tarih: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
+    islemTuru: typeLabel,
+    kategori: categoryMap[data.containerCategory] ?? data.containerCategory,
+    konteynerTipi: data.containerType ?? '',
+    miktar: data.quantity,
+    bolge: data.region ?? '',
+    adSoyad: data.fullName ?? '',
+    sirket: data.companyName ?? '',
+    telefon: data.phone ?? '',
+    eposta: data.email ?? '',
+    notlar: data.notes ?? '',
+    kaynak: data.utmSource ?? '',
+    kanal: data.utmMedium ?? '',
+    kampanya: data.utmCampaign ?? '',
+    aramaTermi: data.utmTerm ?? '',
+    gclid: data.gclid ?? '',
+    referrer: data.originalReferrer ?? '',
+  };
+
+  await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(row),
+  });
+}
+
 async function syncToHubSpot(data: {
   transactionType: string;
   containerCategory: string;
@@ -253,6 +310,11 @@ export async function POST(request: NextRequest) {
     // Fire-and-forget — HubSpot hatası e-postayı engellemez
     syncToHubSpot(validatedData).catch((err) =>
       console.error('[HubSpot sync error]', err)
+    );
+
+    // Fire-and-forget — Google Sheets kaydı
+    syncToGoogleSheets(validatedData).catch((err) =>
+      console.error('[Google Sheets sync error]', err)
     );
 
     return NextResponse.json(

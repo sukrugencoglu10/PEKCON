@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import type { Viewport } from 'next';
 
 import ExitIntentPopup from '@/components/widgets/ExitIntentPopup';
+import { TrackingProvider } from '@/components/TrackingProvider';
 
 export const viewport: Viewport = {
   themeColor: '#0069b4',
@@ -56,6 +57,7 @@ export default async function LocaleLayout({
         <Suspense fallback={null}>
           <GoogleTagManager gtmId="GTM-536W5D89" />
           <AnalyticsEvents />
+          <TrackingProvider />
         </Suspense>
         <Header locale={locale} />
         <main>{children}</main>
