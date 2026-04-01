@@ -107,7 +107,7 @@ function buildEmailHtml(data: {
                 <tr>
                   <td style="padding:6px 0;color:#6b7a8d;font-size:14px;">Telefon</td>
                   <td style="padding:6px 0;">
-                    <a href="tel:${data.phone}" style="color:#0069b4;font-size:14px;font-weight:600;text-decoration:none;">${data.phone}</a>
+                    <a href="tel:${data.phone.replace(/[^0-9+]/g, '')}" style="color:#0069b4;font-size:14px;font-weight:600;text-decoration:none;">${data.phone}</a>
                   </td>
                 </tr>` : ''}
                 ${data.email ? `
@@ -137,11 +137,11 @@ function buildEmailHtml(data: {
           <!-- Footer -->
           <tr>
             <td style="padding:28px 32px;text-align:center;">
-              <a href="mailto:${data.email ?? ''}" style="display:inline-block;background:#0069b4;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin-right:8px;">
+              <a href="mailto:${data.email ?? ''}" style="display:inline-block;background:#0069b4;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 ✉️ Müşteriye Yanıtla
               </a>
               ${data.phone ? `
-              <a href="tel:${data.phone}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;">
+              <a href="tel:${data.phone.replace(/[^0-9+]/g, '')}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 📞 Hemen Ara
               </a>` : ''}
             </td>

@@ -54,7 +54,26 @@
       "Bash(kill -9 72740)",
       "Bash(cat /c/Users/sukru/OneDrive/PEKCON/.next/dev/logs/*.log)",
       "Bash(kill -9 34760 33312 73672 76048 77732)",
-      "Bash(kill -9 33312 73672 77860 74484 76100)"
+      "Bash(kill -9 33312 73672 77860 74484 76100)",
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON -name *header* -o -name *nav* -o -name *menu*)",
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/[locale] -type f -name \"*.tsx\")",
+      "Bash(grep -r \"dropdown\\\\|menu\\\\|Menu\\\\|Dropdown\" /c/Users/sukru/OneDrive/PEKCON/components --include=*.tsx -l)",
+      "Bash(cmd /c \"taskkill /PID 80468 /F\")",
+      "Bash(cmd /c \"taskkill /PID 80468 /F 2>&1\")",
+      "Bash(cmd /c \"tasklist /FI \"\"PID eq 80468\"\" 2>&1\")",
+      "Bash(cmd /c \"tasklist /FI \"\"PID eq 80468\"\"\")",
+      "Bash(powershell -Command \"Get-Process -Id 80468 | Select-Object Name, Id, CPU\")",
+      "Bash(powershell -Command \"Stop-Process -Id 80468 -Force; Start-Sleep -Seconds 2; Write-Host ''Done''\")",
+      "Bash(cmd /c \"start /B npm run dev > .next-dev.log 2>&1\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 8; Invoke-WebRequest -Uri ''http://localhost:3000/tr'' -UseBasicParsing -TimeoutSec 10 | Select-Object -ExpandProperty StatusCode\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 10; Invoke-WebRequest -Uri ''http://localhost:3000/tr'' -UseBasicParsing -TimeoutSec 15 | Select-Object -ExpandProperty StatusCode\")",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_OwningProcess -Force }; Write-Host ''Cleaned''\")",
+      "Bash(powershell -Command 'Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Select-Object OwningProcess')",
+      "Bash(powershell -Command 'Stop-Process -Id 204280 -Force')",
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/[locale] -type f -name \"page.tsx\" -o -name \"layout.tsx\")",
+      "Bash(grep -r \"accordion\\\\|tabs\\\\|Tabs\\\\|Accordion\" /c/Users/sukru/OneDrive/PEKCON/components --include=*.tsx --include=*.ts)",
+      "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/[locale] -type f)",
+      "Bash(cat app/[locale]/page.tsx)"
     ]
   }
 }
