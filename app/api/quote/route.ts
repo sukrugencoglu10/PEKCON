@@ -304,6 +304,11 @@ export async function POST(request: NextRequest) {
       replyTo: validatedData.email,
     });
 
+    // Debug: Check if env var is loaded (this will show in Vercel logs)
+    if (!GOOGLE_SHEET_WEBHOOK_URL) {
+      console.error('[Config Error] GOOGLE_SHEET_WEBHOOK_URL is missing in environment variables');
+    }
+
     // Fire-and-forget — HubSpot hatası e-postayı engellemez
     syncToHubSpot(validatedData).catch((err) =>
       console.error('[HubSpot sync error]', err)
