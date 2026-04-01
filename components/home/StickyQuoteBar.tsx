@@ -68,24 +68,24 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="fixed bottom-0 left-0 right-0 z-40 bg-slate-800/97 backdrop-blur-md border-t border-slate-700/60 shadow-2xl"
+          className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]"
         >
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
 
             {/* İkon + Metin */}
             <div className="hidden sm:flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary-600/20 flex items-center justify-center">
-                <Package size={18} className="text-primary-400" />
+              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center">
+                <Package size={18} className="text-primary-600" />
               </div>
               <div className="min-w-0">
-                <p className="text-white font-semibold text-sm leading-tight truncate">{t.label}</p>
-                <p className="text-slate-400 text-xs leading-tight truncate">{t.sub}</p>
+                <p className="text-slate-900 font-bold text-sm leading-tight truncate">{t.label}</p>
+                <p className="text-slate-500 text-xs leading-tight truncate">{t.sub}</p>
               </div>
             </div>
 
             {/* Mobilde sadece kısa metin */}
             <div className="sm:hidden flex-1 min-w-0">
-              <p className="text-white font-semibold text-sm truncate">{t.label}</p>
+              <p className="text-slate-900 font-bold text-sm truncate">{t.label}</p>
             </div>
 
             {/* Butonlar */}
@@ -114,7 +114,7 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
               <button
                 onClick={handleDismiss}
                 aria-label="Kapat"
-                className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors duration-150 ml-1"
+                className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150 ml-1"
               >
                 <X size={16} />
               </button>
