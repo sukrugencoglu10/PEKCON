@@ -90,17 +90,6 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
 
             {/* Butonlar */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              {/* WhatsApp */}
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-150"
-              >
-                <MessageCircle size={16} />
-                <span className="hidden xs:inline">{t.whatsapp}</span>
-              </a>
-
               {/* Teklif Al */}
               <a
                 href={`/${locale}/teklif-al`}
