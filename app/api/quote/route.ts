@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { quoteFormSchema } from '@/lib/validators';
 import { Resend } from 'resend';
 
+export const dynamic = 'force-dynamic';
+
 const RECIPIENT_EMAILS = ['info@pekcon.com', 'sukrugencoglu10@gmail.com'];
 const FROM_EMAIL = 'teklif@pekcon.com';
 const GOOGLE_SHEET_WEBHOOK_URL = process.env.GOOGLE_SHEET_WEBHOOK_URL ?? '';
