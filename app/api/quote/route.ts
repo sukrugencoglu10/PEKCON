@@ -144,7 +144,10 @@ function buildEmailHtml(data: {
                 ✉️ Müşteriye Yanıtla
               </a>
               ${data.phone ? `
-              <a href="tel:${data.phone.replace(/[^0-9+]/g, '')}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
+              <a href="https://wa.me/${data.phone.replace(/[^0-9]/g, '')}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
+                💬 WhatsApp
+              </a>
+              <a href="tel:${data.phone.replace(/[^0-9+]/g, '')}" style="display:inline-block;background:#0ea5e9;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 📞 Hemen Ara
               </a>` : ''}
             </td>
