@@ -20,6 +20,8 @@ import {
   trackFormStarted,
   trackFormAbandoned,
   trackAddToCart,
+  trackFormFieldDwell,
+  trackFormStepTime,
 } from '@/lib/gtm';
 
 const FORM_TO_SCENE_TYPE: Record<string, Record<string, ContainerType>> = {
@@ -56,6 +58,17 @@ export default function QuoteForm({
   const [formInteracted, setFormInteracted] = useState(false);
   const abandonTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastFieldRef = useRef<string>('');
+  const stepStartTimeRef = useRef<number>(Date.now());
+  const fieldFocusTimeRef = useRef<Record<string, number>>({});
+  const fieldInitialValueRef = useRef<Record<string, string>>({});
+  // Stable session ID for correlating events in the analytics API
+  const sessionIdRef = useRef<string>(
+    typeof crypto !== 'undefined' ? crypto.randomUUID() : Math.random().toString(36).slice(2)
+  );
+  // Unique event ID for Meta CAPI / GA4 deduplication (client + server aynı ID'yi kullanır)
+  const eventIdRef = useRef<string>(
+    typeof crypto !== 'undefined' ? crypto.randomUUID() : Math.random().toString(36).slice(2)
+  );
   
   // Extend translation type strictly
   const t = getTranslations(locale);
@@ -93,10 +106,10 @@ export default function QuoteForm({
     onContainerTypeChange?.(mapped);
   }, [containerTypeValue, containerCategory, onContainerTypeChange]);
 
-  // Form abandonment tracking
+  // Form abandonment + dwell time tracking
   useEffect(() => {
-    const handleFieldInteraction = (e: Event) => {
-      const target = e.target as HTMLElement;
+    const handleFocusIn = (e: Event) => {
+      const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
       const fieldName = target.getAttribute('name') || '';
 
       if (!formInteracted && fieldName) {
@@ -107,6 +120,8 @@ export default function QuoteForm({
       if (fieldName) {
         lastFieldRef.current = fieldName;
         trackFormFieldFocus('quote_form', fieldName);
+        fieldFocusTimeRef.current[fieldName] = Date.now();
+        fieldInitialValueRef.current[fieldName] = target.value ?? '';
 
         if (abandonTimeoutRef.current) {
           clearTimeout(abandonTimeoutRef.current);
@@ -116,18 +131,49 @@ export default function QuoteForm({
           if (submitStatus === 'idle') {
             trackFormAbandoned('quote_form', lastFieldRef.current);
           }
-        }, 60000); 
+        }, 60000);
+      }
+    };
+
+    const handleFocusOut = (e: Event) => {
+      const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+      const fieldName = target.getAttribute('name') || '';
+
+      if (fieldName && fieldFocusTimeRef.current[fieldName]) {
+        const dwellMs = Date.now() - fieldFocusTimeRef.current[fieldName];
+        const correctionCount =
+          fieldInitialValueRef.current[fieldName] !== undefined &&
+          fieldInitialValueRef.current[fieldName] !== '' &&
+          (target.value ?? '') !== fieldInitialValueRef.current[fieldName]
+            ? 1
+            : 0;
+        trackFormFieldDwell('quote_form', fieldName, dwellMs, correctionCount);
+        // POST to admin analytics API (fire-and-forget)
+        fetch('/api/analytics/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            field_name: fieldName,
+            dwell_ms: dwellMs,
+            correction_count: correctionCount,
+            step: currentStep,
+            session_id: sessionIdRef.current,
+          }),
+        }).catch(() => null);
+        delete fieldFocusTimeRef.current[fieldName];
       }
     };
 
     const formElement = document.querySelector('form');
     if (formElement) {
-      formElement.addEventListener('focusin', handleFieldInteraction);
+      formElement.addEventListener('focusin', handleFocusIn);
+      formElement.addEventListener('focusout', handleFocusOut);
     }
 
     return () => {
       if (formElement) {
-        formElement.removeEventListener('focusin', handleFieldInteraction);
+        formElement.removeEventListener('focusin', handleFocusIn);
+        formElement.removeEventListener('focusout', handleFocusOut);
       }
       if (abandonTimeoutRef.current) {
         clearTimeout(abandonTimeoutRef.current);
@@ -146,7 +192,7 @@ export default function QuoteForm({
 
   const validateStep = async (step: number) => {
     let fieldsToValidate: (keyof QuoteFormData)[] = [];
-    
+
     if (step === 1) {
       fieldsToValidate = ['transactionType', 'containerCategory', 'quantity'];
       if (
@@ -163,12 +209,18 @@ export default function QuoteForm({
 
     const isValid = await trigger(fieldsToValidate);
     if (isValid) {
+      const elapsed = Date.now() - stepStartTimeRef.current;
+      trackFormStepTime(step, step + 1, elapsed, 'forward');
+      stepStartTimeRef.current = Date.now();
       setCurrentStep((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const prevStep = () => {
+    const elapsed = Date.now() - stepStartTimeRef.current;
+    trackFormStepTime(currentStep, currentStep - 1, elapsed, 'back');
+    stepStartTimeRef.current = Date.now();
     setCurrentStep((prev) => prev - 1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -196,6 +248,8 @@ export default function QuoteForm({
         utmTerm: trackingData.utmTerm,
         gclid: trackingData.gclid,
         originalReferrer: trackingData.originalReferrer,
+        fbclid: trackingData.fbclid,   // Meta _fbc için
+        event_id: eventIdRef.current,  // CAPI / GA4 deduplikasyon ID'si
       };
 
       const response = await fetch('/api/quote', {
@@ -205,6 +259,22 @@ export default function QuoteForm({
       });
 
       if (!response.ok) throw new Error('Submission failed');
+
+      // Meta Pixel — client-side Lead eventi (server CAPI ile deduplikasyon için aynı event_id)
+      // Kritik sıra: server CAPI önce gönderildi (API route içinde), client sonra tetiklenir
+      if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+        window.fbq(
+          'track',
+          'Lead',
+          {
+            currency: 'TRY',
+            value: data.quantity * 2000, // Tahmini değer — CAPI ile aynı mantık
+            content_category: data.containerCategory,
+            content_name: data.containerType ?? 'unknown',
+          },
+          { eventID: eventIdRef.current }
+        );
+      }
 
       // Fire tracking only after successful submission
       trackQuoteFormSubmit(data);

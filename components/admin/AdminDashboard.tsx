@@ -7,6 +7,7 @@ import StockUploader from './StockUploader';
 import ContactsFetcher from './ContactsFetcher';
 import EmailTemplatePreview from './EmailTemplatePreview';
 import SendProgress from './SendProgress';
+import FormHeatmapTab from './FormHeatmapTab';
 import type { StockRow, Contact } from '@/lib/send-session';
 
 const STEPS = [
@@ -16,10 +17,13 @@ const STEPS = [
   { id: 4, label: 'Gönder' },
 ];
 
+type AdminTab = 'email' | 'analytics';
+
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const [activeTab, setActiveTab] = useState<AdminTab>('email');
   const [sessionId, setSessionId] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [stock, setStock] = useState<StockRow[]>([]);
@@ -93,64 +97,98 @@ export default function AdminDashboard() {
       </header>
 
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Toplu E-posta Gönderimi</h1>
-        <p className="text-gray-500 mb-8 text-sm">
-          Konteyner stok listesini yükleyin ve tüm Outlook kişilerinize gönderin.
-        </p>
-
-        <StepIndicator steps={STEPS} currentStep={currentStep} />
-
-        <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
-          {oauthError && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-              {oauthError}
-            </div>
-          )}
-
-          {currentStep === 1 && (
-            <StockUploader
-              sessionId={sessionId}
-              onComplete={(newSid, rows, types) => {
-                setSessionId(newSid);
-                setStock(rows);
-                setContainerTypes(types);
-                setCurrentStep(2);
-              }}
-            />
-          )}
-
-          {currentStep === 2 && (
-            <ContactsFetcher
-              sessionId={sessionId}
-              preloadedContacts={contacts.length > 0 ? contacts : undefined}
-              onComplete={(fetched) => {
-                setContacts(fetched);
-                setCurrentStep(3);
-              }}
-              onBack={() => setCurrentStep(1)}
-            />
-          )}
-
-          {currentStep === 3 && (
-            <EmailTemplatePreview
-              sessionId={sessionId}
-              stock={stock}
-              containerTypes={containerTypes}
-              contacts={contacts}
-              onConfirm={() => setCurrentStep(4)}
-              onBack={() => setCurrentStep(2)}
-            />
-          )}
-
-          {currentStep === 4 && (
-            <SendProgress
-              sessionId={sessionId}
-              totalContacts={contacts.length}
-              onReset={handleReset}
-              onBack={() => setCurrentStep(3)}
-            />
-          )}
+        {/* Tab navigation */}
+        <div className="flex gap-1 mb-8 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('email')}
+            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab === 'email'
+                ? 'bg-white border border-b-white border-gray-200 -mb-px text-[#0069b4]'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Toplu E-posta
+          </button>
+          <button
+            onClick={() => setActiveTab('analytics')}
+            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab === 'analytics'
+                ? 'bg-white border border-b-white border-gray-200 -mb-px text-[#0069b4]'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Analitik
+          </button>
         </div>
+
+        {activeTab === 'email' && (
+          <>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">Toplu E-posta Gönderimi</h1>
+            <p className="text-gray-500 mb-8 text-sm">
+              Konteyner stok listesini yükleyin ve tüm Outlook kişilerinize gönderin.
+            </p>
+
+            <StepIndicator steps={STEPS} currentStep={currentStep} />
+
+            <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+              {oauthError && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                  {oauthError}
+                </div>
+              )}
+
+              {currentStep === 1 && (
+                <StockUploader
+                  sessionId={sessionId}
+                  onComplete={(newSid, rows, types) => {
+                    setSessionId(newSid);
+                    setStock(rows);
+                    setContainerTypes(types);
+                    setCurrentStep(2);
+                  }}
+                />
+              )}
+
+              {currentStep === 2 && (
+                <ContactsFetcher
+                  sessionId={sessionId}
+                  preloadedContacts={contacts.length > 0 ? contacts : undefined}
+                  onComplete={(fetched) => {
+                    setContacts(fetched);
+                    setCurrentStep(3);
+                  }}
+                  onBack={() => setCurrentStep(1)}
+                />
+              )}
+
+              {currentStep === 3 && (
+                <EmailTemplatePreview
+                  sessionId={sessionId}
+                  stock={stock}
+                  containerTypes={containerTypes}
+                  contacts={contacts}
+                  onConfirm={() => setCurrentStep(4)}
+                  onBack={() => setCurrentStep(2)}
+                />
+              )}
+
+              {currentStep === 4 && (
+                <SendProgress
+                  sessionId={sessionId}
+                  totalContacts={contacts.length}
+                  onReset={handleReset}
+                  onBack={() => setCurrentStep(3)}
+                />
+              )}
+            </div>
+          </>
+        )}
+
+        {activeTab === 'analytics' && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+            <FormHeatmapTab />
+          </div>
+        )}
       </div>
     </div>
   );

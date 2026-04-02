@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, MessageCircle, FileText, Package } from 'lucide-react';
+import { trackStickyBarEvent } from '@/lib/gtm';
 
 const WHATSAPP_URL = 'https://wa.me/902122979758?text=Merhaba%2C%20konteyner%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.';
 const DISMISS_KEY = 'stickyBarDismissed';
@@ -51,7 +52,17 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [dismissed, isQuotePage]);
 
+  // Track first impression
+  const impressionFiredRef = useRef(false);
+  useEffect(() => {
+    if (visible && !dismissed && !impressionFiredRef.current) {
+      impressionFiredRef.current = true;
+      trackStickyBarEvent('impression', locale);
+    }
+  }, [visible, dismissed, locale]);
+
   const handleDismiss = () => {
+    trackStickyBarEvent('dismiss', locale);
     setDismissed(true);
     setVisible(false);
     sessionStorage.setItem(DISMISS_KEY, '1');
@@ -93,6 +104,7 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
               {/* Teklif Al */}
               <a
                 href={`/${locale}/teklif-al`}
+                onClick={() => trackStickyBarEvent('cta_click', locale)}
                 className="flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-150"
               >
                 <FileText size={16} />

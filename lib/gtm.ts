@@ -209,6 +209,61 @@ export const trackBeginCheckout = (containerType?: string) => {
   });
 };
 
+// 3D Model Interaction Tracking
+export const track3DInteraction = (
+  containerType: string,
+  action: 'drag_end' | 'type_view',
+  data: { drag_duration_ms?: number; rotation_delta?: number; view_duration_ms?: number }
+) => {
+  trackEvent('container_3d_interaction', {
+    container_type: containerType,
+    action,
+    ...data,
+  });
+};
+
+// Form Field Dwell Time
+export const trackFormFieldDwell = (
+  formName: string,
+  fieldName: string,
+  dwellMs: number,
+  correctionCount: number
+) => {
+  trackEvent('form_field_dwell', {
+    form_name: formName,
+    field_name: fieldName,
+    dwell_ms: dwellMs,
+    correction_count: correctionCount,
+  });
+};
+
+// Form Step Transition Timing
+export const trackFormStepTime = (
+  fromStep: number,
+  toStep: number,
+  stepDurationMs: number,
+  direction: 'forward' | 'back'
+) => {
+  trackEvent('form_step_time', {
+    form_name: 'quote_form',
+    from_step: fromStep,
+    to_step: toStep,
+    step_duration_ms: stepDurationMs,
+    direction,
+  });
+};
+
+// Sticky Bar Events
+export const trackStickyBarEvent = (
+  action: 'impression' | 'cta_click' | 'dismiss',
+  locale: string
+) => {
+  trackEvent('sticky_bar_event', {
+    action,
+    locale,
+  });
+};
+
 // Scroll Depth Tracking
 export const trackScrollDepth = (percentage: number) => {
   trackEvent('scroll_depth', {

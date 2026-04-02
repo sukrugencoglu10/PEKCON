@@ -3,6 +3,7 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, animate } from 'framer-motion';
 import Image from 'next/image';
+import { track3DInteraction } from '@/lib/gtm';
 
 // ─── Container Presets (pixel dimensions, proportional to real) ───────────────
 const PRESETS = {
@@ -94,6 +95,10 @@ interface Props {
 export default function KonteynerScene({ containerType = '40hc' }: Props) {
   const dragging = useRef(false);
   const drag0 = useRef<{ mx: number; my: number; ry: number; rx: number } | null>(null);
+  const dragStartTimeRef = useRef<number>(0);
+  const dragStartRyRef = useRef<number>(0);
+  const typeViewStartTimeRef = useRef<number>(Date.now());
+  const prevContainerTypeRef = useRef<string>(containerType);
 
   const category = getCategoryFromType(containerType);
   const colors = CATEGORY_COLORS[category];
@@ -103,12 +108,21 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
   const H = useMotionValue(preset.H);
   const D = useMotionValue(preset.D);
 
-  // Animate dimensions on containerType change
+  // Animate dimensions on containerType change + track dwell time
   useEffect(() => {
     const p = PRESETS[containerType];
     animate(W, p.W, { duration: 0.6, ease: 'easeInOut' });
     animate(H, p.H, { duration: 0.6, ease: 'easeInOut' });
     animate(D, p.D, { duration: 0.6, ease: 'easeInOut' });
+
+    const prev = prevContainerTypeRef.current;
+    const elapsed = Date.now() - typeViewStartTimeRef.current;
+    // Only track if user actually viewed the previous type for at least 1 second
+    if (prev !== containerType && elapsed > 1000) {
+      track3DInteraction(prev, 'type_view', { view_duration_ms: elapsed });
+    }
+    prevContainerTypeRef.current = containerType;
+    typeViewStartTimeRef.current = Date.now();
   }, [containerType, W, H, D]);
 
   const ry = useMotionValue(28);
@@ -138,6 +152,8 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
       e.currentTarget.setPointerCapture(e.pointerId);
       dragging.current = true;
       drag0.current = { mx: e.clientX, my: e.clientY, ry: ry.get(), rx: rx.get() };
+      dragStartTimeRef.current = Date.now();
+      dragStartRyRef.current = ry.get();
     },
     [ry, rx]
   );
@@ -156,7 +172,16 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
   const onPointerUp = useCallback(() => {
     dragging.current = false;
     drag0.current = null;
-  }, []);
+    const dragDuration = Date.now() - dragStartTimeRef.current;
+    const rotationDelta = Math.abs(ry.get() - dragStartRyRef.current);
+    // Only track meaningful drags (more than 5 degrees of rotation)
+    if (rotationDelta > 5) {
+      track3DInteraction(containerType, 'drag_end', {
+        drag_duration_ms: dragDuration,
+        rotation_delta: Math.round(rotationDelta),
+      });
+    }
+  }, [ry, containerType]);
 
   // Corrugation textures
   const ch =

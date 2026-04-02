@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { quoteFormSchema } from '@/lib/validators';
 import { Resend } from 'resend';
+import {
+  sendMetaCAPI,
+  sendGA4MeasurementProtocol,
+  extractGA4ClientId,
+  estimateLeadValueServer,
+} from '@/lib/server-tracking';
 
 export const dynamic = 'force-dynamic';
 
@@ -323,6 +329,48 @@ export async function POST(request: NextRequest) {
     syncToGoogleSheets(validatedData).catch((err) =>
       console.error('[Google Sheets sync error]', err)
     );
+
+    // ── Server-Side Tracking (iOS 14+ / ad-blocker bypass) ──────────────────
+    const cookieHeader = request.headers.get('cookie') ?? '';
+    const fbp = cookieHeader.match(/_fbp=([^;]+)/)?.[1];
+    const fbc =
+      cookieHeader.match(/_fbc=([^;]+)/)?.[1] ?? validatedData.fbclid ?? undefined;
+    const gaCookie = cookieHeader.match(/_ga=([^;]+)/)?.[1] ?? null;
+    const clientId = extractGA4ClientId(gaCookie);
+    const eventSourceUrl =
+      request.headers.get('referer') ??
+      `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://pekcon.com'}/tr/teklif-al`;
+
+    const nameParts = (validatedData.fullName ?? '').split(' ');
+    const leadValue = estimateLeadValueServer(validatedData.containerType, validatedData.quantity);
+
+    // Meta CAPI — Lead eventi (client pixel ile aynı event_id → deduplikasyon)
+    sendMetaCAPI({
+      event_id: validatedData.event_id ?? crypto.randomUUID(),
+      email: validatedData.email,
+      phone: validatedData.phone,
+      firstName: nameParts[0],
+      lastName: nameParts.slice(1).join(' ') || undefined,
+      fbp,
+      fbc,
+      clientIp: request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? undefined,
+      userAgent: request.headers.get('user-agent') ?? undefined,
+      eventSourceUrl,
+      containerCategory: validatedData.containerCategory,
+      containerType: validatedData.containerType,
+      quantity: validatedData.quantity,
+    }).catch(() => null);
+
+    // GA4 Measurement Protocol — generate_lead eventi (client GTM backup)
+    sendGA4MeasurementProtocol({
+      clientId,
+      gclid: validatedData.gclid,
+      currency: 'TRY',
+      value: leadValue,
+      containerCategory: validatedData.containerCategory,
+      containerType: validatedData.containerType,
+    }).catch(() => null);
+    // ────────────────────────────────────────────────────────────────────────
 
     return NextResponse.json(
       { success: true, message: 'Quote request received' },

@@ -22,6 +22,8 @@ export const quoteFormSchema = z.object({
   utmTerm: z.string().optional(),
   gclid: z.string().optional(),
   originalReferrer: z.string().optional(),
+  event_id: z.string().optional(),  // Meta CAPI / GA4 deduplikasyon ID'si
+  fbclid: z.string().optional(),    // Facebook tıklama ID'si (_fbc için)
 });
 
 // Contact form validation schema

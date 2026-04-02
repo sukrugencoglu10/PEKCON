@@ -6,6 +6,8 @@ import WhatsAppButton from '@/components/widgets/WhatsAppButton';
 import { Inter, Satisfy } from 'next/font/google';
 import GoogleTagManager from '@/components/analytics/GoogleTagManager';
 import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
+import MicrosoftClarity from '@/components/analytics/MicrosoftClarity';
+import MetaPixel from '@/components/analytics/MetaPixel';
 import { Suspense } from 'react';
 import type { Viewport } from 'next';
 
@@ -56,6 +58,8 @@ export default async function LocaleLayout({
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <GoogleTagManager gtmId="GTM-536W5D89" />
+          <MicrosoftClarity />
+          <MetaPixel />
           <AnalyticsEvents />
           <TrackingProvider />
         </Suspense>

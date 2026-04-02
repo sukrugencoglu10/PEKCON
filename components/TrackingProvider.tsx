@@ -13,6 +13,7 @@ function TrackingLogic() {
       const utmCampaign = searchParams.get('utm_campaign');
       const utmTerm = searchParams.get('utm_term');
       const gclid = searchParams.get('gclid');
+      const fbclid = searchParams.get('fbclid');
       const referrer = document.referrer;
 
       const existingTracking = localStorage.getItem('site_tracking_data');
@@ -25,6 +26,7 @@ function TrackingLogic() {
       if (utmCampaign) { trackingData.utmCampaign = utmCampaign; hasNewData = true; }
       if (utmTerm) { trackingData.utmTerm = utmTerm; hasNewData = true; }
       if (gclid) { trackingData.gclid = gclid; hasNewData = true; }
+      if (fbclid) { trackingData.fbclid = fbclid; hasNewData = true; }
       
       // Save the original referrer only if it's not already set
       if (!trackingData.originalReferrer) {
