@@ -21,7 +21,6 @@ export default function ContactSection({ locale = 'tr' }: { locale?: Locale }) {
   const isInView = useInView(ref, { once: true, margin: '-80px' });
   const [selectedContainer, setSelectedContainer] = useState<ContainerType>('40hc');
   const [formContainerType, setFormContainerType] = useState<ContainerType | null>(null);
-
   const handleContainerTypeChange = useCallback((type: ContainerType | null) => {
     setFormContainerType(type);
     if (type !== null) setSelectedContainer(type);

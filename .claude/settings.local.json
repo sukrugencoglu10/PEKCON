@@ -73,7 +73,17 @@
       "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/[locale] -type f -name \"page.tsx\" -o -name \"layout.tsx\")",
       "Bash(grep -r \"accordion\\\\|tabs\\\\|Tabs\\\\|Accordion\" /c/Users/sukru/OneDrive/PEKCON/components --include=*.tsx --include=*.ts)",
       "Bash(find /c/Users/sukru/OneDrive/PEKCON/app/[locale] -type f)",
-      "Bash(cat app/[locale]/page.tsx)"
+      "Bash(cat app/[locale]/page.tsx)",
+      "Bash(exit 0)",
+      "Bash(wmic process:*)",
+      "Bash(powershell -Command \"Stop-Process -Id 8984 -Force -ErrorAction SilentlyContinue; Start-Sleep 2; \\(Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue\\).OwningProcess\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 8984 -Force; Start-Sleep -Seconds 2; Test-NetConnection -ComputerName localhost -Port 3000 | Select-Object TcpTestSucceeded\")",
+      "Bash(if exist:*)",
+      "Bash(powershell.exe -Command \"Stop-Process -Id \\(Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue\\).OwningProcess -Force -ErrorAction SilentlyContinue\")",
+      "Bash(rm -f \"C:/Users/sukru/OneDrive/PEKCON/.next/dev/lock\")",
+      "Bash(grep -r \"fbp\\\\|fbc\\\\|_ga\" C:/Users/sukru/OneDrive/PEKCON/app/api/quote/ --include=*.ts)",
+      "Bash(grep -E \"\\\\.tsx$\")",
+      "Bash(grep -E \"\\\\.ts$\")"
     ]
   }
 }
