@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, MessageCircle, FileText, Package } from 'lucide-react';
 import { trackStickyBarEvent } from '@/lib/gtm';
 
-const WHATSAPP_URL = 'https://wa.me/902122979758?text=Merhaba%2C%20konteyner%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.';
+const WHATSAPP_URL = 'https://wa.me/905427179357?text=Merhaba%2C%20konteyner%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.';
 const DISMISS_KEY = 'stickyBarDismissed';
 const SCROLL_THRESHOLD = 500;
 

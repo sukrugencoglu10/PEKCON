@@ -1,0 +1,8 @@
+﻿ M components/home/HeroSection.tsx
+ M components/home/StickyQuoteBar.tsx
+ M components/widgets/ExitIntentPopup.tsx
+ M components/widgets/WhatsAppButton.tsx
+?? .git_status_tmp.txt
+?? "PEKCON_g\303\274nl\303\274k/"
+?? "docs/ben \305\237imdi s\304\261f\304\261rdan bir site yapsam ve google ads ile reklam \303\247\304\261kmak istiyorum.docx"
+?? "docs/s\304\261f\304\261rdan.md.docx"

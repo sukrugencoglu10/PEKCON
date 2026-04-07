@@ -7,8 +7,8 @@ export default function WhatsAppButton() {
   const params = useParams();
   const locale = params?.locale as string || 'tr';
 
-  const phoneNumber = '905543545201'; // +90 554 354 52 01
-  const displayNumber = '+90 554 354 52 01';
+  const phoneNumber = '905427179357'; // +90 542 717 93 57
+  const displayNumber = '+90 542 717 93 57';
 
   // Localized messages
   const message = locale === 'en'

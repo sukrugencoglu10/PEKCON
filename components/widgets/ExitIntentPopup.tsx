@@ -169,7 +169,7 @@ export default function ExitIntentPopup({ locale = 'tr' }: { locale?: Locale }) 
                   <div className="space-y-3">
                     {/* Primary CTA — WhatsApp */}
                     <Link
-                      href="https://wa.me/905543545201"
+                      href="https://wa.me/905427179357"
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={handleClose}
