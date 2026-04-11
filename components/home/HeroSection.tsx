@@ -1,12 +1,21 @@
 'use client';
 
-import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion, AnimatePresence, type Variants } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
-import { slideUp, staggerContainer } from '@/lib/animations';
+// Hero-specific variants: NO opacity:0 → LCP element always visible
+// (staggerContainer/slideUp from lib start at opacity:0, delays LCP on mobile)
+const heroStagger: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+const heroSlide: Variants = {
+  hidden: { y: 24 },
+  visible: { y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { trackCTAClick } from '@/lib/gtm';
 import { getKeywordConfig } from '@/lib/keyword-config';
@@ -90,14 +99,14 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
 
       <div className="relative z-10 container mx-auto px-4">
         <motion.div
-          variants={staggerContainer}
+          variants={heroStagger}
           initial="hidden"
           animate="visible"
           className="max-w-[1400px] mx-auto flex flex-col lg:grid lg:grid-cols-3 items-center lg:items-start gap-8 lg:gap-5 xl:gap-8 -mt-4 lg:mt-0"
         >
           {/* ─── COL 1: Text + Buttons ─── */}
           <div className="text-center lg:text-left lg:self-center order-1 lg:order-none">
-            <motion.h1 variants={slideUp} className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-display font-black text-white mb-4 leading-[1.1] flex flex-col drop-shadow-lg">
+            <motion.h1 variants={heroSlide} className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-display font-black text-white mb-4 leading-[1.1] flex flex-col drop-shadow-lg">
               <span dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle1 || t.hero.title1 }} />
               <span
                 className="bg-gradient-to-r from-primary-400 via-primary-200 to-accent-400 bg-clip-text text-transparent pb-2"
@@ -109,12 +118,12 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
             </motion.h1>
 
             <motion.p
-              variants={slideUp}
+              variants={heroSlide}
               className="text-sm md:text-base lg:text-sm xl:text-base text-gray-200 mb-6 leading-relaxed drop-shadow-md whitespace-pre-line"
               dangerouslySetInnerHTML={{ __html: kwConfig?.heroDescription || t.hero.description }}
             />
 
-            <motion.div variants={slideUp} className="flex flex-col sm:flex-row items-center lg:justify-start gap-3">
+            <motion.div variants={heroSlide} className="flex flex-col sm:flex-row items-center lg:justify-start gap-3">
               <Link href="https://wa.me/905427179357" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:min-w-[180px] !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-xl hover:shadow-red-600/30 text-sm font-bold">
                   {t.hero.cta3}
@@ -190,7 +199,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           </div>
 
           {/* ─── COL 2: Quote Form ─── */}
-          <motion.div variants={slideUp} className="w-full order-2 lg:order-none" id="quote-form">
+          <motion.div variants={heroSlide} className="w-full order-2 lg:order-none" id="quote-form">
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
@@ -203,7 +212,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           </motion.div>
 
           {/* ─── COL 3: 3D Container + Comparison ─── */}
-          <motion.div variants={slideUp} className="order-3 lg:order-none">
+          <motion.div variants={heroSlide} className="order-3 lg:order-none">
             <KonteynerScene containerType={selectedContainer} />
             <ContainerComparison
               locale={locale}

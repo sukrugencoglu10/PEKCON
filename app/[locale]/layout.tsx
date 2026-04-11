@@ -56,6 +56,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
       <head>
+        {/* Preload hero image before JS hydration — critical for mobile LCP */}
+        <link rel="preload" as="image" href="/hero-bg.webp" type="image/webp" fetchPriority="high" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://connect.facebook.net" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
