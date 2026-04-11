@@ -90,7 +90,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
     { href: `/en/contact`, label: t.nav.contact },
   ] : [
     { href: `/${locale}`, label: t.nav.home },
-    { href: `/${locale}/konteynerlar`, label: t.nav.containers },
+    { href: `/${locale}/konteynerler`, label: t.nav.containers },
     { href: `/${locale}/hizmetlerimiz`, label: t.nav.services, dropdown: servicesDropdown },
     { href: `/${locale}/hakkimizda`, label: t.nav.about },
     { href: `/${locale}/iletisim`, label: t.nav.contact },

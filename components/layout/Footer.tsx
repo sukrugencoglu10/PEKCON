@@ -55,7 +55,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
                 </Link>
               </li>
               <li>
-                <Link href={locale === 'en' ? '/en/containers' : `/${locale}/konteynerlar`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                <Link href={locale === 'en' ? '/en/containers' : `/${locale}/konteynerler`} className="text-dark-700 hover:text-primary-500 transition-colors">
                   {t.footer.containerSales}
                 </Link>
               </li>

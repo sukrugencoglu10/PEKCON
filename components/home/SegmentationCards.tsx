@@ -25,7 +25,7 @@ export default function SegmentationCards({ locale = 'tr' }: { locale?: Locale }
       description: locale === 'tr' ? 'Tekil konteyner ihtiyaçlarınız ve özel tasarım projeleriniz için.' : 'For your单个 container needs and custom design projects.',
       icon: <User size={36} className="text-primary-500" />,
       cta: locale === 'tr' ? 'Hemen İncele' : 'Explore Now',
-      href: `/${locale}/konteynerlar`,
+      href: `/${locale}/konteynerler`,
       color: 'primary',
     },
   ];

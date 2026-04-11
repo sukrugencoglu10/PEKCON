@@ -4,7 +4,7 @@ const trRoutes = [
   { slug: '',           changeFreq: 'weekly' as const, priority: 1.0 },
   { slug: 'hakkimizda', changeFreq: 'weekly' as const, priority: 0.8 },
   { slug: 'hizmetlerimiz', changeFreq: 'weekly' as const, priority: 0.8 },
-  { slug: 'konteynerlar',  changeFreq: 'weekly' as const, priority: 0.8 },
+  { slug: 'konteynerler',  changeFreq: 'weekly' as const, priority: 0.8 },
   { slug: 'iletisim',      changeFreq: 'weekly' as const, priority: 0.8 },
   { slug: 'teklif-al',     changeFreq: 'daily' as const,  priority: 0.9 },
 ];

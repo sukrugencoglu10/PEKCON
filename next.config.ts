@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       // EN sayfaları için TR slug → EN slug (301 kalıcı yönlendirme)
       { source: '/en/hakkimizda',   destination: '/en/about',      permanent: true },
       { source: '/en/iletisim',     destination: '/en/contact',    permanent: true },
-      { source: '/en/konteynerlar', destination: '/en/containers', permanent: true },
+      { source: '/en/konteynerler', destination: '/en/containers', permanent: true },
       { source: '/en/hizmetlerimiz',destination: '/en/services',   permanent: true },
       { source: '/en/teklif-al',    destination: '/en/quote',      permanent: true },
     ];
@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
       // EN slug'larını gerçek dosya yollarına yönlendir (iç rewrite)
       { source: '/en/about',      destination: '/en/hakkimizda' },
       { source: '/en/services',   destination: '/en/hizmetlerimiz' },
-      { source: '/en/containers', destination: '/en/konteynerlar' },
+      { source: '/en/containers', destination: '/en/konteynerler' },
       { source: '/en/contact',    destination: '/en/iletisim' },
       { source: '/en/quote',      destination: '/en/teklif-al' },
     ];

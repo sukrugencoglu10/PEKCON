@@ -12,14 +12,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     <div className="min-h-screen bg-white py-20">
       <div className="container mx-auto px-4 pt-20">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
             <div>
               <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-12 text-center">
                 {t.about.title}
               </h1>
               <div className="prose prose-lg max-w-none">
                 {t.about.description.split('\n\n').map((para, i) => (
-                  <p key={i} className="text-lg text-dark-700 leading-relaxed mb-6 indent-8">
+                  <p key={i} className="text-lg text-dark-700 leading-relaxed mb-6 indent-4 md:indent-8">
                     {para}
                   </p>
                 ))}
@@ -49,7 +49,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
 
             {/* Image on the right */}
-            <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative h-[300px] md:h-[450px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
                 src="/x2.webp"
                 alt="PEKCON Container & Logistics"

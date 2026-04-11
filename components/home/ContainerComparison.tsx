@@ -180,7 +180,7 @@ export default function ContainerComparison({
     <div className="mt-6">
       {/* Section label */}
       <div className="flex justify-center mb-3">
-        <span className={`text-[9px] uppercase tracking-[0.2em] font-mono ${isDark ? 'text-gray-300' : 'text-gray-400'}`}>
+        <span className={`text-[10px] md:text-[9px] uppercase tracking-[0.2em] font-mono ${isDark ? 'text-gray-300' : 'text-gray-400'}`}>
           {sectionLabel}
         </span>
       </div>
@@ -241,15 +241,15 @@ export default function ContainerComparison({
               {/* Specs — show if data available */}
               {data && (
                 <div className="space-y-1.5">
-                  <div className={`flex items-center gap-1.5 text-[10px] md:text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <div className={`flex items-center gap-1.5 text-xs md:text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     <Ruler size={12} className={`flex-shrink-0 ${accent.text}`} />
                     <span className="truncate">{data.dimensions?.external?.length}m</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 text-[10px] md:text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <div className={`flex items-center gap-1.5 text-xs md:text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     <Box size={12} className={`flex-shrink-0 ${accent.text}`} />
                     <span className="truncate">{data.capacity?.volume} m&sup3;</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 text-[10px] md:text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <div className={`flex items-center gap-1.5 text-xs md:text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     <Weight size={12} className={`flex-shrink-0 ${accent.text}`} />
                     <span className="truncate">{((data.capacity?.maxPayload ?? 0) / 1000).toFixed(1)}t</span>
                   </div>

@@ -24,7 +24,7 @@ export default function WhatsAppButton() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 animate-[fadeInUp_0.3s_ease_forwards]">
+    <div className="fixed bottom-20 right-6 z-50 animate-[fadeInUp_0.3s_ease_forwards] md:bottom-6">
       <a
         href={whatsappUrl}
         target="_blank"

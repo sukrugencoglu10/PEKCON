@@ -137,7 +137,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
                   ))}
                 </ul>
 
-                <Link href={`/${locale}/konteynerlar#${container.id}`} className="mt-auto">
+                <Link href={`/${locale}/konteynerler#${container.id}`} className="mt-auto">
                   <Button variant="primary" className="w-full !bg-red-600 !bg-none hover:!bg-red-700 transition-all hover:shadow-xl hover:shadow-red-500/40">
                     {locale === 'tr' ? 'Detayları Görüntüle' : 'View Details'}
                   </Button>
@@ -148,7 +148,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
         </motion.div>
 
         <div className="text-center">
-          <Link href={`/${locale}/konteynerlar`}>
+          <Link href={`/${locale}/konteynerler`}>
             <Button variant="primary" size="lg" className="!bg-[#0069b4] !bg-none hover:!bg-[#005490] px-12 py-4 text-lg rounded-full transition-all hover:shadow-2xl hover:shadow-blue-500/40">
               {locale === 'tr' ? 'Tüm Konteynerleri İncele' : 'Explore All Containers'}
             </Button>

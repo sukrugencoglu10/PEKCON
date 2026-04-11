@@ -86,7 +86,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   };
 
   return (
-    <section className="relative min-h-screen flex items-start justify-center overflow-hidden py-10 md:py-16 lg:pt-28 lg:pb-8">
+    <section className="relative min-h-fit lg:min-h-screen flex items-start justify-center overflow-hidden py-10 md:py-16 lg:pt-28 lg:pb-8">
       <div className="absolute inset-0">
         <Image
           src="/Yellow and Black Modern Logistic Company Presentation.png"
