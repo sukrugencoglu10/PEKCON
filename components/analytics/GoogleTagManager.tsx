@@ -26,7 +26,7 @@ export default function GoogleTagManager({ gtmId }: { gtmId?: string }) {
       {/* GTM: dataLayer + gtag shim — GTM'den yüklenen GA4/Ads tagleri window.gtag'i override eder */}
       <Script
         id="gtm-init"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
