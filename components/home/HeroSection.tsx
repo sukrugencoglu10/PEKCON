@@ -74,6 +74,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           fill
           className="object-cover"
           priority
+          unoptimized
           sizes="(max-width: 1024px) 100vw, 1920px"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-secondary-900/80 to-dark-900/90 z-0" />
