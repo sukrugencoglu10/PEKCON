@@ -49,11 +49,12 @@ export default function ServicesOverview({ locale }: ServicesOverviewProps) {
       {/* Background Image with subtle effect */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=2000"
+          src="/services-bg.webp"
           alt="Services Background"
           fill
           className="object-cover opacity-25"
           sizes="100vw"
+          loading="lazy"
         />
       </div>
       

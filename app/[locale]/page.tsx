@@ -1,11 +1,14 @@
+import dynamic from 'next/dynamic';
 import HeroSection from '@/components/home/HeroSection';
 import TrustSlider from '@/components/home/TrustSlider';
 import StatsSection from '@/components/home/StatsSection';
 import SegmentationCards from '@/components/home/SegmentationCards';
-import ServicesOverview from '@/components/home/ServicesOverview';
-import ContainerShowcase from '@/components/home/ContainerShowcase';
-import CTASection from '@/components/home/CTASection';
 import StickyQuoteBar from '@/components/home/StickyQuoteBar';
+
+// Below-the-fold: lazy load for smaller initial bundle
+const ContainerShowcase = dynamic(() => import('@/components/home/ContainerShowcase'));
+const ServicesOverview = dynamic(() => import('@/components/home/ServicesOverview'));
+const CTASection = dynamic(() => import('@/components/home/CTASection'));
 
 import { getKeywordConfig } from '@/lib/keyword-config';
 import type { Locale } from '@/lib/i18n';

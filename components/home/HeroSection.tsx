@@ -1,12 +1,12 @@
 'use client';
 
-import { motion, useMotionValue, useTransform, useReducedMotion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
-import { slideUp, staggerContainer, floatSlow, floatFast, antiGravityFloat } from '@/lib/animations';
+import { slideUp, staggerContainer } from '@/lib/animations';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { trackCTAClick } from '@/lib/gtm';
 import { getKeywordConfig } from '@/lib/keyword-config';
@@ -32,29 +32,9 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   const [selectedContainer, setSelectedContainer] = useState<ContainerType>('40hc');
   const containerCategory = getCategoryFromType(selectedContainer);
   
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const parallaxX1 = useTransform(mouseX, [-1000, 1000], [30, -30]);
-  const parallaxY1 = useTransform(mouseY, [-1000, 1000], [30, -30]);
-  const parallaxX2 = useTransform(mouseX, [-1000, 1000], [-20, 20]);
-  const parallaxY2 = useTransform(mouseY, [-1000, 1000], [-20, 20]);
-  const parallaxX3 = useTransform(mouseX, [-1000, 1000], [15, -15]);
-  const parallaxY3 = useTransform(mouseY, [-1000, 1000], [15, -15]);
-
   useEffect(() => {
     isDesktopRef.current = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
-    if (!isDesktopRef.current) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      mouseX.set(e.clientX - centerX);
-      mouseY.set(e.clientY - centerY);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, []);
 
   const handleQuoteClick = (e: React.MouseEvent) => {
     if (animState !== 'idle') return;
@@ -89,20 +69,20 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
     <section className="relative min-h-fit lg:min-h-screen flex items-start justify-center overflow-hidden py-10 md:py-16 lg:pt-28 lg:pb-8">
       <div className="absolute inset-0">
         <Image
-          src="/Yellow and Black Modern Logistic Company Presentation.png"
+          src="/hero-bg.webp"
           alt="Yük Konteynerleri - PEKCON"
           fill
           className="object-cover"
           priority
-          sizes="100vw"
+          sizes="(max-width: 1024px) 100vw, 1920px"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-secondary-900/80 to-dark-900/90 z-0" />
 
         {!prefersReducedMotion && (
           <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none hidden md:block">
-            <motion.div className="absolute top-1/4 left-1/4 w-64 h-32 bg-primary-500/10 rounded-lg blur-xl" style={{ x: parallaxX1, y: parallaxY1, rotateZ: 12 }} variants={antiGravityFloat} animate="animate" />
-            <motion.div className="absolute top-1/3 right-1/4 w-48 h-48 bg-accent-500/15 rounded-lg blur-lg" style={{ x: parallaxX2, y: parallaxY2, rotateZ: -12 }} variants={floatSlow} animate="animate" />
-            <motion.div className="absolute bottom-1/4 left-1/3 w-56 h-24 bg-primary-500/20 rounded-lg blur-sm" style={{ x: parallaxX3, y: parallaxY3, rotateZ: 6 }} variants={floatFast} animate="animate" />
+            <div className="absolute top-1/4 left-1/4 w-64 h-32 bg-primary-500/10 rounded-lg blur-xl rotate-12 animate-float" />
+            <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-accent-500/15 rounded-lg blur-lg -rotate-12 animate-float [animation-delay:2s] [animation-duration:8s]" />
+            <div className="absolute bottom-1/4 left-1/3 w-56 h-24 bg-primary-500/20 rounded-lg blur-sm rotate-6 animate-float [animation-delay:4s] [animation-duration:10s]" />
           </div>
         )}
       </div>

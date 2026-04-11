@@ -55,6 +55,11 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${inter.variable} ${satisfy.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+      </head>
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <GoogleTagManager gtmId="GTM-536W5D89" />
