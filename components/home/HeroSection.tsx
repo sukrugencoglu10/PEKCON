@@ -40,13 +40,12 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   const [animState, setAnimState] = useState<'idle' | 'transforming' | 'swimming'>('idle');
   const [selectedContainer, setSelectedContainer] = useState<ContainerType>('40hc');
   const containerCategory = getCategoryFromType(selectedContainer);
-  // Only render 3D scene on desktop — Three.js is ~320KB, skip on mobile for TBT
+  // Render 3D scene on client-side only to prevent hydration mismatch and defer LCP block
   const [showScene, setShowScene] = useState(false);
 
   useEffect(() => {
-    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
     isDesktopRef.current = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
-    setShowScene(isDesktop);
+    setShowScene(true); // Mobilde de görünsün (CSR, formun altına yerleşecek)
   }, []);
 
   const handleQuoteClick = (e: React.MouseEvent) => {
@@ -214,7 +213,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
             </div>
           </motion.div>
 
-          {/* ─── COL 3: 3D Container + Comparison (desktop only — Three.js ~320KB) ─── */}
+          {/* ─── COL 3: 3D Container + Comparison ─── */}
           {showScene && (
             <motion.div variants={heroSlide} className="order-3 lg:order-none">
               <KonteynerScene containerType={selectedContainer} />
