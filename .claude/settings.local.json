@@ -83,7 +83,13 @@
       "Bash(rm -f \"C:/Users/sukru/OneDrive/PEKCON/.next/dev/lock\")",
       "Bash(grep -r \"fbp\\\\|fbc\\\\|_ga\" C:/Users/sukru/OneDrive/PEKCON/app/api/quote/ --include=*.ts)",
       "Bash(grep -E \"\\\\.tsx$\")",
-      "Bash(grep -E \"\\\\.ts$\")"
+      "Bash(grep -E \"\\\\.ts$\")",
+      "Bash(xargs grep:*)",
+      "Bash(npx sharp-cli:*)",
+      "Bash(npm list:*)",
+      "Bash(node -e ':*)",
+      "Bash(powershell -Command \"Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 2; Remove-Item -Recurse -Force 'C:\\\\Users\\\\sukru\\\\OneDrive\\\\PEKCON\\\\.next' -ErrorAction SilentlyContinue; echo 'Cleanup done'\")",
+      "Bash(node -e \"const fs = require\\('fs'\\); const stats = fs.statSync\\('public/hero-bg.webp'\\); console.log\\('Size:', stats.size, 'bytes =', \\(stats.size/1024\\).toFixed\\(1\\), 'KB'\\);\")"
     ]
   }
 }

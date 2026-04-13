@@ -75,7 +75,7 @@ export const translations = {
       home: 'Ana Sayfa',
       about: 'Hakkımızda',
       services: 'Hizmetlerimiz',
-      containers: 'Konteynerlar',
+      containers: 'Konteynerler',
       contact: 'İletişim',
       quote: 'Teklif Al',
     },

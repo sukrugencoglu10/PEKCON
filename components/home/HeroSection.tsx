@@ -10,11 +10,11 @@ import Button from '@/components/ui/Button';
 // (staggerContainer/slideUp from lib start at opacity:0, delays LCP on mobile)
 const heroStagger: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 };
 const heroSlide: Variants = {
-  hidden: { y: 24 },
-  visible: { y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  hidden: { y: 20 },
+  visible: { y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { trackCTAClick } from '@/lib/gtm';
@@ -87,8 +87,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           fill
           className="object-cover"
           priority
-          unoptimized
-          sizes="(max-width: 1024px) 100vw, 1920px"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1920px"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-secondary-900/80 to-dark-900/90 z-0" />
 
