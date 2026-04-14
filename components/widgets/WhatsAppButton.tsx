@@ -22,6 +22,27 @@ export default function WhatsAppButton() {
 
   const handleClick = () => {
     trackWhatsAppConversion(locale);
+
+    // Analytics DB kaydı
+    try {
+      const tracking = JSON.parse(localStorage.getItem('site_tracking_data') || '{}');
+      fetch('/api/analytics/conversion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'whatsapp_click',
+          utm_source: tracking.utmSource,
+          utm_medium: tracking.utmMedium,
+          utm_campaign: tracking.utmCampaign,
+          utm_term: tracking.utmTerm,
+          gclid: tracking.gclid,
+          fbclid: tracking.fbclid,
+          original_referrer: tracking.originalReferrer,
+          locale,
+          page_url: window.location.href,
+        }),
+      }).catch(() => {});
+    } catch {}
   };
 
   return (

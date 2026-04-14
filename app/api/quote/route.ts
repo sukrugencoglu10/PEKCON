@@ -7,6 +7,7 @@ import {
   extractGA4ClientId,
   estimateLeadValueServer,
 } from '@/lib/server-tracking';
+import { insertConversion } from '@/lib/analytics-db';
 
 export const dynamic = 'force-dynamic';
 
@@ -370,6 +371,29 @@ export async function POST(request: NextRequest) {
       containerCategory: validatedData.containerCategory,
       containerType: validatedData.containerType,
     }).catch(() => null);
+
+    // Analytics DB — lokal dönüşüm kaydı (admin dashboard için)
+    insertConversion({
+      type: 'form_submit',
+      utm_source: validatedData.utmSource,
+      utm_medium: validatedData.utmMedium,
+      utm_campaign: validatedData.utmCampaign,
+      utm_term: validatedData.utmTerm,
+      gclid: validatedData.gclid,
+      fbclid: validatedData.fbclid,
+      original_referrer: validatedData.originalReferrer,
+      container_category: validatedData.containerCategory,
+      container_type: validatedData.containerType,
+      quantity: validatedData.quantity,
+      transaction_type: validatedData.transactionType,
+      estimated_value: leadValue,
+      contact_name: validatedData.fullName,
+      contact_email: validatedData.email,
+      contact_phone: validatedData.phone,
+      company_name: validatedData.companyName,
+      page_url: eventSourceUrl,
+      user_agent: request.headers.get('user-agent') ?? undefined,
+    }).catch((err) => console.error('[Analytics DB] Insert error:', err));
     // ────────────────────────────────────────────────────────────────────────
 
     return NextResponse.json(

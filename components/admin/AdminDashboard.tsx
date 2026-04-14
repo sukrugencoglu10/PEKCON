@@ -8,6 +8,7 @@ import ContactsFetcher from './ContactsFetcher';
 import EmailTemplatePreview from './EmailTemplatePreview';
 import SendProgress from './SendProgress';
 import FormHeatmapTab from './FormHeatmapTab';
+import AnalyticsDashboard from './AnalyticsDashboard';
 import type { StockRow, Contact } from '@/lib/send-session';
 
 const STEPS = [
@@ -96,7 +97,7 @@ export default function AdminDashboard() {
         </a>
       </header>
 
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className={`${activeTab === 'analytics' ? 'max-w-7xl' : 'max-w-4xl'} mx-auto py-8 px-4 transition-all`}>
         {/* Tab navigation */}
         <div className="flex gap-1 mb-8 border-b border-gray-200">
           <button
@@ -185,8 +186,12 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === 'analytics' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
-            <FormHeatmapTab />
+          <div className="space-y-6">
+            <AnalyticsDashboard />
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+              <h3 className="text-sm font-semibold text-gray-900 mb-4">Form Alan Analizi (Heatmap)</h3>
+              <FormHeatmapTab />
+            </div>
           </div>
         )}
       </div>
