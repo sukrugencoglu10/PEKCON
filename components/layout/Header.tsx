@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Phone, Mail, ChevronDown, Calculator, Layers, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const t = getTranslations(locale as Locale);
 
   const isActive = (href: string) => {
@@ -140,8 +141,10 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   alt="PEKCON Container & Logistics"
                   width={207}
                   height={69}
-                  className="h-14 md:h-[70px] w-auto"
+                  className="h-14 md:h-[70px] w-auto select-none"
                   priority
+                  draggable={false}
+                  onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push('/admin'); }}
                 />
                 <div className="absolute left-[105%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0 pointer-events-none min-w-[150px]">
                   <div className="flex flex-col leading-[1.1]">
