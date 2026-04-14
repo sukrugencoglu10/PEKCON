@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Mail, Phone, MapPin, Instagram, Linkedin } from 'lucide-react';
 import { getTranslations, type Locale } from '@/lib/i18n';
+import FooterLogo from './FooterLogo';
 
 export default function Footer({ locale = 'tr' }: { locale?: string }) {
   const t = getTranslations(locale as Locale);
@@ -11,13 +11,7 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Şirket */}
           <div className="flex flex-col items-center">
-            <Image
-              src="/SVGpekcon_x.svg"
-              alt="PEKCON Container & Logistics"
-              width={160}
-              height={50}
-              className="mb-4 h-auto w-40"
-            />
+            <FooterLogo />
             <div className="flex space-x-6">
               <a
                 href="https://instagram.com"

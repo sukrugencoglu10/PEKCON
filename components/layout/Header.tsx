@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, Mail, ChevronDown, Calculator, Layers } from "lucide-react";
+import { Menu, X, Phone, Mail, ChevronDown, Calculator, Layers, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { getTranslations, type Locale } from "@/lib/i18n";
@@ -354,6 +354,16 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                     )}
                   </div>
                 ))}
+                <div className="flex justify-start mt-2 pt-3 border-t border-gray-100">
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-1.5 px-2 py-1 text-xs text-gray-300 hover:text-gray-400 transition-colors"
+                  >
+                    <Lock size={11} />
+                    <span>Yönetici</span>
+                  </Link>
+                </div>
                 <div className="flex items-center justify-center space-x-2 mt-4">
                   <Link href="/tr">
                     <button
