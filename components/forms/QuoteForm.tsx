@@ -130,6 +130,26 @@ export default function QuoteForm({
         abandonTimeoutRef.current = setTimeout(() => {
           if (submitStatus === 'idle') {
             trackFormAbandoned('quote_form', lastFieldRef.current);
+
+            // Turso DB'ye terk kaydı
+            try {
+              const tracking = JSON.parse(localStorage.getItem('site_tracking_data') || '{}');
+              fetch('/api/analytics/conversion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  type: 'form_abandon',
+                  utm_source: tracking.utmSource,
+                  utm_medium: tracking.utmMedium,
+                  utm_campaign: tracking.utmCampaign,
+                  utm_term: tracking.utmTerm,
+                  gclid: tracking.gclid,
+                  fbclid: tracking.fbclid,
+                  original_referrer: tracking.originalReferrer,
+                  page_url: window.location.href,
+                }),
+              }).catch(() => {});
+            } catch {}
           }
         }, 60000);
       }

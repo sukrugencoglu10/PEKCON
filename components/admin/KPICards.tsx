@@ -1,12 +1,13 @@
 'use client';
 
-import { FileText, MessageCircle, TrendingUp, Target } from 'lucide-react';
+import { FileText, MessageCircle, TrendingUp, LogOut } from 'lucide-react';
 
 interface KPIData {
   total_leads: number;
   total_whatsapp: number;
   total_value: number;
   total: number;
+  total_abandon: number;
 }
 
 interface KPICardsProps {
@@ -15,9 +16,13 @@ interface KPICardsProps {
 }
 
 export default function KPICards({ data, loading }: KPICardsProps) {
+  const abandonRate = data.total_leads + data.total_abandon > 0
+    ? Math.round((data.total_abandon / (data.total_leads + data.total_abandon)) * 100)
+    : 0;
+
   const cards = [
     {
-      label: 'Form Leadleri',
+      label: 'Form Gonderimleri',
       value: data.total_leads,
       format: 'number' as const,
       icon: FileText,
@@ -25,12 +30,21 @@ export default function KPICards({ data, loading }: KPICardsProps) {
       bg: 'bg-blue-50',
     },
     {
-      label: 'WhatsApp',
+      label: 'WhatsApp Tiklamalari',
       value: data.total_whatsapp,
       format: 'number' as const,
       icon: MessageCircle,
       color: 'text-green-600',
       bg: 'bg-green-50',
+    },
+    {
+      label: 'Form Terk',
+      value: data.total_abandon,
+      format: 'number' as const,
+      sub: `Terk orani: %${abandonRate}`,
+      icon: LogOut,
+      color: 'text-red-500',
+      bg: 'bg-red-50',
     },
     {
       label: 'Toplam Deger (TRY)',
@@ -39,14 +53,6 @@ export default function KPICards({ data, loading }: KPICardsProps) {
       icon: TrendingUp,
       color: 'text-amber-600',
       bg: 'bg-amber-50',
-    },
-    {
-      label: 'Toplam Donusum',
-      value: data.total,
-      format: 'number' as const,
-      icon: Target,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50',
     },
   ];
 
@@ -68,11 +74,16 @@ export default function KPICards({ data, loading }: KPICardsProps) {
             {loading ? (
               <div className="h-8 bg-gray-100 rounded animate-pulse" />
             ) : (
-              <p className={`text-2xl font-bold ${card.color}`}>
-                {card.format === 'currency'
-                  ? new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(card.value)
-                  : card.value.toLocaleString('tr-TR')}
-              </p>
+              <>
+                <p className={`text-2xl font-bold ${card.color}`}>
+                  {card.format === 'currency'
+                    ? new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(card.value)
+                    : card.value.toLocaleString('tr-TR')}
+                </p>
+                {'sub' in card && card.sub && (
+                  <p className="text-xs text-gray-400 mt-1">{card.sub}</p>
+                )}
+              </>
             )}
           </div>
         );

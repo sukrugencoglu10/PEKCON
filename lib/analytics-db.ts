@@ -48,7 +48,7 @@ async function ensureTable() {
 }
 
 export interface ConversionInput {
-  type: 'form_submit' | 'whatsapp_click';
+  type: 'form_submit' | 'whatsapp_click' | 'form_abandon';
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
@@ -112,6 +112,7 @@ export async function getConversionSummary(from: string, to: string) {
       COUNT(*) as total,
       SUM(CASE WHEN type = 'form_submit' THEN 1 ELSE 0 END) as total_leads,
       SUM(CASE WHEN type = 'whatsapp_click' THEN 1 ELSE 0 END) as total_whatsapp,
+      SUM(CASE WHEN type = 'form_abandon' THEN 1 ELSE 0 END) as total_abandon,
       COALESCE(SUM(estimated_value), 0) as total_value
     FROM conversions
     WHERE created_at >= ? AND created_at < ?`,
@@ -123,6 +124,7 @@ export async function getConversionSummary(from: string, to: string) {
     total_leads: Number(row.total_leads ?? 0),
     total_whatsapp: Number(row.total_whatsapp ?? 0),
     total_value: Number(row.total_value ?? 0),
+    total_abandon: Number(row.total_abandon ?? 0),
   };
 }
 
@@ -133,6 +135,7 @@ export async function getConversionsByDay(from: string, to: string) {
       date(created_at) as date,
       SUM(CASE WHEN type = 'form_submit' THEN 1 ELSE 0 END) as form_count,
       SUM(CASE WHEN type = 'whatsapp_click' THEN 1 ELSE 0 END) as whatsapp_count,
+      SUM(CASE WHEN type = 'form_abandon' THEN 1 ELSE 0 END) as abandon_count,
       COALESCE(SUM(estimated_value), 0) as value
     FROM conversions
     WHERE created_at >= ? AND created_at < ?
@@ -144,6 +147,7 @@ export async function getConversionsByDay(from: string, to: string) {
     date: String(r.date),
     form_count: Number(r.form_count),
     whatsapp_count: Number(r.whatsapp_count),
+    abandon_count: Number(r.abandon_count),
     value: Number(r.value),
   }));
 }

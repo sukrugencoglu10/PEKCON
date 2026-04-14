@@ -15,6 +15,7 @@ interface DailyData {
   date: string;
   form_count: number;
   whatsapp_count: number;
+  abandon_count: number;
   value: number;
 }
 
@@ -57,6 +58,10 @@ export default function ConversionChart({ data, loading }: ConversionChartProps)
                 <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
               </linearGradient>
+              <linearGradient id="abandonGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#EF4444" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
+              </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9CA3AF" />
@@ -65,12 +70,12 @@ export default function ConversionChart({ data, loading }: ConversionChartProps)
               contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '13px' }}
               formatter={(value, name) => [
                 value,
-                name === 'form_count' ? 'Form' : 'WhatsApp',
+                name === 'form_count' ? 'Form' : name === 'whatsapp_count' ? 'WhatsApp' : 'Terk',
               ]}
             />
             <Legend
               formatter={(value: string) =>
-                value === 'form_count' ? 'Form Lead' : 'WhatsApp'
+                value === 'form_count' ? 'Form Lead' : value === 'whatsapp_count' ? 'WhatsApp' : 'Terk'
               }
             />
             <Area
@@ -86,6 +91,14 @@ export default function ConversionChart({ data, loading }: ConversionChartProps)
               stroke="#22C55E"
               strokeWidth={2}
               fill="url(#waGrad)"
+            />
+            <Area
+              type="monotone"
+              dataKey="abandon_count"
+              stroke="#EF4444"
+              strokeWidth={2}
+              strokeDasharray="4 2"
+              fill="url(#abandonGrad)"
             />
           </AreaChart>
         </ResponsiveContainer>

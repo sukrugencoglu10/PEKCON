@@ -8,12 +8,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type, utm_source, utm_medium, utm_campaign, utm_term, gclid, fbclid, original_referrer, locale, page_url } = body;
 
-    if (type !== 'whatsapp_click') {
+    if (!['whatsapp_click', 'form_abandon'].includes(type)) {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }
 
     await insertConversion({
-      type: 'whatsapp_click',
+      type,
       utm_source: utm_source || undefined,
       utm_medium: utm_medium || undefined,
       utm_campaign: utm_campaign || undefined,

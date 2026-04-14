@@ -14,11 +14,13 @@ interface SummaryData {
     total_leads: number;
     total_whatsapp: number;
     total_value: number;
+    total_abandon: number;
   };
   daily: Array<{
     date: string;
     form_count: number;
     whatsapp_count: number;
+    abandon_count: number;
     value: number;
   }>;
   attribution: Array<{
@@ -76,7 +78,7 @@ function getDateRange(range: string): { from: string; to: string } {
 }
 
 const emptyData: SummaryData = {
-  kpi: { total: 0, total_leads: 0, total_whatsapp: 0, total_value: 0 },
+  kpi: { total: 0, total_leads: 0, total_whatsapp: 0, total_value: 0, total_abandon: 0 },
   daily: [],
   attribution: [],
   google_ads: [],
