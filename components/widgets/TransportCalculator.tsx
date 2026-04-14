@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import {
@@ -154,6 +154,7 @@ export default function TransportCalculator({ locale = 'tr' }: { locale?: Locale
   const [emptyReturn, setEmptyReturn] = useState(false);
   const [breakdown, setBreakdown] = useState<Breakdown | null>(null);
   const [calculated, setCalculated] = useState(false);
+  const trackedRef = useRef(false);
 
   // Fetch live fuel price on mount
   useEffect(() => {
@@ -175,6 +176,21 @@ export default function TransportCalculator({ locale = 'tr' }: { locale?: Locale
     const result = calculateCosts(distance, fuelPrice, containerType, emptyReturn);
     setBreakdown(result);
     setCalculated(true);
+
+    // İlk hesaplamada dataLayer'a event bas
+    if (!trackedRef.current) {
+      trackedRef.current = true;
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'generate_lead',
+          lead_type: 'transport_calc',
+          container_type: containerType,
+          distance_km: distance,
+          empty_return: emptyReturn,
+          estimated_value: result.total,
+        });
+      }
+    }
   }, [distance, fuelPrice, containerType, emptyReturn]);
 
   // Auto-update when inputs change after first calculation

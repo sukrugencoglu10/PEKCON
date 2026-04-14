@@ -31,6 +31,9 @@ export const trackLeadConversion = (formData: QuoteFormData) => {
       currency: 'TRY',
       value: estimateLeadValue(formData),
       method: 'quote_form',
+      lead_type: 'quote_request',
+      container_type: formData.containerType,
+      user_segment: formData.companyName ? 'B2B' : 'B2C',
     });
   }
 };
@@ -94,14 +97,17 @@ export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
   const firstName = nameParts[0] || '';
   const lastName = nameParts.slice(1).join(' ') || '';
 
+  const userSegment = formData.companyName ? 'B2B' : 'B2C';
+
   trackEvent('form_submit', {
     form_name: 'quote_form',
+    lead_type: 'quote_request',
     form_type: formData.transactionType,
     container_category: formData.containerCategory,
     container_type: formData.containerType,
     quantity: formData.quantity,
     estimated_value: estimateLeadValue(formData),
-    has_company: !!formData.companyName,
+    user_segment: userSegment,
     // Enhanced Conversions Data
     email: formData.email,
     phone: formData.phone,
