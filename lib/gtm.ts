@@ -30,7 +30,7 @@ export const trackLeadConversion = (formData: QuoteFormData) => {
     method: 'quote_form',
     lead_type: 'quote_request',
     container_type: formData.containerType,
-    user_segment: formData.companyName ? 'B2B' : 'B2C',
+    user_type: formData.companyName ? 'B2B' : 'B2C',
   });
 };
 
@@ -95,7 +95,7 @@ export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
 
   const userSegment = formData.companyName ? 'B2B' : 'B2C';
 
-  trackEvent('form_submit', {
+  trackEvent('quote_submit', {
     form_name: 'quote_form',
     lead_type: 'quote_request',
     form_type: formData.transactionType,
@@ -103,7 +103,7 @@ export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
     container_type: formData.containerType,
     quantity: formData.quantity,
     estimated_value: estimateLeadValue(formData),
-    user_segment: userSegment,
+    user_type: userSegment,
     // Enhanced Conversions Data
     email: formData.email,
     phone: formData.phone,
