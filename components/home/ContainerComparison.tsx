@@ -177,7 +177,7 @@ export default function ContainerComparison({
   const sectionLabel = locale === 'tr' ? categoryLabel[containerCategory].tr : categoryLabel[containerCategory].en;
 
   return (
-    <div className="mt-6">
+    <div className="mt-1 md:mt-6">
       {/* Section label */}
       <div className="flex justify-center mb-3">
         <span className={`text-[10px] md:text-[9px] uppercase tracking-[0.2em] font-mono ${isDark ? 'text-gray-300' : 'text-gray-400'}`}>
