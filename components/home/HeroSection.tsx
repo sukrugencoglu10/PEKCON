@@ -125,7 +125,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
               dangerouslySetInnerHTML={{ __html: kwConfig?.heroDescription || t.hero.description }}
             />
 
-            <motion.div variants={heroSlide} className="flex flex-col sm:flex-row items-center lg:justify-start gap-3">
+            <motion.div variants={heroSlide} className="flex flex-col-reverse sm:flex-row items-center lg:justify-start gap-3">
               <Link href="https://wa.me/905427179357" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:min-w-[180px] !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-xl hover:shadow-red-600/30 text-sm font-bold">
                   {t.hero.cta3}
