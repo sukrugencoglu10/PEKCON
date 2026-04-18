@@ -169,7 +169,7 @@ export default function ContainerComparison({
 
   // Section label per category
   const categoryLabel: Record<ContainerCategory, { tr: string; en: string }> = {
-    standard:  { tr: 'Kuru Yük Karşılaştırma',  en: 'Dry Cargo Comparison'  },
+    standard:  { tr: 'TIKLA VE KARŞILAŞTIR',  en: 'CLICK AND COMPARE'  },
     reefer:    { tr: 'Soğutmalı Karşılaştırma',  en: 'Reefer Comparison'     },
     flat_rack: { tr: 'Flat Rack Karşılaştırma',  en: 'Flat Rack Comparison'  },
     open_top:  { tr: 'Open Top Karşılaştırma',   en: 'Open Top Comparison'   },
