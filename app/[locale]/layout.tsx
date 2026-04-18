@@ -32,10 +32,41 @@ const satisfy = Satisfy({
 });
 
 export const metadata: Metadata = {
-  title: 'PEKCON Container & Logistics',
-  description: 'Küresel lojistikte güvenilir çözüm ortağınız',
+  title: {
+    default: 'PEKCON Container & Logistics',
+    template: '%s | PEKCON',
+  },
+  description: 'Küresel lojistikte güvenilir çözüm ortağınız. Konteyner satış, kiralama ve taşımacılık hizmetleri.',
+  metadataBase: new URL('https://pekcon.com'),
   icons: {
     icon: '/favicon.png',
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'PEKCON Container & Logistics',
+    images: [
+      {
+        url: '/x2.webp',
+        width: 1200,
+        height: 630,
+        alt: 'PEKCON Container & Logistics',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@pekcon',
+    images: ['/x2.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

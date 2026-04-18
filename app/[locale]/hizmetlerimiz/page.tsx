@@ -2,16 +2,84 @@ import { Ship, Truck, Train, Route, ClipboardCheck } from 'lucide-react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { getTranslations, type Locale } from '@/lib/i18n';
+import type { Metadata } from 'next';
+import JsonLd from '@/components/seo/JsonLd';
 
 // ISR: Revalidate every 1 hour
 export const revalidate = 3600;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params;
+  if (locale === 'tr') {
+    return {
+      title: 'Lojistik Hizmetlerimiz | Denizyolu, Karayolu, Demiryolu | PEKCON',
+      description: 'FCL/LCL denizyolu taşımacılığı, karayolu TIR, demiryolu ve intermodal taşımacılık hizmetleri. Gümrük işlemleri ve kapıdan kapıya teslimat. Ücretsiz teklif alın.',
+      alternates: { canonical: 'https://pekcon.com/tr/hizmetlerimiz', languages: { 'tr': 'https://pekcon.com/tr/hizmetlerimiz', 'en': 'https://pekcon.com/en/services' } },
+      openGraph: {
+        title: 'Lojistik Hizmetlerimiz | Denizyolu, Karayolu, Demiryolu | PEKCON',
+        description: 'FCL/LCL denizyolu, karayolu TIR, demiryolu ve intermodal taşımacılık hizmetleri.',
+        url: 'https://pekcon.com/tr/hizmetlerimiz',
+        siteName: 'PEKCON Container & Logistics',
+        type: 'website',
+      },
+    };
+  }
+  return {
+    title: 'Logistics Services | Sea, Road & Rail Freight | PEKCON',
+    description: 'FCL/LCL sea freight, road freight (TIR), rail and intermodal transport services. Customs clearance and door-to-door delivery. Get a free quote.',
+    alternates: { canonical: 'https://pekcon.com/en/services', languages: { 'tr': 'https://pekcon.com/tr/hizmetlerimiz', 'en': 'https://pekcon.com/en/services' } },
+    openGraph: {
+      title: 'Logistics Services | Sea, Road & Rail Freight | PEKCON',
+      description: 'FCL/LCL sea freight, road freight, rail and intermodal transport services.',
+      url: 'https://pekcon.com/en/services',
+      siteName: 'PEKCON Container & Logistics',
+      type: 'website',
+    },
+  };
+}
 
 export default async function ServicesPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = getTranslations(locale);
 
+  const serviceSchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: locale === 'tr' ? 'Denizyolu Taşımacılık' : 'Sea Freight',
+      provider: { '@type': 'Organization', name: 'PEKCON Container & Logistics' },
+      description: locale === 'tr'
+        ? 'FCL ve LCL denizyolu taşımacılık hizmetleri. Konteyner konsolidasyonu, gümrük işlemleri ve kapıdan kapıya teslimat.'
+        : 'FCL and LCL sea freight services. Container consolidation, customs clearance and door-to-door delivery.',
+      areaServed: { '@type': 'Place', name: 'Worldwide' },
+      serviceType: 'Sea Freight / Ocean Freight',
+      url: `https://pekcon.com/${locale}/hizmetlerimiz`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: locale === 'tr' ? 'Karayolu Taşımacılık' : 'Road Freight',
+      provider: { '@type': 'Organization', name: 'PEKCON Container & Logistics' },
+      description: locale === 'tr'
+        ? 'Avrupa ve Asya arasında TIR taşımacılığı. ADR belgeli araçlarla tehlikeli madde taşımacılığı.'
+        : 'TIR road freight between Europe and Asia. Dangerous goods transport with ADR-certified vehicles.',
+      areaServed: { '@type': 'Place', name: 'Europe and Asia' },
+      serviceType: 'Road Freight',
+      url: `https://pekcon.com/${locale}/hizmetlerimiz`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: locale === 'tr' ? 'Demiryolu Taşımacılık' : 'Rail Freight',
+      provider: { '@type': 'Organization', name: 'PEKCON Container & Logistics' },
+      serviceType: 'Rail Freight',
+      url: `https://pekcon.com/${locale}/hizmetlerimiz`,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 py-20">
+      <JsonLd data={serviceSchema} />
       <div className="container mx-auto px-4 pt-20">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-4">

@@ -1,15 +1,66 @@
 import Image from 'next/image';
 import { getTranslations, type Locale } from '@/lib/i18n';
+import type { Metadata } from 'next';
+import JsonLd from '@/components/seo/JsonLd';
 
 // ISR: Revalidate every 1 hour
 export const revalidate = 3600;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params;
+  if (locale === 'tr') {
+    return {
+      title: 'Hakkımızda | PEKCON Konteyner & Lojistik',
+      description: '2009\'den bu yana Türkiye\'nin güvenilir konteyner ve lojistik çözüm ortağı PEKCON. 500+ mutlu müşteri, 1000+ tamamlanan proje ve 15+ yıllık sektör deneyimi.',
+      alternates: { canonical: 'https://pekcon.com/tr/hakkimizda', languages: { 'tr': 'https://pekcon.com/tr/hakkimizda', 'en': 'https://pekcon.com/en/about' } },
+      openGraph: {
+        title: 'Hakkımızda | PEKCON Konteyner & Lojistik',
+        description: '2009\'den bu yana Türkiye\'nin güvenilir konteyner ve lojistik çözüm ortağı.',
+        url: 'https://pekcon.com/tr/hakkimizda',
+        siteName: 'PEKCON Container & Logistics',
+        type: 'website',
+      },
+    };
+  }
+  return {
+    title: 'About Us | PEKCON Container & Logistics',
+    description: 'PEKCON – Your trusted container and logistics partner since 2009. 500+ clients, 1000+ completed projects, 15+ years of industry expertise in Turkey and globally.',
+    alternates: { canonical: 'https://pekcon.com/en/about', languages: { 'tr': 'https://pekcon.com/tr/hakkimizda', 'en': 'https://pekcon.com/en/about' } },
+    openGraph: {
+      title: 'About Us | PEKCON Container & Logistics',
+      description: 'Your trusted container and logistics partner since 2009.',
+      url: 'https://pekcon.com/en/about',
+      siteName: 'PEKCON Container & Logistics',
+      type: 'website',
+    },
+  };
+}
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = getTranslations(locale);
 
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'PEKCON Container & Logistics',
+    url: 'https://pekcon.com',
+    logo: 'https://pekcon.com/logo.png',
+    foundingDate: '2009',
+    numberOfEmployees: { '@type': 'QuantitativeValue', value: 50 },
+    description: locale === 'tr'
+      ? '2009 yılından itibaren konteyner satış, kiralama ve global lojistik alanında hizmet veren PEKCON, 500+ müşteri ve 1000+ projeyle Türkiye\'nin güvenilir çözüm ortağıdır.'
+      : 'PEKCON has been providing container sales, rental and global logistics solutions since 2009, with 500+ clients and 1000+ completed projects.',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'İstanbul',
+      addressCountry: 'TR',
+    },
+  };
+
   return (
     <div className="min-h-screen bg-white py-20">
+      <JsonLd data={organizationSchema} />
       <div className="container mx-auto px-4 pt-20">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">

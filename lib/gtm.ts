@@ -38,7 +38,16 @@ export const trackLeadConversion = (formData: QuoteFormData) => {
 export const trackWhatsAppConversion = (locale: string) => {
   if (typeof window === 'undefined') return;
 
-  // GA4 + Google Ads: generate_lead event
+  // localStorage'dan UTM / gclid verilerini oku
+  const tracking = (() => {
+    try { return JSON.parse(localStorage.getItem('site_tracking_data') || '{}'); }
+    catch { return {}; }
+  })();
+
+  const now = new Date();
+  const transactionId = `wa_${now.getTime()}`;
+
+  // GA4: generate_lead event
   if (typeof window.gtag === 'function') {
     window.gtag('event', 'generate_lead', {
       currency: 'TRY',
@@ -47,11 +56,22 @@ export const trackWhatsAppConversion = (locale: string) => {
     });
   }
 
-  // DataLayer fallback
+  // DataLayer — GTM bu event'i yakalar ve Google Ads'e iletir
   trackEvent('whatsapp_click', {
     cta_location: 'floating_button',
     method: 'whatsapp',
     locale,
+    conversion_time: now.toISOString(),
+    page_url: window.location.href,
+    page_path: window.location.pathname,
+    page_referrer: document.referrer || '(direct)',
+    utm_source: tracking.utmSource || '(none)',
+    utm_medium: tracking.utmMedium || '(none)',
+    utm_campaign: tracking.utmCampaign || '(none)',
+    utm_term: tracking.utmTerm || '(none)',
+    gclid: tracking.gclid || null,
+    fbclid: tracking.fbclid || null,
+    transaction_id: transactionId,
   });
 };
 
@@ -95,6 +115,11 @@ export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
 
   const userSegment = formData.companyName ? 'B2B' : 'B2C';
 
+  const session = formSession['quote_form'];
+  const time_spent = session ? Math.round((Date.now() - session.startTime) / 1000) : undefined;
+  const first_field = session?.firstField ?? undefined;
+  delete formSession['quote_form'];
+
   trackEvent('form_submit', {
     form_name: 'quote_form',
     lead_type: 'quote_request',
@@ -104,11 +129,13 @@ export const trackQuoteFormSubmit = (formData: QuoteFormData) => {
     quantity: formData.quantity,
     estimated_value: estimateLeadValue(formData),
     user_type: userSegment,
-    // Enhanced Conversions Data
-    email: formData.email,
-    phone: formData.phone,
-    first_name: firstName,
-    last_name: lastName,
+    first_field,
+    time_spent,
+    // Enhanced Conversions Data — key names must match GTM dlv variables
+    user_email: formData.email,
+    user_phone: formData.phone,
+    user_first_name: firstName,
+    user_last_name: lastName,
   });
 };
 
@@ -131,7 +158,13 @@ export const trackFormError = (formName: string, field: string, error: string) =
   });
 };
 
+// Form session state — reset on each form start
+const formSession: Record<string, { startTime: number; firstField: string | null }> = {};
+
 export const trackFormFieldFocus = (formName: string, field: string) => {
+  if (formSession[formName] && !formSession[formName].firstField) {
+    formSession[formName].firstField = field;
+  }
   trackEvent('form_field_focus', {
     form_name: formName,
     field_name: field,
@@ -139,25 +172,34 @@ export const trackFormFieldFocus = (formName: string, field: string) => {
 };
 
 export const trackFormStarted = (formName: string) => {
+  formSession[formName] = { startTime: Date.now(), firstField: null };
   trackEvent('form_started', {
     form_name: formName,
   });
 };
 
 export const trackFormAbandoned = (formName: string, lastField?: string) => {
+  const session = formSession[formName];
+  const time_spent = session ? Math.round((Date.now() - session.startTime) / 1000) : undefined;
+  const first_field = session?.firstField ?? undefined;
+  delete formSession[formName];
+
   trackEvent('form_abandoned', {
     form_name: formName,
     last_field: lastField,
+    first_field,
+    time_spent,
     page_location: typeof window !== 'undefined' ? window.location.pathname : '',
     timestamp: new Date().toISOString(),
   });
 };
 
 // Interaction Tracking Events
-export const trackCTAClick = (ctaName: string, location: string) => {
+export const trackCTAClick = (ctaName: string, location: string, ctaText?: string) => {
   trackEvent('cta_click', {
     cta_name: ctaName,
     cta_location: location,
+    cta_text: ctaText,
   });
 };
 

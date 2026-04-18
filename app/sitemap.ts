@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next';
 
 const trRoutes = [
-  { slug: '',           changeFreq: 'weekly' as const, priority: 1.0 },
-  { slug: 'hakkimizda', changeFreq: 'weekly' as const, priority: 0.8 },
-  { slug: 'hizmetlerimiz', changeFreq: 'weekly' as const, priority: 0.8 },
-  { slug: 'konteynerler',  changeFreq: 'weekly' as const, priority: 0.8 },
-  { slug: 'iletisim',      changeFreq: 'weekly' as const, priority: 0.8 },
-  { slug: 'teklif-al',     changeFreq: 'daily' as const,  priority: 0.9 },
+  { slug: '',                    changeFreq: 'weekly' as const,  priority: 1.0 },
+  { slug: 'hakkimizda',          changeFreq: 'weekly' as const,  priority: 0.8 },
+  { slug: 'hizmetlerimiz',       changeFreq: 'weekly' as const,  priority: 0.9 },
+  { slug: 'konteynerler',        changeFreq: 'weekly' as const,  priority: 0.8 },
+  { slug: 'iletisim',            changeFreq: 'weekly' as const,  priority: 0.8 },
+  { slug: 'teklif-al',           changeFreq: 'daily'  as const,  priority: 0.9 },
+  { slug: 'maliyet-hesaplayici', changeFreq: 'monthly' as const, priority: 0.7 },
 ];
 
 const enRoutes = [
