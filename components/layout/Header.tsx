@@ -27,6 +27,7 @@ interface NavLink {
 export default function Header({ locale = "tr" }: { locale?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,6 +48,14 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -131,9 +140,9 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
               className="flex items-center p-0 m-0 overflow-visible group"
             >
               <motion.div
-                variants={flagWave}
+                variants={isMobile ? undefined : flagWave}
                 initial="rest"
-                animate="animate"
+                animate={isMobile ? "rest" : "animate"}
                 className="origin-left flex items-center"
               >
                 <Image

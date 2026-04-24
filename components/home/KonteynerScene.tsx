@@ -282,7 +282,7 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
   const isStandard = category === 'standard';
 
   return (
-    <div className="relative w-full h-[280px] flex items-center justify-center select-none">
+    <div className="relative w-full h-[200px] md:h-[280px] flex items-center justify-center select-none">
       {/* Floor glow — color matches category */}
       <div
         className="absolute pointer-events-none"

@@ -185,7 +185,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
           </div>
 
           {/* ─── COL 2: Quote Form (mobil: order-3, desktop: order-2) ─── */}
-          <motion.div variants={heroSlide} className="w-full order-4 lg:order-2" id="quote-form">
+          <motion.div variants={heroSlide} className="w-full order-4 lg:order-2 lg:self-end" id="quote-form">
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
@@ -199,7 +199,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
 
           {/* ─── COL 3: 3D Container + Comparison (mobil: order-2, desktop: order-3) ─── */}
           {showScene && (
-            <motion.div variants={heroSlide} className="order-2 lg:order-3">
+            <motion.div variants={heroSlide} className="order-2 lg:order-3 -mt-12 lg:mt-0 lg:self-end">
               <KonteynerScene containerType={selectedContainer} />
               <ContainerComparison
                 locale={locale}

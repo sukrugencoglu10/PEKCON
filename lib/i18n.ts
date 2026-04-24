@@ -4,7 +4,7 @@ export const translations = {
     hero: {
       title1: 'Satılık Yük Konteynerleri',
       title2: 'Sıfır & İkinci El',
-      title3: 'Türkiye\'den Dünyaya Teslimat',
+      title3: 'Türkiye\'nin Lider Konteyner Tedarikçisi',
       heroH2: 'Her Ebatta Yüksek Kondisyonlu Konteyner<br class="sm:hidden" /> Hızlı Teklif, Hazır Stok',
       description: 'Sıfır ve ikinci el yük konteynerleri — 20ft, 40ft ve 40HC dahil her ebatta yüksek kondisyon. Türkiye\'den dünyaya hızlı teklif ve kesintisiz tedarik.',
       cta1: 'Hemen Teklif Al',
@@ -320,7 +320,7 @@ export const translations = {
   en: {
     // Hero Section
     hero: {
-      title1: 'Shipping Containers for Sale',
+      title1: 'Shipping Containers<br /> for Sale',
       title2: 'New & Used',
       title3: 'Worldwide Delivery from Türkiye',
       heroH2: 'All Sizes, High Condition — Fast Quote, Ready Stock',
