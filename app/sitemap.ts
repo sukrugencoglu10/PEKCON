@@ -17,6 +17,7 @@ const enRoutes = [
   { slug: 'containers',changeFreq: 'weekly' as const, priority: 0.8 },
   { slug: 'contact',   changeFreq: 'weekly' as const, priority: 0.8 },
   { slug: 'quote',     changeFreq: 'daily' as const,  priority: 0.9 },
+  { slug: 'cost-calculator', changeFreq: 'monthly' as const, priority: 0.7 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

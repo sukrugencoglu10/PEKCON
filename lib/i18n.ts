@@ -2,10 +2,11 @@ export const translations = {
   tr: {
     // Hero Section
     hero: {
-      title1: 'Satılık',
-      title2: 'Uluslararası Dolaşımda',
-      title3: 'Yük Konteynerleri',
-      description: 'Sıfır ve İkinci El Seçeneklerimizde<br />İhtiyacınız Olan Her Ebatta<br />Yüksek Kondisyonda Konteyner Çözümleri !<br />Küresel ve Yerel Operasyonlarınızın Güvencesiyiz.',
+      title1: 'Satılık Yük Konteynerleri',
+      title2: 'Sıfır & İkinci El',
+      title3: 'Türkiye\'den Dünyaya Teslimat',
+      heroH2: 'Her Ebatta Yüksek Kondisyonlu Konteyner — Hızlı Teklif, Hazır Stok',
+      description: 'Sıfır ve ikinci el yük konteynerleri — 20ft, 40ft ve 40HC dahil her ebatta yüksek kondisyon. Türkiye\'den dünyaya hızlı teklif ve kesintisiz tedarik.',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
       cta3: 'İletişime Geçiniz',
@@ -319,10 +320,11 @@ export const translations = {
   en: {
     // Hero Section
     hero: {
-      title1: 'for Sale',
-      title2: 'International',
-      title3: 'SOC Containers',
-      description: 'Your Reliable Solution Partner <br class="sm:hidden" /> in Global Logistics; <br class="sm:hidden" /> With New and Used Containers <br class="sm:hidden" /> in All Sizes and Conditions.',
+      title1: 'Shipping Containers for Sale',
+      title2: 'New & Used',
+      title3: 'Worldwide Delivery from Türkiye',
+      heroH2: 'All Sizes, High Condition — Fast Quote, Ready Stock',
+      description: 'New and used shipping containers — 20ft, 40ft and 40HC in every size, high condition. Fast quote and uninterrupted supply from Türkiye to the world.',
       cta1: 'Get Free Quote',
       cta3: 'Contact Us',
       quickQuote: {

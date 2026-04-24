@@ -82,7 +82,9 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
       <div className="absolute inset-0">
         <Image
           src="/hero-bg.webp"
-          alt="Yük Konteynerleri - PEKCON"
+          alt={locale === 'en'
+            ? 'Shipping containers for sale - 20ft, 40ft and 40HC SOC containers from PEKCON Türkiye'
+            : 'Satılık 20ft, 40ft ve 40HC sıfır ve ikinci el yük konteynerleri - PEKCON İstanbul stoku'}
           fill
           className="object-cover"
           priority
@@ -119,9 +121,15 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
               />
             </motion.h1>
 
+            <motion.h2
+              variants={heroSlide}
+              className="text-sm md:text-base lg:text-sm xl:text-base text-gray-300 mb-2 font-semibold drop-shadow-md"
+              dangerouslySetInnerHTML={{ __html: t.hero.heroH2 }}
+            />
+
             <motion.p
               variants={heroSlide}
-              className="text-sm md:text-base lg:text-sm xl:text-base text-gray-200 mb-6 leading-relaxed drop-shadow-md whitespace-pre-line"
+              className="text-xs md:text-sm lg:text-xs xl:text-sm text-gray-400 mb-6 leading-relaxed drop-shadow-md whitespace-pre-line"
               dangerouslySetInnerHTML={{ __html: kwConfig?.heroDescription || t.hero.description }}
             />
 
@@ -136,21 +144,23 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
               <div className="w-full sm:w-auto relative">
                 <AnimatePresence mode="wait">
                   {animState === 'idle' && (
-                    <motion.div key="button-d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}>
-                      <Button
-                        size="lg"
-                        className="w-full sm:min-w-[180px] bg-primary-600 hover:bg-primary-500 text-white shadow-2xl hover:shadow-primary-500/50 text-sm font-bold group relative overflow-hidden"
-                        onClick={handleQuoteClick}
-                      >
-                        <motion.div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-10" animate={{ left: ['-50%', '150%'] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }} />
-                        <span className="relative z-20 flex items-center">
-                          {t.nav.quote}
-                          <motion.div animate={{ x: [0, 8, 0], opacity: [1, 0.7, 1] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }} className="ml-2">
-                            <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
-                          </motion.div>
-                        </span>
-                      </Button>
-                    </motion.div>
+                    <motion.a
+                      key="button-d"
+                      href="#quote-form"
+                      onClick={handleQuoteClick}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ scale: 0.8, opacity: 0 }}
+                      className="inline-flex items-center justify-center rounded-lg transition-all duration-300 px-8 py-4 w-full sm:min-w-[180px] bg-primary-600 hover:bg-primary-500 text-white shadow-2xl hover:shadow-primary-500/50 text-sm font-bold group relative overflow-hidden"
+                    >
+                      <motion.div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-10" animate={{ left: ['-50%', '150%'] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }} />
+                      <span className="relative z-20 flex items-center">
+                        {t.nav.quote}
+                        <motion.div animate={{ x: [0, 8, 0], opacity: [1, 0.7, 1] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }} className="ml-2">
+                          <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
+                        </motion.div>
+                      </span>
+                    </motion.a>
                   )}
                   {animState === 'transforming' && (
                     <motion.div key="ship-intro-d" initial={{ scale: 0.2, opacity: 0, x: -20 }} animate={{ scale: 1.5, opacity: 1, x: 0 }} exit={{ opacity: 1 }} className="flex items-center justify-center py-4">
@@ -212,21 +222,23 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
             <div className="w-full relative">
               <AnimatePresence mode="wait">
                 {animState === 'idle' && (
-                  <motion.div key="button-m" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}>
-                    <Button
-                      size="lg"
-                      className="w-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl hover:shadow-primary-500/50 text-sm font-bold group relative overflow-hidden"
-                      onClick={handleQuoteClick}
-                    >
-                      <motion.div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-10" animate={{ left: ['-50%', '150%'] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }} />
-                      <span className="relative z-20 flex items-center justify-center">
-                        {t.nav.quote}
-                        <motion.div animate={{ y: [0, 8, 0], opacity: [1, 0.7, 1] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }} className="ml-2">
-                          <ChevronDown size={20} className="group-hover:scale-110 transition-transform" />
-                        </motion.div>
-                      </span>
-                    </Button>
-                  </motion.div>
+                  <motion.a
+                    key="button-m"
+                    href="#quote-form"
+                    onClick={handleQuoteClick}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    className="inline-flex items-center justify-center rounded-lg transition-all duration-300 px-8 py-4 w-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl hover:shadow-primary-500/50 text-sm font-bold group relative overflow-hidden"
+                  >
+                    <motion.div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-10" animate={{ left: ['-50%', '150%'] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }} />
+                    <span className="relative z-20 flex items-center justify-center">
+                      {t.nav.quote}
+                      <motion.div animate={{ y: [0, 8, 0], opacity: [1, 0.7, 1] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }} className="ml-2">
+                        <ChevronDown size={20} className="group-hover:scale-110 transition-transform" />
+                      </motion.div>
+                    </span>
+                  </motion.a>
                 )}
                 {animState === 'transforming' && (
                   <motion.div key="ship-intro-m" initial={{ scale: 0.2, opacity: 0, x: -20 }} animate={{ scale: 1.5, opacity: 1, x: 0 }} exit={{ opacity: 1 }} className="flex items-center justify-center py-4">

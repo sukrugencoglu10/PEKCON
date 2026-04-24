@@ -1,4 +1,5 @@
 import TransportCalculator from '@/components/widgets/TransportCalculator';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import type { Locale } from '@/lib/i18n';
 import type { Metadata } from 'next';
 
@@ -39,6 +40,7 @@ export default async function CostCalculatorPage({ params }: { params: Promise<{
 
   return (
     <main className="pt-0">
+      <BreadcrumbJsonLd locale={locale} slug="maliyet-hesaplayici" />
       <TransportCalculator locale={locale} />
     </main>
   );

@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import type { Metadata } from 'next';
 import JsonLd from '@/components/seo/JsonLd';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 
 // ISR: Revalidate every 1 hour
 export const revalidate = 3600;
@@ -80,6 +81,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   return (
     <div className="min-h-screen bg-gray-50 py-20">
       <JsonLd data={serviceSchema} />
+      <BreadcrumbJsonLd locale={locale} slug="hizmetlerimiz" />
       <div className="container mx-auto px-4 pt-20">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-display font-black text-dark-900 mb-4">

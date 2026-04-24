@@ -169,7 +169,7 @@ export default function ContainerComparison({
 
   // Section label per category
   const categoryLabel: Record<ContainerCategory, { tr: string; en: string }> = {
-    standard:  { tr: 'TIKLA VE KARŞILAŞTIR',  en: 'CLICK AND COMPARE'  },
+    standard:  { tr: 'Uluslararası Dolaşımda, 20ft, 40ft, 40HC Konteyner Seçenekleri',  en: 'International SOC Containers: 20ft, 40ft, 40HC Options'  },
     reefer:    { tr: 'Soğutmalı Karşılaştırma',  en: 'Reefer Comparison'     },
     flat_rack: { tr: 'Flat Rack Karşılaştırma',  en: 'Flat Rack Comparison'  },
     open_top:  { tr: 'Open Top Karşılaştırma',   en: 'Open Top Comparison'   },
@@ -180,9 +180,9 @@ export default function ContainerComparison({
     <div className="mt-1 md:mt-6">
       {/* Section label */}
       <div className="flex justify-center mb-3">
-        <span className={`text-[10px] md:text-[9px] uppercase tracking-[0.2em] font-mono ${isDark ? 'text-gray-300' : 'text-gray-400'}`}>
+        <h3 className={`text-xs md:text-sm uppercase tracking-[0.15em] font-semibold text-center ${isDark ? 'text-primary-300' : 'text-primary-600'}`}>
           {sectionLabel}
-        </span>
+        </h3>
       </div>
 
       {/* Comparison grid */}

@@ -16,7 +16,7 @@ export const containers = {
         maxPayload: 28180,
       },
       features: ['Yeni/sıfır', 'ISO standartları', 'Dayanıklı çelik yapı'],
-      image: '/images/containers/20dc.jpg',
+      image: '/20.webp',
     },
     {
       id: '40dc',
@@ -34,7 +34,7 @@ export const containers = {
         maxPayload: 26730,
       },
       features: ['Yeni/sıfır', 'ISO standartları', 'Standart yükseklik'],
-      image: '/images/containers/40dc.jpg',
+      image: '/40.webp',
     },
     {
       id: '40hc',
@@ -52,7 +52,7 @@ export const containers = {
         maxPayload: 26580,
       },
       features: ['Yeni/sıfır', 'High Cube', 'Geniş iç hacim'],
-      image: '/images/containers/40hc.jpg',
+      image: '/40h.webp',
     },
     {
       id: '20ot',
@@ -70,7 +70,7 @@ export const containers = {
         maxPayload: 28130,
       },
       features: ['Açılabilir tavan', 'Üstten yükleme', 'Aşırı boyutlu kargo'],
-      image: '/images/containers/20ot.jpg',
+      image: '/Container.webp',
     },
     {
       id: '20fr',
@@ -88,7 +88,7 @@ export const containers = {
         maxPayload: 31260,
       },
       features: ['Katlanabilir yan duvarlar', 'Ağır yük kapasitesi', 'Bağlama noktaları'],
-      image: '/images/containers/20fr.jpg',
+      image: '/Container.webp',
     },
     {
       id: '40rf',
@@ -106,7 +106,7 @@ export const containers = {
         maxPayload: 25680,
       },
       features: ['-30°C ile +30°C kontrol', 'Soğutma ünitesi', 'Gıda taşımacılığı'],
-      image: '/images/containers/40rf.jpg',
+      image: '/Container.webp',
     },
     {
       id: '40ot',
@@ -124,7 +124,7 @@ export const containers = {
         maxPayload: 28600,
       },
       features: ['Açılabilir tavan', 'Üstten yükleme', 'Aşırı boyutlu kargo'],
-      image: '/images/containers/40ot.jpg',
+      image: '/Container.webp',
     },
     {
       id: '40fr',
@@ -142,7 +142,7 @@ export const containers = {
         maxPayload: 40000,
       },
       features: ['Katlanabilir yan duvarlar', 'Ağır yük kapasitesi', 'Bağlama noktaları'],
-      image: '/images/containers/40fr.jpg',
+      image: '/Container.webp',
     },
     {
       id: '45hc',
@@ -160,7 +160,7 @@ export const containers = {
         maxPayload: 25680,
       },
       features: ['Yüksek hacim', 'Ekstra uzunluk', 'Hafif hacimli yükler'],
-      image: '/images/containers/45hc.jpg',
+      image: '/40h.webp',
     },
   ],
   en: [
@@ -180,7 +180,7 @@ export const containers = {
         maxPayload: 28180,
       },
       features: ['New/unused', 'ISO standards', 'Durable steel construction'],
-      image: '/images/containers/20dc.jpg',
+      image: '/20.webp',
     },
     {
       id: '40dc',
@@ -198,7 +198,7 @@ export const containers = {
         maxPayload: 26730,
       },
       features: ['New/unused', 'ISO standards', 'Standard height'],
-      image: '/images/containers/40dc.jpg',
+      image: '/40.webp',
     },
     {
       id: '40hc',
@@ -216,7 +216,7 @@ export const containers = {
         maxPayload: 26580,
       },
       features: ['New/unused', 'High Cube', 'Large internal volume'],
-      image: '/images/containers/40hc.jpg',
+      image: '/40h.webp',
     },
     {
       id: '20ot',
@@ -234,7 +234,7 @@ export const containers = {
         maxPayload: 28130,
       },
       features: ['Removable roof', 'Top loading', 'Oversized cargo'],
-      image: '/images/containers/20ot.jpg',
+      image: '/Container.webp',
     },
     {
       id: '20fr',
@@ -252,7 +252,7 @@ export const containers = {
         maxPayload: 31260,
       },
       features: ['Collapsible sides', 'Heavy load capacity', 'Lashing points'],
-      image: '/images/containers/20fr.jpg',
+      image: '/Container.webp',
     },
     {
       id: '40rf',
@@ -270,7 +270,7 @@ export const containers = {
         maxPayload: 25680,
       },
       features: ['-30°C to +30°C control', 'Cooling unit', 'Food transport'],
-      image: '/images/containers/40rf.jpg',
+      image: '/Container.webp',
     },
     {
       id: '40ot',
@@ -288,7 +288,7 @@ export const containers = {
         maxPayload: 28600,
       },
       features: ['Removable roof', 'Top loading', 'Oversized cargo'],
-      image: '/images/containers/40ot.jpg',
+      image: '/Container.webp',
     },
     {
       id: '40fr',
@@ -306,7 +306,7 @@ export const containers = {
         maxPayload: 40000,
       },
       features: ['Collapsible sides', 'Heavy load capacity', 'Lashing points'],
-      image: '/images/containers/40fr.jpg',
+      image: '/Container.webp',
     },
     {
       id: '45hc',
@@ -324,7 +324,7 @@ export const containers = {
         maxPayload: 25680,
       },
       features: ['High volume', 'Extra length', 'Light volumetric cargo'],
-      image: '/images/containers/45hc.jpg',
+      image: '/40h.webp',
     },
   ],
 };

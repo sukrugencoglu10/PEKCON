@@ -1,5 +1,6 @@
 import { getTranslations, type Locale } from '@/lib/i18n';
 import ContainerDimensionsSection from '@/components/containers/ContainerDimensionsSection';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import type { Metadata } from 'next';
 
 // ISR: Revalidate every 1 hour
@@ -24,6 +25,7 @@ export default async function ContainersPage({ params }: { params: Promise<{ loc
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-28 md:pt-32 pb-16 px-4">
+      <BreadcrumbJsonLd locale={locale} slug="konteynerler" />
       <div className="max-w-7xl mx-auto">
         <ContainerDimensionsSection locale={locale} />
       </div>

@@ -9,11 +9,13 @@ import JsonLd from '@/components/seo/JsonLd';
 // Below-the-fold: lazy load for smaller initial bundle
 const ContainerShowcase = dynamic(() => import('@/components/home/ContainerShowcase'));
 const ServicesOverview = dynamic(() => import('@/components/home/ServicesOverview'));
+const FAQSection = dynamic(() => import('@/components/home/FAQSection'));
 const CTASection = dynamic(() => import('@/components/home/CTASection'));
 
 import { getKeywordConfig } from '@/lib/keyword-config';
 import type { Locale } from '@/lib/i18n';
 import type { Metadata } from 'next';
+import { containers } from '@/data/containers';
 
 // ISR: Revalidate every 1 hour
 export const revalidate = 3600;
@@ -30,18 +32,54 @@ export async function generateMetadata({
   const { keyword } = await searchParams;
   const kwConfig = getKeywordConfig(locale, keyword || null);
 
-  if (kwConfig) {
-    return {
-      title: kwConfig.title,
-      description: kwConfig.description,
-    };
-  }
+  const title = kwConfig?.title ?? (locale === 'tr'
+    ? 'Satılık Konteyner | Sıfır & İkinci El Yük Konteynerleri | PEKCON'
+    : 'Shipping Containers for Sale | New & Used SOC Containers | PEKCON');
+
+  const description = kwConfig?.description ?? (locale === 'tr'
+    ? 'Satılık ve kiralık 20ft, 40ft, 40HC yük konteynerleri. Sıfır ve ikinci el seçenekler, hızlı teklif, Türkiye\'den dünyaya teslimat. 15+ yıl tecrübe ile PEKCON.'
+    : 'Shipping containers for sale and rent: 20ft, 40ft, 40HC. New and used SOC containers, fast quote, worldwide delivery from Türkiye. 15+ years of experience.');
+
+  const ogImage = {
+    url: 'https://pekcon.com/hero-bg.webp',
+    width: 1200,
+    height: 630,
+    alt: locale === 'tr'
+      ? 'PEKCON - Satılık Yük Konteynerleri'
+      : 'PEKCON - Shipping Containers for Sale',
+  };
+
+  const keywords = locale === 'tr'
+    ? ['satılık konteyner', 'yük konteyneri', '20ft konteyner', '40ft konteyner', '40HC konteyner', 'sıfır konteyner', 'ikinci el konteyner', 'konteyner kiralama', 'SOC konteyner', 'reefer konteyner', 'konteyner fiyatları', 'PEKCON', 'İstanbul konteyner', 'Türkiye konteyner ihracat']
+    : ['shipping container for sale', 'cargo container', '20ft container', '40ft container', '40HC container', 'new container', 'used container', 'container rental', 'SOC container', 'reefer container', 'container prices', 'PEKCON', 'Türkiye container export'];
 
   return {
-    title: 'PEKCON Container & Logistics',
-    description: locale === 'tr'
-      ? 'Küresel lojistikte güvenilir çözüm ortağınız'
-      : 'Your trusted partner in global logistics',
+    title,
+    description,
+    keywords,
+    alternates: {
+      canonical: locale === 'tr' ? '/tr' : '/en',
+      languages: {
+        'tr-TR': '/tr',
+        'en-US': '/en',
+        'x-default': '/tr',
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: locale === 'tr' ? 'https://pekcon.com/tr' : 'https://pekcon.com/en',
+      siteName: 'PEKCON Container & Logistics',
+      locale: locale === 'tr' ? 'tr_TR' : 'en_US',
+      type: 'website',
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage.url],
+    },
   };
 }
 
@@ -106,15 +144,58 @@ export default async function HomePage({
     },
   };
 
+  const localeContainers = ((containers as any)[locale] || (containers as any).tr) as Array<{
+    id: string;
+    name: string;
+    type: string;
+    image: string;
+    dimensions: { external: { length: number; width: number; height: number } };
+    capacity: { volume: number; maxPayload: number };
+  }>;
+  const baseUrl = 'https://pekcon.com';
+  const quoteUrl = `${baseUrl}/${locale}/teklif-al`;
+
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: locale === 'tr' ? 'Yük Konteyneri Modelleri' : 'Shipping Container Models',
+    numberOfItems: localeContainers.length,
+    itemListElement: localeContainers.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        '@id': `${baseUrl}/${locale}/konteynerler#${c.id}`,
+        name: c.name,
+        sku: c.type,
+        image: `${baseUrl}${c.image}`,
+        description: locale === 'tr'
+          ? `${c.name} - ${c.dimensions.external.length}m uzunluk, ${c.capacity.volume} m³ hacim, ${c.capacity.maxPayload} kg yük kapasitesi. Sıfır ve ikinci el seçeneklerle PEKCON'dan hızlı teklif.`
+          : `${c.name} - ${c.dimensions.external.length}m length, ${c.capacity.volume} m³ volume, ${c.capacity.maxPayload} kg payload capacity. New and used options, fast quote from PEKCON.`,
+        brand: { '@type': 'Brand', name: 'PEKCON' },
+        category: locale === 'tr' ? 'Yük Konteyneri' : 'Shipping Container',
+        offers: {
+          '@type': 'Offer',
+          availability: 'https://schema.org/InStock',
+          url: quoteUrl,
+          priceCurrency: locale === 'tr' ? 'TRY' : 'USD',
+          seller: { '@type': 'Organization', name: 'PEKCON Container & Logistics' },
+        },
+      },
+    })),
+  };
+
   return (
     <>
       <JsonLd data={organizationSchema} />
+      <JsonLd data={itemListSchema} />
       <HeroSection locale={locale} keyword={keyword} />
       <TrustSlider locale={locale} />
       <StatsSection locale={locale} />
       <SegmentationCards locale={locale} />
       <ContainerShowcase locale={locale} />
       <ServicesOverview locale={locale} />
+      <FAQSection locale={locale} />
       <CTASection locale={locale} />
       <StickyQuoteBar locale={locale} />
     </>

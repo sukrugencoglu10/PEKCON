@@ -142,7 +142,6 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                   width={207}
                   height={69}
                   className="h-14 md:h-[70px] w-auto select-none"
-                  priority
                   draggable={false}
                   onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push('/admin'); }}
                 />

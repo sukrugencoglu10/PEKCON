@@ -34,7 +34,7 @@ const satisfy = Satisfy({
 export const metadata: Metadata = {
   title: {
     default: 'PEKCON Container & Logistics',
-    template: '%s | PEKCON',
+    template: '%s',
   },
   description: 'Küresel lojistikte güvenilir çözüm ortağınız. Konteyner satış, kiralama ve taşımacılık hizmetleri.',
   metadataBase: new URL('https://pekcon.com'),

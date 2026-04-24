@@ -1,4 +1,5 @@
 import ContactSection from '@/components/home/ContactSection';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import type { Locale } from '@/lib/i18n';
 import type { Metadata } from 'next';
 
@@ -40,6 +41,7 @@ export default async function QuotePage({ params }: { params: Promise<{ locale: 
 
   return (
     <div className="min-h-screen bg-[#f8f7f4] pt-4 md:pt-8">
+      <BreadcrumbJsonLd locale={locale} slug="teklif-al" />
       <ContactSection locale={locale} />
     </div>
   );
