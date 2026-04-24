@@ -113,7 +113,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
             <motion.h1 variants={heroSlide} className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-display font-black text-white mb-4 leading-[1.1] flex flex-col drop-shadow-lg">
               <span dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle1 || t.hero.title1 }} />
               <span
-                className="bg-gradient-to-r from-primary-400 via-primary-200 to-accent-400 bg-clip-text text-transparent pb-2"
+                className="bg-gradient-to-r from-primary-400 via-primary-200 to-accent-400 bg-clip-text text-transparent"
                 dangerouslySetInnerHTML={{ __html: kwConfig?.heroTitle2 || t.hero.title2 }}
               />
               <span

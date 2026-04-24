@@ -94,7 +94,16 @@ interface Props {
 
 export default function KonteynerScene({ containerType = '40hc' }: Props) {
   const dragging = useRef(false);
+  const isMobileRef = useRef(false);
   const drag0 = useRef<{ mx: number; my: number; ry: number; rx: number } | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const update = () => { isMobileRef.current = mq.matches; };
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
   const dragStartTimeRef = useRef<number>(0);
   const dragStartRyRef = useRef<number>(0);
   const typeViewStartTimeRef = useRef<number>(Date.now());
@@ -162,9 +171,11 @@ export default function KonteynerScene({ containerType = '40hc' }: Props) {
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!drag0.current) return;
       ry.set(drag0.current.ry + (e.clientX - drag0.current.mx) * 0.5);
-      rx.set(
-        Math.max(-25, Math.min(20, drag0.current.rx + (e.clientY - drag0.current.my) * 0.3))
-      );
+      if (!isMobileRef.current) {
+        rx.set(
+          Math.max(-25, Math.min(20, drag0.current.rx + (e.clientY - drag0.current.my) * 0.3))
+        );
+      }
     },
     [ry, rx]
   );

@@ -5,7 +5,7 @@ export const translations = {
       title1: 'Satılık Yük Konteynerleri',
       title2: 'Sıfır & İkinci El',
       title3: 'Türkiye\'den Dünyaya Teslimat',
-      heroH2: 'Her Ebatta Yüksek Kondisyonlu Konteyner — Hızlı Teklif, Hazır Stok',
+      heroH2: 'Her Ebatta Yüksek Kondisyonlu Konteyner<br class="sm:hidden" /> Hızlı Teklif, Hazır Stok',
       description: 'Sıfır ve ikinci el yük konteynerleri — 20ft, 40ft ve 40HC dahil her ebatta yüksek kondisyon. Türkiye\'den dünyaya hızlı teklif ve kesintisiz tedarik.',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
