@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
   /* Scale down the entire site by replacing the root font-size on desktop.
-     Since Tailwind uses 'rem' for everything, changing the root font size from 16px to 11px 
+     Since Tailwind uses 'rem' for everything, changing the root font size from 16px to 11px
      effectively applies a ~68% zoom-out universally without breaking standard CSS layouts. */
   html {
     font-size: 16px; /* Mobil için varsayılan büyüklük korunsun */

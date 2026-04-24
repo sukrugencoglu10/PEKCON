@@ -5,6 +5,10 @@ import type { Viewport } from 'next';
 
 export const viewport: Viewport = {
   themeColor: '#0069b4',
+  width: 'device-width',
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 5,
 };
 const inter = Inter({
   subsets: ['latin'],
