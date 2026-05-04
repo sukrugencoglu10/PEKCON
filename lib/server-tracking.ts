@@ -4,7 +4,7 @@
  * iOS 14+ / ad-blocker bypass — tüm çağrılar Next.js API Route içinden yapılır.
  */
 
-const GA4_MEASUREMENT_ID = 'G-WLY28LNC3X';
+const GA4_MEASUREMENT_ID = 'G-09MSN7JYJ8';
 
 // ─── Lead değer tahmini (gtm.ts'e bağımlı olmamak için inline) ───────────────
 const BASE_VALUES: Record<string, number> = {
