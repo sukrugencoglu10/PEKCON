@@ -120,11 +120,11 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
               <span>+90 (212) 297 97 58</span>
             </a>
             <a
-              href="mailto:info@pekcon.com.tr"
+              href="mailto:info@pekcon.com"
               className="flex items-center space-x-2 hover:text-primary-400 transition-colors"
             >
               <Mail size={16} className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span>info@pekcon.com.tr</span>
+              <span>info@pekcon.com</span>
             </a>
           </div>
         </div>

@@ -90,8 +90,8 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
               </li>
               <li className="flex items-center justify-center md:justify-start space-x-3">
                 <Mail size={20} className="text-primary-500 flex-shrink-0" />
-                <a href="mailto:info@pekcon.com.tr" className="text-dark-700 hover:text-primary-500 transition-colors">
-                  info@pekcon.com.tr
+                <a href="mailto:info@pekcon.com" className="text-dark-700 hover:text-primary-500 transition-colors">
+                  info@pekcon.com
                 </a>
               </li>
               <li>

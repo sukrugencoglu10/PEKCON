@@ -102,7 +102,7 @@ export default async function HomePage({
     logo: 'https://pekcon.com/logo.png',
     image: 'https://pekcon.com/x2.webp',
     telephone: '+902122979758',
-    email: 'info@pekcon.com.tr',
+    email: 'info@pekcon.com',
     foundingDate: '2009',
     description: locale === 'tr'
       ? 'Türkiye\'nin güvenilir konteyner satış, kiralama ve lojistik çözüm ortağı. 15+ yıllık deneyim.'
