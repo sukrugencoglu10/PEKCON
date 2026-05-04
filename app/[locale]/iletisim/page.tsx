@@ -47,7 +47,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     name: 'PEKCON Container & Logistics',
     url: 'https://pekcon.com',
     telephone: '+902122979758',
-    email: 'info@pekcon.com.tr',
+    email: 'info@pekcon.com',
     image: 'https://pekcon.com/x2.webp',
     logo: 'https://pekcon.com/logo.png',
     description: locale === 'tr'
@@ -127,10 +127,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             </div>
             <h3 className="text-xl font-display font-bold text-dark-900 mb-2">{t.contactPage.email}</h3>
             <a
-              href="mailto:info@pekcon.com.tr"
+              href="mailto:info@pekcon.com"
               className="text-primary-500 hover:text-primary-600 font-medium"
             >
-              info@pekcon.com.tr
+              info@pekcon.com
             </a>
           </div>
 
