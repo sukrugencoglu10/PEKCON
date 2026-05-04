@@ -127,12 +127,6 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
               dangerouslySetInnerHTML={{ __html: t.hero.heroH2 }}
             />
 
-            <motion.p
-              variants={heroSlide}
-              className="text-xs md:text-sm lg:text-xs xl:text-sm text-gray-400 mb-6 leading-relaxed drop-shadow-md whitespace-pre-line"
-              dangerouslySetInnerHTML={{ __html: kwConfig?.heroDescription || t.hero.description }}
-            />
-
             {/* Butonlar: sadece tablet (sm) ve desktop'ta görünür */}
             <motion.div variants={heroSlide} className="hidden sm:flex flex-row items-center lg:justify-start gap-3">
               <Link href="https://wa.me/905427179357" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
