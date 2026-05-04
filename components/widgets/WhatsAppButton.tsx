@@ -20,7 +20,8 @@ export default function WhatsAppButton() {
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // AnalyticsEvents.tsx'deki document listener'ın çift tetiklenmesini önler
     trackWhatsAppConversion(locale);
 
     // Analytics DB kaydı
