@@ -15,6 +15,14 @@ const RECIPIENT_EMAILS = ['info@pekcon.com', 'sukrugencoglu10@gmail.com'];
 const FROM_EMAIL = 'teklif@pekcon.com';
 const GOOGLE_SHEET_WEBHOOK_URL = process.env.GOOGLE_SHEET_WEBHOOK_URL ?? '';
 
+function normalizeTurkishPhone(phone: string): string {
+  const digits = phone.replace(/[^0-9]/g, '');
+  if (digits.startsWith('90') && digits.length === 12) return '+' + digits;
+  if (digits.startsWith('0') && digits.length === 11) return '+90' + digits.slice(1);
+  if (digits.length === 10 && digits.startsWith('5')) return '+90' + digits;
+  return phone.startsWith('+') ? '+' + digits : phone;
+}
+
 function buildEmailHtml(data: {
   transactionType: string;
   containerCategory: string;
@@ -117,7 +125,7 @@ function buildEmailHtml(data: {
                 <tr>
                   <td style="padding:6px 0;color:#6b7a8d;font-size:14px;">Telefon</td>
                   <td style="padding:6px 0;">
-                    <a href="tel:${data.phone.replace(/[^0-9+]/g, '')}" style="color:#0069b4;font-size:14px;font-weight:600;text-decoration:none;">${data.phone}</a>
+                    <a href="tel:${normalizeTurkishPhone(data.phone)}" style="color:#0069b4;font-size:14px;font-weight:600;text-decoration:none;">${data.phone}</a>
                   </td>
                 </tr>` : ''}
                 ${data.email ? `
@@ -151,10 +159,10 @@ function buildEmailHtml(data: {
                 ✉️ Müşteriye Yanıtla
               </a>
               ${data.phone ? `
-              <a href="https://wa.me/${data.phone.replace(/[^0-9]/g, '')}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
+              <a href="https://wa.me/${normalizeTurkishPhone(data.phone).replace('+', '')}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 💬 WhatsApp
               </a>
-              <a href="tel:${data.phone.replace(/[^0-9+]/g, '')}" style="display:inline-block;background:#0ea5e9;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
+              <a href="tel:${normalizeTurkishPhone(data.phone)}" style="display:inline-block;background:#0ea5e9;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 📞 Hemen Ara
               </a>` : ''}
             </td>
