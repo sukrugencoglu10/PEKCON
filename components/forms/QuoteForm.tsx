@@ -545,8 +545,20 @@ export default function QuoteForm({
                 <FormInput
                   type="tel"
                   label={`${f.phone} *`}
-                  placeholder={f.phonePlaceholder}
-                  {...register('phone')}
+                  placeholder="5XX XXX XX XX"
+                  {...(() => {
+                    const { onChange, ...rest } = register('phone');
+                    return {
+                      ...rest,
+                      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                        let val = e.target.value;
+                        if (!val.startsWith('+90')) val = '+90';
+                        const digits = val.slice(3).replace(/[^0-9]/g, '').slice(0, 10);
+                        e.target.value = '+90' + digits;
+                        onChange(e);
+                      },
+                    };
+                  })()}
                   error={errors.phone?.message}
                 />
                 <FormInput
