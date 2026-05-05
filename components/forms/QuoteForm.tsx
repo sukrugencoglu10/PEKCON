@@ -56,6 +56,7 @@ export default function QuoteForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formInteracted, setFormInteracted] = useState(false);
+  const formTopRef = useRef<HTMLDivElement | null>(null);
   const abandonTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastFieldRef = useRef<string>('');
   const stepStartTimeRef = useRef<number>(Date.now());
@@ -234,7 +235,7 @@ export default function QuoteForm({
       trackFormStepTime(step, step + 1, elapsed, 'forward');
       stepStartTimeRef.current = Date.now();
       setCurrentStep((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      formTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -353,7 +354,7 @@ export default function QuoteForm({
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div ref={formTopRef} className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
       {/* Progress Header */}
       <div className="bg-gray-50 border-b border-gray-200 p-4 md:p-6">
         <div className="flex justify-between items-center mb-2 relative">
