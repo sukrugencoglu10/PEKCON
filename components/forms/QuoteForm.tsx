@@ -87,6 +87,7 @@ export default function QuoteForm({
     defaultValues: {
       transactionType: 'purchase',
       quantity: 1,
+      phone: '+90',
     },
     mode: 'onChange'
   });

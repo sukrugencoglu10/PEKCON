@@ -13,7 +13,7 @@ export const quoteFormSchema = z.object({
   region: z.string().optional(),
   fullName: z.string().min(2, 'Ad soyad gereklidir'),
   companyName: z.string().optional(),
-  phone: z.string().regex(/^[0-9+\s()-]+$/, 'Geçerli bir telefon numarası giriniz'),
+  phone: z.string().regex(/^[0-9+\s()-]+$/, 'Geçerli bir telefon numarası giriniz').min(10, 'Geçerli bir telefon numarası giriniz'),
   email: z.string().email('Geçerli bir e-posta adresi giriniz'),
   notes: z.string().optional(),
   utmSource: z.string().optional(),
