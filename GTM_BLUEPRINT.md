@@ -1,10 +1,30 @@
 # PEKCON GTM Event Blueprint
 
 **GTM Container:** GTM-536W5D89  
-**GA4 Measurement ID:** G-WLY28LNC3X  
+**GA4 Measurement ID:** G-09MSN7JYJ8  *(güncellendi — eski: G-WLY28LNC3X)*  
 **Google Ads ID:** AW-10974974305  
 **Meta Pixel ID:** 1293202826015037  
 **Microsoft Clarity:** w5cvs8fh9m  
+
+> ⚠️ **GTM UI'da yapılacak kritik değişiklik:**  
+> Tags → GA4 Configuration Tag → Measurement ID alanını **G-09MSN7JYJ8** olarak güncelleyin.  
+> Eski ID (G-WLY28LNC3X) aktifse veriler yanlış GA4 mülkünde toplanıyor.
+
+---
+
+## Google Ads Keyword Takibi — Zorunlu Kurulum
+
+Anahtar kelime verilerinin `/admin/dashboard → Anahtar Kelimeler` sekmesinde görünmesi için
+Google Ads hesabında aşağıdaki URL şablonu tanımlanmalıdır:
+
+**Google Ads → Hesap Ayarları → İzleme → Son URL soneki:**
+```
+utm_source=google&utm_medium=cpc&utm_campaign={campaignname}&utm_term={keyword}&utm_content={adgroupname}
+```
+
+Bu şablon olmadan:
+- `gclid` otomatik eklenir (Google Ads ziyareti sayılır)
+- `utm_term` **boş** gelir → keyword verisi "belirtilmemiş" görünür
 
 ---
 

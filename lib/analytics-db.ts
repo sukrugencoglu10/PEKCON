@@ -6,6 +6,7 @@ const db = createClient({
 });
 
 let initialized = false;
+let pvInitialized = false;
 
 async function ensureTable() {
   if (initialized) return;
@@ -45,6 +46,36 @@ async function ensureTable() {
     `CREATE INDEX IF NOT EXISTS idx_conv_source ON conversions(utm_source)`
   );
   initialized = true;
+}
+
+async function ensurePageViewsTable() {
+  if (pvInitialized) return;
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS page_views (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_id TEXT NOT NULL UNIQUE,
+      utm_source TEXT,
+      utm_medium TEXT,
+      utm_campaign TEXT,
+      utm_term TEXT,
+      gclid TEXT,
+      fbclid TEXT,
+      original_referrer TEXT,
+      page_url TEXT,
+      locale TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )
+  `);
+  await db.execute(
+    `CREATE INDEX IF NOT EXISTS idx_pv_created ON page_views(created_at)`
+  );
+  await db.execute(
+    `CREATE INDEX IF NOT EXISTS idx_pv_term ON page_views(utm_term)`
+  );
+  await db.execute(
+    `CREATE INDEX IF NOT EXISTS idx_pv_source ON page_views(utm_source)`
+  );
+  pvInitialized = true;
 }
 
 export interface ConversionInput {
@@ -194,6 +225,121 @@ export async function getGoogleAdsData(from: string, to: string) {
     term: String(r.term),
     count: Number(r.count),
     value: Number(r.value),
+  }));
+}
+
+export interface PageViewInput {
+  session_id: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  gclid?: string;
+  fbclid?: string;
+  original_referrer?: string;
+  page_url?: string;
+  locale?: string;
+}
+
+export async function insertPageView(data: PageViewInput) {
+  await ensurePageViewsTable();
+  try {
+    await db.execute({
+      sql: `INSERT OR IGNORE INTO page_views (
+        session_id, utm_source, utm_medium, utm_campaign, utm_term,
+        gclid, fbclid, original_referrer, page_url, locale
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [
+        data.session_id,
+        data.utm_source ?? null,
+        data.utm_medium ?? null,
+        data.utm_campaign ?? null,
+        data.utm_term ?? null,
+        data.gclid ?? null,
+        data.fbclid ?? null,
+        data.original_referrer ?? null,
+        data.page_url ?? null,
+        data.locale ?? null,
+      ],
+    });
+  } catch {
+    // session_id UNIQUE conflict — duplicate session, ignore silently
+  }
+}
+
+export async function getKeywordTraffic(from: string, to: string) {
+  await ensurePageViewsTable();
+  const result = await db.execute({
+    sql: `SELECT
+      COALESCE(utm_term, '(belirtilmemiş)') as term,
+      COALESCE(utm_campaign, '(belirtilmemiş)') as campaign,
+      COALESCE(utm_source, '(direct)') as source,
+      COUNT(*) as visits,
+      SUM(CASE WHEN gclid IS NOT NULL AND gclid != '' THEN 1 ELSE 0 END) as gclid_count
+    FROM page_views
+    WHERE created_at >= ? AND created_at < ?
+    GROUP BY utm_term, utm_campaign, utm_source
+    ORDER BY visits DESC`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    term: String(r.term),
+    campaign: String(r.campaign),
+    source: String(r.source),
+    visits: Number(r.visits),
+    gclid_count: Number(r.gclid_count),
+  }));
+}
+
+export async function getKeywordFunnel(from: string, to: string) {
+  await ensurePageViewsTable();
+  await ensureTable();
+  const result = await db.execute({
+    sql: `SELECT
+      COALESCE(pv.utm_term, '(belirtilmemiş)') as term,
+      COALESCE(pv.utm_campaign, '(belirtilmemiş)') as campaign,
+      COUNT(DISTINCT pv.session_id) as visits,
+      COUNT(DISTINCT c.id) as conversions,
+      COALESCE(SUM(c.estimated_value), 0) as value
+    FROM page_views pv
+    LEFT JOIN conversions c
+      ON pv.utm_term = c.utm_term
+      AND pv.utm_campaign = c.utm_campaign
+      AND c.created_at >= ? AND c.created_at < ?
+    WHERE pv.created_at >= ? AND pv.created_at < ?
+    GROUP BY pv.utm_term, pv.utm_campaign
+    ORDER BY visits DESC`,
+    args: [from, to, from, to],
+  });
+  return result.rows.map((r) => ({
+    term: String(r.term),
+    campaign: String(r.campaign),
+    visits: Number(r.visits),
+    conversions: Number(r.conversions),
+    rate: Number(r.visits) > 0 ? Number(r.conversions) / Number(r.visits) : 0,
+    value: Number(r.value),
+  }));
+}
+
+export async function getChannelBreakdown(from: string, to: string) {
+  await ensurePageViewsTable();
+  const result = await db.execute({
+    sql: `SELECT
+      COALESCE(utm_source, '(direct)') as source,
+      COALESCE(utm_medium, '(none)') as medium,
+      COUNT(*) as visits,
+      SUM(CASE WHEN gclid IS NOT NULL AND gclid != '' THEN 1 ELSE 0 END) as paid_clicks
+    FROM page_views
+    WHERE created_at >= ? AND created_at < ?
+    GROUP BY utm_source, utm_medium
+    ORDER BY visits DESC`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    source: String(r.source),
+    medium: String(r.medium),
+    visits: Number(r.visits),
+    paid_clicks: Number(r.paid_clicks),
   }));
 }
 
