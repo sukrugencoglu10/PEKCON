@@ -10,6 +10,8 @@ import SendProgress from './SendProgress';
 import FormHeatmapTab from './FormHeatmapTab';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import KeywordAnalysis from './KeywordAnalysis';
+import DemandForecastPanel from './DemandForecastPanel';
+import AdManagementPanel from './AdManagementPanel';
 import type { StockRow, Contact } from '@/lib/send-session';
 
 const STEPS = [
@@ -19,7 +21,7 @@ const STEPS = [
   { id: 4, label: 'Gönder' },
 ];
 
-type AdminTab = 'email' | 'analytics' | 'keywords';
+type AdminTab = 'email' | 'analytics' | 'keywords' | 'forecast' | 'ads';
 
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
@@ -98,7 +100,7 @@ export default function AdminDashboard() {
         </a>
       </header>
 
-      <div className={`${activeTab === 'analytics' || activeTab === 'keywords' ? 'max-w-7xl' : 'max-w-4xl'} mx-auto py-8 px-4 transition-all`}>
+      <div className={`${activeTab === 'analytics' || activeTab === 'keywords' || activeTab === 'forecast' || activeTab === 'ads' ? 'max-w-7xl' : 'max-w-4xl'} mx-auto py-8 px-4 transition-all`}>
         {/* Tab navigation */}
         <div className="flex gap-1 mb-8 border-b border-gray-200">
           <button
@@ -130,6 +132,26 @@ export default function AdminDashboard() {
             }`}
           >
             Anahtar Kelimeler
+          </button>
+          <button
+            onClick={() => setActiveTab('forecast')}
+            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab === 'forecast'
+                ? 'bg-white border border-b-white border-gray-200 -mb-px text-[#0069b4]'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Talep Tahmini
+          </button>
+          <button
+            onClick={() => setActiveTab('ads')}
+            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab === 'ads'
+                ? 'bg-white border border-b-white border-gray-200 -mb-px text-[#0069b4]'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Reklam Yönetimi
           </button>
         </div>
 
@@ -208,6 +230,14 @@ export default function AdminDashboard() {
 
         {activeTab === 'keywords' && (
           <KeywordAnalysis />
+        )}
+
+        {activeTab === 'forecast' && (
+          <DemandForecastPanel />
+        )}
+
+        {activeTab === 'ads' && (
+          <AdManagementPanel />
         )}
       </div>
     </div>

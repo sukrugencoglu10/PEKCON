@@ -370,3 +370,117 @@ export async function getRecentConversions(limit: number = 20) {
     locale: r.locale ? String(r.locale) : null,
   }));
 }
+
+export interface ContainerDemandRow {
+  date: string;
+  container_type: string;
+  demand: number;
+  total_quantity: number;
+}
+
+export async function getDemandByContainerType(from: string, to: string): Promise<ContainerDemandRow[]> {
+  await ensureTable();
+  const result = await db.execute({
+    sql: `SELECT
+      date(created_at) as date,
+      COALESCE(container_type, 'Belirtilmemiş') as container_type,
+      COUNT(*) as demand,
+      COALESCE(SUM(quantity), 0) as total_quantity
+    FROM conversions
+    WHERE type = 'form_submit'
+      AND created_at >= ? AND created_at < ?
+    GROUP BY date(created_at), container_type
+    ORDER BY date(created_at)`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    date: String(r.date),
+    container_type: String(r.container_type),
+    demand: Number(r.demand),
+    total_quantity: Number(r.total_quantity),
+  }));
+}
+
+export interface ContainerTypeSummaryRow {
+  container_type: string;
+  total_leads: number;
+  total_units: number;
+  total_value: number;
+}
+
+export async function getContainerTypeSummary(from: string, to: string): Promise<ContainerTypeSummaryRow[]> {
+  await ensureTable();
+  const result = await db.execute({
+    sql: `SELECT
+      COALESCE(container_type, 'Belirtilmemiş') as container_type,
+      COUNT(*) as total_leads,
+      COALESCE(SUM(quantity), 0) as total_units,
+      COALESCE(SUM(estimated_value), 0) as total_value
+    FROM conversions
+    WHERE type = 'form_submit'
+      AND created_at >= ? AND created_at < ?
+    GROUP BY container_type
+    ORDER BY total_leads DESC`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    container_type: String(r.container_type),
+    total_leads: Number(r.total_leads),
+    total_units: Number(r.total_units),
+    total_value: Number(r.total_value),
+  }));
+}
+
+export interface DayOfWeekRow {
+  dow: number;
+  demand: number;
+}
+
+export async function getDemandByDayOfWeek(from: string, to: string): Promise<DayOfWeekRow[]> {
+  await ensureTable();
+  const result = await db.execute({
+    sql: `SELECT
+      CAST(strftime('%w', created_at) AS INTEGER) as dow,
+      COUNT(*) as demand
+    FROM conversions
+    WHERE type = 'form_submit'
+      AND created_at >= ? AND created_at < ?
+    GROUP BY dow
+    ORDER BY dow`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    dow: Number(r.dow),
+    demand: Number(r.demand),
+  }));
+}
+
+export interface MonthlyDemandRow {
+  month: string;
+  container_type: string;
+  demand: number;
+  total_value: number;
+}
+
+export async function getDemandByMonth(from: string, to: string): Promise<MonthlyDemandRow[]> {
+  await ensureTable();
+  const result = await db.execute({
+    sql: `SELECT
+      strftime('%Y-%m', created_at) as month,
+      COALESCE(container_type, 'Belirtilmemiş') as container_type,
+      COUNT(*) as demand,
+      COALESCE(SUM(estimated_value), 0) as total_value
+    FROM conversions
+    WHERE type = 'form_submit'
+      AND created_at >= ? AND created_at < ?
+    GROUP BY strftime('%Y-%m', created_at), container_type
+    ORDER BY month`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    month: String(r.month),
+    container_type: String(r.container_type),
+    demand: Number(r.demand),
+    total_value: Number(r.total_value),
+  }));
+}
