@@ -27,7 +27,7 @@ const FAQ_DATA: Record<Locale, { heading: string; items: { q: string; a: string 
       },
       {
         q: 'Konteyner kiralama hizmetiniz var mı?',
-        a: 'Evet, kısa ve uzun dönem konteyner kiralama hizmeti sunuyoruz. SOC ve COC seçenekleriyle uluslararası dolaşıma uygun konteynerler mevcuttur.',
+        a: 'PEKCON olarak konteyner kiralama hizmeti sunmamaktayız. Hizmetlerimiz yalnızca konteyner satışı ve uluslararası lojistik çözümleri kapsamaktadır. Satın alma talepleriniz için teklif formunu doldurabilirsiniz.',
       },
     ],
   },
@@ -56,7 +56,7 @@ const FAQ_DATA: Record<Locale, { heading: string; items: { q: string; a: string 
       },
       {
         q: 'Do you offer container rental?',
-        a: 'Yes, we offer both short-term and long-term container rental. SOC and COC options are available for international circulation.',
+        a: 'PEKCON does not provide container rental services. Our services are limited to container sales and international logistics solutions. You may submit the quote form for your purchase inquiries.',
       },
     ],
   },
