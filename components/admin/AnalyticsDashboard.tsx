@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import DateRangeSelector from './DateRangeSelector';
 import KPICards from './KPICards';
+import FunnelChart, { type FunnelData } from './FunnelChart';
+import ReconciliationPanel from './ReconciliationPanel';
 import ConversionChart from './ConversionChart';
 import AttributionTable from './AttributionTable';
 import GoogleAdsPanel from './GoogleAdsPanel';
@@ -50,6 +52,7 @@ interface SummaryData {
     created_at: string;
     locale: string | null;
   }>;
+  funnel: FunnelData;
 }
 
 function getDateRange(range: string): { from: string; to: string } {
@@ -77,12 +80,24 @@ function getDateRange(range: string): { from: string; to: string } {
   };
 }
 
+const emptyFunnel: FunnelData = {
+  visits: 0,
+  intent: 0,
+  whatsapp_clicks: 0,
+  form_submits: 0,
+  form_abandons: 0,
+  visit_to_intent: 0,
+  intent_to_submit: 0,
+  visit_to_submit: 0,
+};
+
 const emptyData: SummaryData = {
   kpi: { total: 0, total_leads: 0, total_whatsapp: 0, total_value: 0, total_abandon: 0 },
   daily: [],
   attribution: [],
   google_ads: [],
   recent: [],
+  funnel: emptyFunnel,
 };
 
 export default function AnalyticsDashboard() {
@@ -90,10 +105,15 @@ export default function AnalyticsDashboard() {
   const [data, setData] = useState<SummaryData>(emptyData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Apps Script doğrulamasında eşleşen (Sheet'te bulunan) form sayısı → huniye yansır
+  const [verifiedLeads, setVerifiedLeads] = useState<number | null>(null);
+
+  const { from, to } = getDateRange(range);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setVerifiedLeads(null); // aralık/yenileme değişince doğrulama sıfırlanır
 
     const { from, to } = getDateRange(range);
 
@@ -154,6 +174,12 @@ export default function AnalyticsDashboard() {
 
       {/* KPI Cards */}
       <KPICards data={data.kpi} loading={loading} />
+
+      {/* Birleşik Huni + Apps Script Doğrulama */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <FunnelChart data={data.funnel} verifiedLeads={verifiedLeads} loading={loading} />
+        <ReconciliationPanel from={from} to={to} onVerified={setVerifiedLeads} />
+      </div>
 
       {/* Chart */}
       <ConversionChart data={data.daily} loading={loading} />

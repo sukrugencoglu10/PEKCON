@@ -484,3 +484,93 @@ export async function getDemandByMonth(from: string, to: string): Promise<Monthl
     total_value: Number(r.total_value),
   }));
 }
+
+// ── Birleşik Dönüşüm Hunisi (WhatsApp + Form) ───────────────────────────────
+
+export interface FunnelStages {
+  visits: number; // tekil oturum (page_views)
+  intent: number; // herhangi bir dönüşüm sinyali (whatsapp + abandon + submit)
+  whatsapp_clicks: number; // paralel yol: WhatsApp CTA
+  form_submits: number; // paralel yol: form gönderimi
+  form_abandons: number; // bağlam: yarıda bırakılan form
+  // aşamalar arası oranlar (0–1)
+  visit_to_intent: number;
+  intent_to_submit: number;
+  visit_to_submit: number;
+}
+
+/**
+ * Birleşik huni aşamalarını kalıcı verilerden (page_views + conversions) hesaplar.
+ * "Doğrulanmış Lead" aşaması Apps Script reconcile API'sinden client tarafında eklenir.
+ */
+export async function getFunnelStages(from: string, to: string): Promise<FunnelStages> {
+  await ensurePageViewsTable();
+  await ensureTable();
+
+  const [pvResult, convResult] = await Promise.all([
+    db.execute({
+      sql: `SELECT COUNT(DISTINCT session_id) as visits
+        FROM page_views
+        WHERE created_at >= ? AND created_at < ?`,
+      args: [from, to],
+    }),
+    db.execute({
+      sql: `SELECT
+        SUM(CASE WHEN type = 'whatsapp_click' THEN 1 ELSE 0 END) as whatsapp_clicks,
+        SUM(CASE WHEN type = 'form_submit' THEN 1 ELSE 0 END) as form_submits,
+        SUM(CASE WHEN type = 'form_abandon' THEN 1 ELSE 0 END) as form_abandons
+      FROM conversions
+      WHERE created_at >= ? AND created_at < ?`,
+      args: [from, to],
+    }),
+  ]);
+
+  const visits = Number(pvResult.rows[0]?.visits ?? 0);
+  const whatsapp_clicks = Number(convResult.rows[0]?.whatsapp_clicks ?? 0);
+  const form_submits = Number(convResult.rows[0]?.form_submits ?? 0);
+  const form_abandons = Number(convResult.rows[0]?.form_abandons ?? 0);
+  const intent = whatsapp_clicks + form_submits + form_abandons;
+
+  return {
+    visits,
+    intent,
+    whatsapp_clicks,
+    form_submits,
+    form_abandons,
+    visit_to_intent: visits > 0 ? intent / visits : 0,
+    intent_to_submit: intent > 0 ? form_submits / intent : 0,
+    visit_to_submit: visits > 0 ? form_submits / visits : 0,
+  };
+}
+
+export interface ReconcileFormRow {
+  created_at: string;
+  contact_phone: string | null;
+  contact_email: string | null;
+  estimated_value: number | null;
+}
+
+/**
+ * Apps Script (Google Sheets) doğrulaması için DB'deki form_submit kayıtları.
+ * Telefon/e-posta + zaman penceresi ile Sheet satırlarıyla eşleştirilir.
+ */
+export async function getFormSubmitsForReconcile(
+  from: string,
+  to: string
+): Promise<ReconcileFormRow[]> {
+  await ensureTable();
+  const result = await db.execute({
+    sql: `SELECT created_at, contact_phone, contact_email, estimated_value
+      FROM conversions
+      WHERE type = 'form_submit'
+        AND created_at >= ? AND created_at < ?
+      ORDER BY created_at`,
+    args: [from, to],
+  });
+  return result.rows.map((r) => ({
+    created_at: String(r.created_at),
+    contact_phone: r.contact_phone ? String(r.contact_phone) : null,
+    contact_email: r.contact_email ? String(r.contact_email) : null,
+    estimated_value: r.estimated_value ? Number(r.estimated_value) : null,
+  }));
+}

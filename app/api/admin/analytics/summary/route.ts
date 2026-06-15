@@ -6,6 +6,7 @@ import {
   getAttributionBreakdown,
   getGoogleAdsData,
   getRecentConversions,
+  getFunnelStages,
 } from '@/lib/analytics-db';
 
 export const dynamic = 'force-dynamic';
@@ -25,12 +26,13 @@ export async function GET(request: NextRequest) {
   const to = searchParams.get('to') ?? new Date(now.getTime() + 86400000).toISOString().slice(0, 10);
 
   try {
-    const [kpi, daily, attribution, google_ads, recent] = await Promise.all([
+    const [kpi, daily, attribution, google_ads, recent, funnel] = await Promise.all([
       getConversionSummary(from, to),
       getConversionsByDay(from, to),
       getAttributionBreakdown(from, to),
       getGoogleAdsData(from, to),
       getRecentConversions(20),
+      getFunnelStages(from, to),
     ]);
 
     return NextResponse.json({
@@ -39,6 +41,7 @@ export async function GET(request: NextRequest) {
       attribution,
       google_ads,
       recent,
+      funnel,
     });
   } catch (error) {
     console.error('[Analytics Summary] Error:', error);

@@ -326,6 +326,16 @@ Ayrıca:
 
 ---
 
+## Birleşik Dönüşüm Hunisi & Apps Script Doğrulama
+
+WhatsApp tıklamaları + form gönderimleri tek huni'de (Ziyaret → Niyet → Form/WhatsApp →
+Doğrulanmış Lead) toplanır ve formdan Apps Script'e giden lead'ler Sheet ile karşılaştırılır.
+- **In-house:** Admin → Analitik sekmesi (`FunnelChart` + `ReconciliationPanel`)
+- **GA4 + Looker Studio:** huni keşfi + Sheet karşılaştırması
+- Kurulum + Apps Script `doGet` snippet'i: **`docs/FUNNEL_AND_RECONCILE.md`**
+
+---
+
 ## Yeni Event Eklerken Kontrol Listesi
 
 1. `lib/gtm.ts`'e yeni `trackXxx()` fonksiyonu ekle
