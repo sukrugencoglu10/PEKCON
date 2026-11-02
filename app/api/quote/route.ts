@@ -3,8 +3,6 @@ import { quoteFormSchema } from '@/lib/validators';
 import { Resend } from 'resend';
 import {
   sendMetaCAPI,
-  sendGA4MeasurementProtocol,
-  extractGA4ClientId,
   estimateLeadValueServer,
 } from '@/lib/server-tracking';
 import { insertConversion } from '@/lib/analytics-db';
@@ -344,8 +342,6 @@ export async function POST(request: NextRequest) {
     const fbp = cookieHeader.match(/_fbp=([^;]+)/)?.[1];
     const fbc =
       cookieHeader.match(/_fbc=([^;]+)/)?.[1] ?? validatedData.fbclid ?? undefined;
-    const gaCookie = cookieHeader.match(/_ga=([^;]+)/)?.[1] ?? null;
-    const clientId = extractGA4ClientId(gaCookie);
     const eventSourceUrl =
       request.headers.get('referer') ??
       `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://pekcon.com'}/tr/teklif-al`;
@@ -370,15 +366,10 @@ export async function POST(request: NextRequest) {
       quantity: validatedData.quantity,
     }).catch(() => null);
 
-    // GA4 Measurement Protocol — generate_lead eventi (client GTM backup)
-    sendGA4MeasurementProtocol({
-      clientId,
-      gclid: validatedData.gclid,
-      currency: 'TRY',
-      value: leadValue,
-      containerCategory: validatedData.containerCategory,
-      containerType: validatedData.containerType,
-    }).catch(() => null);
+    // GA4 generate_lead artık yalnızca client tarafında (GTM) gönderiliyor.
+    // Sunucudan Measurement Protocol ile ikinci bir generate_lead gönderilmesi,
+    // session_id ve sayfa bilgisi olmadığı için GA4'te "Unassigned/(not set)"
+    // ve çift sayılan lead'lere yol açıyordu; bu yüzden kaldırıldı.
 
     // Analytics DB — lokal dönüşüm kaydı (admin dashboard için)
     insertConversion({

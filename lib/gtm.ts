@@ -47,14 +47,10 @@ export const trackWhatsAppConversion = (locale: string) => {
   const now = new Date();
   const transactionId = `wa_${now.getTime()}`;
 
-  // GA4: generate_lead event
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'generate_lead', {
-      currency: 'TRY',
-      method: 'whatsapp',
-      locale,
-    });
-  }
+  // Not: WhatsApp tıklaması GA4'e generate_lead olarak GÖNDERİLMEZ.
+  // generate_lead yalnızca teklif formu için kullanılır; WhatsApp ayrı bir
+  // dönüşüm (whatsapp_click) olarak ölçülür. Aksi halde Google Ads'te
+  // WhatsApp tıklamaları form lead'i olarak çift sayılır.
 
   // DataLayer — GTM bu event'i yakalar ve Google Ads'e iletir
   trackEvent('whatsapp_click', {

@@ -25,8 +25,8 @@ window.dataLayer.push({
 | Katman | ID | Dosya |
 |--------|-----|-------|
 | **GTM Container** | `GTM-536W5D89` | `components/analytics/GoogleTagManager.tsx` |
-| **GA4 Measurement ID** | `G-WLY28LNC3X` | `lib/server-tracking.ts` |
-| **GA4 API Secret** | `kwlg2Y_UR2qwXH28HjKHxA` | `.env.local` |
+| **GA4 Measurement ID (ana site)** | `G-09MSN7JYJ8` | GTM üzerinden |
+| **GA4 API Secret** | _(repoda tutulmaz — gerekirse ortam değişkeni)_ | — |
 
 ### Client-Side vs Server-Side Ayrımı
 
@@ -37,7 +37,7 @@ window.dataLayer.push({
 | **Client: Clarity** | Session recording + heatmap | `MicrosoftClarity.tsx` |
 | **Client: TrackingProvider** | UTM, gclid, fbclid, referrer yakalama | `TrackingProvider.tsx` |
 | **Server: Meta CAPI** | `graph.facebook.com/v19.0` Lead event | `lib/server-tracking.ts` |
-| **Server: GA4 MP** | `/mp/collect` generate_lead event | `lib/server-tracking.ts` |
+| **Server: GA4 MP** | Kullanılmıyor (Kasım 2026'da kaldırıldı — çift/kanalsız lead sayımı) | — |
 | **Server: HubSpot** | Contact + Deal oluşturma | `app/api/quote/route.ts` |
 | **Server: Google Sheets** | Lead log webhook | `app/api/quote/route.ts` |
 
@@ -46,15 +46,15 @@ window.dataLayer.push({
 ## 2. Google Ekosistemi Entegrasyonu
 
 ### GA4 Yapılandırması
-- **Measurement ID:** `G-WLY28LNC3X`
-- **Yükleme:** GTM container üzerinden (client-side) + Measurement Protocol (server-side)
+- **Measurement ID:** `G-09MSN7JYJ8` (ana site). `G-WLY28LNC3X` yavru sitenin (container.pekcon.com) mülküdür.
+- **Yükleme:** Yalnızca GTM container üzerinden (client-side)
 - **Page View:** Route değişikliğinde otomatik (`GoogleTagManager.tsx`)
 
 **Temel Event'ler (Custom + Standard):**
 
 | Event | Tür | Tetiklenme |
 |-------|-----|-----------|
-| `generate_lead` | GA4 Standard | Form submit + WhatsApp click |
+| `generate_lead` | GA4 Standard | Yalnızca teklif formu gönderimi |
 | `add_to_cart` | GA4 Standard | Form submit (estimated value) |
 | `view_item` | GA4 Standard | Konteyner tipi görüntüleme |
 | `begin_checkout` | GA4 Standard | Teklif akışı başlatma |
@@ -227,7 +227,7 @@ Bu projede **sGTM container ayrı kurulu DEĞİL**. Bunun yerine:
 │  ┌─── CLIENT (Browser) ──────────────────────────────────┐   │
 │  │                                                        │   │
 │  │  GTM Container (GTM-536W5D89)                          │   │
-│  │   └─ GA4 Config Tag (G-WLY28LNC3X)                    │   │
+│  │   └─ GA4 Config Tag (G-09MSN7JYJ8)                    │   │
 │  │   └─ Google Ads Conversion Tag (AW-XXXXXXXXX)          │   │
 │  │   └─ Conversion Linker                                 │   │
 │  │   └─ Enhanced Conversions Tag                          │   │
