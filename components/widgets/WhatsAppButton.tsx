@@ -52,6 +52,9 @@ export default function WhatsAppButton() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
+        // Bu buton kendi ölçümünü yapar (handleClick); AnalyticsEvents'teki
+        // genel wa.me dinleyicisi bu işareti görünce atlar → tek sayım.
+        data-wa-tracked="self"
         className="relative w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all group md:hover:scale-110 md:active:scale-95 animate-heartbeat md:animate-none"
         aria-label="WhatsApp ile iletişime geç"
       >
