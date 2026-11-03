@@ -39,10 +39,19 @@ export default function AnalyticsEvents() {
       const target = e.target as HTMLElement;
       const link = target.closest('a');
       if (link && link.href.includes('wa.me')) {
+        // Kendi ölçümünü yapan linkler (ör. yüzen WhatsApp butonu) burada
+        // tekrar sayılmaz; aksi halde whatsapp_click iki kez gider.
+        if (link.dataset.waTracked === 'self') return;
+
         if (typeof window.dataLayer !== 'undefined') {
              window.dataLayer.push({
                 event: 'whatsapp_click',
-                path: pathname
+                method: 'whatsapp',
+                cta_location: link.dataset.ctaLocation || 'inline_link',
+                path: pathname,
+                // Her tıklamaya benzersiz ID: Ads etiketi önceki tıklamanın
+                // ID'sini tekrar kullanıp dönüşümü yutmasın.
+                transaction_id: `wa_${Date.now()}`,
             });
         }
 
