@@ -37,8 +37,8 @@ export async function generateMetadata({
     : 'Shipping Containers for Sale | New & Used SOC Containers | PEKCON');
 
   const description = kwConfig?.description ?? (locale === 'tr'
-    ? 'Satılık ve kiralık 20ft, 40ft, 40HC yük konteynerleri. Sıfır ve ikinci el seçenekler, hızlı teklif, Türkiye\'den dünyaya teslimat. 15+ yıl tecrübe ile PEKCON.'
-    : 'Shipping containers for sale and rent: 20ft, 40ft, 40HC. New and used SOC containers, fast quote, worldwide delivery from Türkiye. 15+ years of experience.');
+    ? 'Satılık 20ft, 40ft, 40HC yük konteynerleri. Sıfır ve ikinci el seçenekler, hızlı teklif, Türkiye\'den dünyaya teslimat. 15+ yıl tecrübe ile PEKCON.'
+    : 'Shipping containers for sale: 20ft, 40ft, 40HC. New and used SOC containers, fast quote, worldwide delivery from Türkiye. 15+ years of experience.');
 
   const ogImage = {
     url: 'https://pekcon.com/hero-bg.webp',
@@ -50,8 +50,8 @@ export async function generateMetadata({
   };
 
   const keywords = locale === 'tr'
-    ? ['satılık konteyner', 'yük konteyneri', '20ft konteyner', '40ft konteyner', '40HC konteyner', 'sıfır konteyner', 'ikinci el konteyner', 'konteyner kiralama', 'SOC konteyner', 'reefer konteyner', 'konteyner fiyatları', 'PEKCON', 'İstanbul konteyner', 'Türkiye konteyner ihracat']
-    : ['shipping container for sale', 'cargo container', '20ft container', '40ft container', '40HC container', 'new container', 'used container', 'container rental', 'SOC container', 'reefer container', 'container prices', 'PEKCON', 'Türkiye container export'];
+    ? ['satılık konteyner', 'yük konteyneri', '20ft konteyner', '40ft konteyner', '40HC konteyner', 'sıfır konteyner', 'ikinci el konteyner', 'SOC konteyner', 'reefer konteyner', 'konteyner fiyatları', 'PEKCON', 'İstanbul konteyner', 'Türkiye konteyner ihracat']
+    : ['shipping container for sale', 'cargo container', '20ft container', '40ft container', '40HC container', 'new container', 'used container', 'SOC container', 'reefer container', 'container prices', 'PEKCON', 'Türkiye container export'];
 
   return {
     title,
@@ -105,8 +105,8 @@ export default async function HomePage({
     email: 'info@pekcon.com',
     foundingDate: '2009',
     description: locale === 'tr'
-      ? 'Türkiye\'nin güvenilir konteyner satış, kiralama ve lojistik çözüm ortağı. 15+ yıllık deneyim.'
-      : 'Turkey\'s trusted container sales, rental and global logistics partner. 15+ years of experience.',
+      ? 'Türkiye\'nin güvenilir konteyner satış ve lojistik çözüm ortağı. 15+ yıllık deneyim.'
+      : 'Turkey\'s trusted container sales and global logistics partner. 15+ years of experience.',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Kağıthane',

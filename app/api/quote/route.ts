@@ -33,7 +33,7 @@ function buildEmailHtml(data: {
   companyName?: string;
   notes?: string;
 }) {
-  const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
+  const typeLabel = 'Satın Alma';
   const categoryMap: Record<string, string> = {
     standard_cargo: 'Standart Yük',
     refrigerated: 'Soğutmalı',
@@ -191,7 +191,7 @@ async function syncToGoogleSheets(data: any): Promise<void> {
   }
 
   try {
-    const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
+    const typeLabel = 'Satın Alma';
     const categoryMap: Record<string, string> = {
       standard_cargo: 'Standart Yük',
       refrigerated: 'Soğutmalı',
@@ -278,7 +278,7 @@ async function syncToHubSpot(data: {
   }
 
   // 2. Deal oluştur
-  const typeLabel = data.transactionType === 'purchase' ? 'Satın Alma' : 'Kiralama';
+  const typeLabel = 'Satın Alma';
   const dealName = `${typeLabel} — ${data.containerType ?? data.containerCategory} x${data.quantity}${data.region ? ` (${data.region})` : ''}`;
   const dealRes = await fetch('https://api.hubapi.com/crm/v3/objects/deals', {
     method: 'POST',

@@ -50,8 +50,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     foundingDate: '2009',
     numberOfEmployees: { '@type': 'QuantitativeValue', value: 50 },
     description: locale === 'tr'
-      ? '2009 yılından itibaren konteyner satış, kiralama ve global lojistik alanında hizmet veren PEKCON, 500+ müşteri ve 1000+ projeyle Türkiye\'nin güvenilir çözüm ortağıdır.'
-      : 'PEKCON has been providing container sales, rental and global logistics solutions since 2009, with 500+ clients and 1000+ completed projects.',
+      ? '2009 yılından itibaren konteyner satış ve global lojistik alanında hizmet veren PEKCON, 500+ müşteri ve 1000+ projeyle Türkiye\'nin güvenilir çözüm ortağıdır.'
+      : 'PEKCON has been providing container sales and global logistics solutions since 2009, with 500+ clients and 1000+ completed projects.',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'İstanbul',

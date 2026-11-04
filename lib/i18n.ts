@@ -48,7 +48,6 @@ export const translations = {
     containers: {
       title: 'Küresel Standartlarda Yerli Güçle Konteyner Çözümleri',
       subtitle: 'İhtiyacınıza uygun sıfır ve ikinci el konteyner seçenekleri',
-      saleRent: 'Satış & Kiralama',
       fromPrice: 'başlayan fiyatlarla',
     },
     // CTA Section
@@ -218,7 +217,6 @@ export const translations = {
       form: {
         transactionType: 'İşlem Türü',
         purchase: 'Satın Alma',
-        rental: 'Kiralama',
         category: 'Konteyner Kategorisi',
         select: 'Seçiniz',
         standard: 'Standart Yük Konteyneri',
@@ -365,7 +363,6 @@ export const translations = {
     containers: {
       title: 'Container Solutions with Global Standards and Local Power',
       subtitle: 'New and used container options suited to your needs',
-      saleRent: 'Sale & Rental',
       fromPrice: 'starting from',
     },
     // CTA Section
@@ -535,7 +532,6 @@ export const translations = {
       form: {
         transactionType: 'Transaction Type',
         purchase: 'Purchase',
-        rental: 'Rental',
         category: 'Container Category',
         select: 'Select',
         standard: 'Standard Cargo Container',

@@ -12,11 +12,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   if (locale === 'tr') {
     return {
       title: 'İletişim | Konteyner Fiyatı Öğren & Teklif Al | PEKCON',
-      description: 'PEKCON ile iletişime geçin. Konteyner satış, kiralama ve lojistik hizmetleri için teklif alın. 7/24 WhatsApp destek: 0542 717 93 57.',
+      description: 'PEKCON ile iletişime geçin. Konteyner satış ve lojistik hizmetleri için teklif alın. 7/24 WhatsApp destek: 0542 717 93 57.',
       alternates: { canonical: 'https://pekcon.com/tr/iletisim', languages: { 'tr': 'https://pekcon.com/tr/iletisim', 'en': 'https://pekcon.com/en/contact' } },
       openGraph: {
         title: 'İletişim | Konteyner Fiyatı Öğren & Teklif Al | PEKCON',
-        description: 'Konteyner satış, kiralama ve lojistik hizmetleri için teklif alın. 7/24 WhatsApp destek.',
+        description: 'Konteyner satış ve lojistik hizmetleri için teklif alın. 7/24 WhatsApp destek.',
         url: 'https://pekcon.com/tr/iletisim',
         siteName: 'PEKCON Container & Logistics',
         type: 'website',
@@ -25,11 +25,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   }
   return {
     title: 'Contact Us | Get Container Price & Quote | PEKCON',
-    description: 'Contact PEKCON for container sales, rental and logistics services. Get a free quote. 24/7 WhatsApp support: +90 542 717 93 57.',
+    description: 'Contact PEKCON for container sales and logistics services. Get a free quote. 24/7 WhatsApp support: +90 542 717 93 57.',
     alternates: { canonical: 'https://pekcon.com/en/contact', languages: { 'tr': 'https://pekcon.com/tr/iletisim', 'en': 'https://pekcon.com/en/contact' } },
     openGraph: {
       title: 'Contact Us | Get Container Price & Quote | PEKCON',
-      description: 'Get a free quote for container sales, rental and logistics services.',
+      description: 'Get a free quote for container sales and logistics services.',
       url: 'https://pekcon.com/en/contact',
       siteName: 'PEKCON Container & Logistics',
       type: 'website',
@@ -51,8 +51,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     image: 'https://pekcon.com/x2.webp',
     logo: 'https://pekcon.com/logo.png',
     description: locale === 'tr'
-      ? 'PEKCON, İstanbul Kağıthane merkezli konteyner satış, kiralama ve lojistik çözüm ortağıdır.'
-      : 'PEKCON is an Istanbul-based container sales, rental and logistics solutions provider.',
+      ? 'PEKCON, İstanbul Kağıthane merkezli konteyner satış ve lojistik çözüm ortağıdır.'
+      : 'PEKCON is an Istanbul-based container sales and logistics solutions provider.',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Kağıthane',

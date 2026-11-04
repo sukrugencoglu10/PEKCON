@@ -13,7 +13,7 @@ export default function SegmentationCards({ locale = 'tr' }: { locale?: Locale }
     {
       id: 'corporate',
       title: locale === 'tr' ? 'Kurumsal Çözümler' : 'Corporate Solutions',
-      description: locale === 'tr' ? 'Toplu alım, filo kiralama ve proje bazlı lojistik talepleriniz için.' : 'For bulk purchase, fleet rental and project-based logistics requests.',
+      description: locale === 'tr' ? 'Toplu alım ve proje bazlı lojistik talepleriniz için.' : 'For bulk purchase and project-based logistics requests.',
       icon: <Building2 size={36} className="text-secondary-500" />,
       cta: locale === 'tr' ? 'Kurumsal Teklif Al' : 'Get Corporate Quote',
       href: `/${locale}/teklif-al?type=corporate`, 

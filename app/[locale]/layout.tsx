@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     default: 'PEKCON Container & Logistics',
     template: '%s',
   },
-  description: 'Küresel lojistikte güvenilir çözüm ortağınız. Konteyner satış, kiralama ve taşımacılık hizmetleri.',
+  description: 'Küresel lojistikte güvenilir çözüm ortağınız. Konteyner satış ve taşımacılık hizmetleri.',
   metadataBase: new URL('https://pekcon.com'),
   icons: {
     icon: '/favicon.png',

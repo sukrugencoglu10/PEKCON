@@ -13,7 +13,7 @@ interface FieldStats {
 
 // Field display labels (matches QuoteForm field names)
 const FIELD_LABELS: Record<string, string> = {
-  transactionType: 'İşlem Türü (Satın Al / Kirala)',
+  transactionType: 'İşlem Türü (Satın Alma)',
   containerCategory: 'Konteyner Kategorisi',
   containerType: 'Konteyner Tipi',
   quantity: 'Miktar',

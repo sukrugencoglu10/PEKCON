@@ -180,8 +180,8 @@ export default function ContactSection({ locale = 'tr' }: { locale?: Locale }) {
             </h2>
             <p className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto">
               {isTr
-                ? 'Satılık ve kiralık konteyner ihtiyaçlarınız için 15 yılı aşkın sektör deneyimimizle yanınızdayız. Uzman ekibimizden hemen fiyat teklifi alın.'
-                : 'With over 15 years of industry experience, we are by your side for all your container purchase and rental needs. Get an instant quote from our expert team.'}
+                ? 'Satılık konteyner ihtiyaçlarınız için 15 yılı aşkın sektör deneyimimizle yanınızdayız. Uzman ekibimizden hemen fiyat teklifi alın.'
+                : 'With over 15 years of industry experience, we are by your side for all your container purchase needs. Get an instant quote from our expert team.'}
             </p>
           </div>
 

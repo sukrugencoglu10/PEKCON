@@ -394,44 +394,8 @@ export default function QuoteForm({
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div>
-                <label className="block text-sm font-medium text-dark-800 mb-3">
-                  {f.transactionType} *
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                  <label className={`
-                    relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all
-                    ${formValues.transactionType === 'purchase' 
-                      ? 'border-primary-500 bg-primary-50 text-primary-700' 
-                      : 'border-gray-200 hover:border-primary-200'
-                    }
-                  `}>
-                    <input
-                      type="radio"
-                      value="purchase"
-                      {...register('transactionType')}
-                      className="sr-only"
-                    />
-                    <span className="font-medium">{f.purchase}</span>
-                  </label>
-                  
-                  <label className={`
-                    relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all
-                    ${formValues.transactionType === 'rental' 
-                      ? 'border-primary-500 bg-primary-50 text-primary-700' 
-                      : 'border-gray-200 hover:border-primary-200'
-                    }
-                  `}>
-                    <input
-                      type="radio"
-                      value="rental"
-                      {...register('transactionType')}
-                      className="sr-only"
-                    />
-                    <span className="font-medium">{f.rental}</span>
-                  </label>
-                </div>
-              </div>
+              {/* Yalnızca satın alma hizmeti verildiği için işlem türü seçimi yok; değer sabit */}
+              <input type="hidden" value="purchase" {...register('transactionType')} />
 
               <FormSelect
                 label={`${f.category} *`}
@@ -592,10 +556,6 @@ export default function QuoteForm({
               </h3>
               
               <div className="bg-gray-50 rounded-lg p-4 space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">{f.transactionType}:</span>
-                  <span className="font-medium text-dark-900 capitalize">{getValues('transactionType')}</span>
-                </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">{f.category}:</span>
                   <span className="font-medium text-dark-900 capitalize">

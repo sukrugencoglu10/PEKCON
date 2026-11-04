@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Quote form validation schema
 export const quoteFormSchema = z.object({
-  transactionType: z.enum(['purchase', 'rental'] as const, {
+  transactionType: z.enum(['purchase'] as const, {
     error: 'Lütfen işlem türünü seçiniz',
   }),
   containerCategory: z.enum(['standard_cargo', 'refrigerated', 'flat_rack', 'open_top', 'custom'] as const, {

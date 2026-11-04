@@ -20,13 +20,13 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
   const texts = {
     tr: {
       label: 'Konteyner ihtiyacınız mı var?',
-      sub: 'Satın al veya kirala, hemen teklif al',
+      sub: 'Hemen satın al, hızlı teklif al',
       whatsapp: 'WhatsApp',
       quote: 'Teklif Al',
     },
     en: {
       label: 'Need a container?',
-      sub: 'Buy or rent, get a quote now',
+      sub: 'Buy now, get a quick quote',
       whatsapp: 'WhatsApp',
       quote: 'Get Quote',
     },
