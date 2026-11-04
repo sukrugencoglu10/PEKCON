@@ -9,7 +9,7 @@ export const translations = {
       description: 'Sıfır ve ikinci el yük konteynerleri — 20ft, 40ft ve 40HC dahil her ebatta yüksek kondisyon. Türkiye\'den dünyaya hızlı teklif ve kesintisiz tedarik.',
       cta1: 'Hemen Teklif Al',
       cta2: 'Hizmetlerimiz',
-      cta3: 'İletişime Geçiniz',
+      cta3: 'Satılık Konteyner',
       quickQuote: {
         placeholder: 'Telefon veya E-posta adresiniz',
         submit: 'Hemen Teklif Al',
@@ -326,7 +326,7 @@ export const translations = {
       heroH2: 'All Sizes, High Condition — Fast Quote, Ready Stock',
       description: 'New and used shipping containers — 20ft, 40ft and 40HC in every size, high condition. Fast quote and uninterrupted supply from Türkiye to the world.',
       cta1: 'Get Free Quote',
-      cta3: 'Contact Us',
+      cta3: 'Containers for Sale',
       quickQuote: {
         placeholder: 'Your Phone or Email Address',
         submit: 'Get Quick Quote',

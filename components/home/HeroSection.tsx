@@ -35,6 +35,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   const t = getTranslations(locale);
   const kwConfig = getKeywordConfig(locale, keyword || null);
   const prefersReducedMotion = useReducedMotion();
+  const salesHref = locale === 'en' ? '/en/containers-for-sale' : `/${locale}/satilik-konteyner`;
   const isDesktopRef = useRef<boolean | null>(null);
   
   const [animState, setAnimState] = useState<'idle' | 'transforming' | 'swimming'>('idle');
@@ -129,7 +130,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
 
             {/* Butonlar: sadece tablet (sm) ve desktop'ta görünür */}
             <motion.div variants={heroSlide} className="hidden sm:flex flex-row items-center lg:justify-start gap-3">
-              <Link href="https://wa.me/905427179357" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+              <Link href={salesHref} className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:min-w-[180px] !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-xl hover:shadow-red-600/30 text-sm font-bold">
                   {t.hero.cta3}
                 </Button>
@@ -207,7 +208,7 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
 
           {/* ─── MOBİL ONLY: Butonlar (3D animasyonun altında, sm+ gizli) ─── */}
           <motion.div variants={heroSlide} className="sm:hidden order-3 w-full flex flex-col items-center gap-3">
-            <Link href="https://wa.me/905427179357" target="_blank" rel="noopener noreferrer" className="w-full">
+            <Link href={salesHref} className="w-full">
               <Button size="lg" className="w-full !bg-none !bg-red-600 !border-red-600 !text-white hover:!bg-red-700 transition-all duration-300 shadow-xl hover:shadow-red-600/30 text-sm font-bold">
                 {t.hero.cta3}
               </Button>
