@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       { source: '/en/hizmetlerimiz',destination: '/en/services',   permanent: true },
       { source: '/en/teklif-al',    destination: '/en/quote',      permanent: true },
       { source: '/en/maliyet-hesaplayici', destination: '/en/cost-calculator', permanent: true },
+      { source: '/en/satilik-konteyner', destination: '/en/containers-for-sale', permanent: true },
     ];
   },
   async rewrites() {
@@ -36,6 +37,7 @@ const nextConfig: NextConfig = {
       { source: '/en/contact',    destination: '/en/iletisim' },
       { source: '/en/quote',      destination: '/en/teklif-al' },
       { source: '/en/cost-calculator', destination: '/en/maliyet-hesaplayici' },
+      { source: '/en/containers-for-sale', destination: '/en/satilik-konteyner' },
     ];
   },
 };

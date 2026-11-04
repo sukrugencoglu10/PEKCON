@@ -5,6 +5,8 @@ const PAGE_NAMES: Record<string, { tr: string; en: string }> = {
   hizmetlerimiz: { tr: 'Hizmetlerimiz', en: 'Our Services' },
   iletisim: { tr: 'İletişim', en: 'Contact' },
   konteynerler: { tr: 'Konteynerler', en: 'Containers' },
+  'satilik-konteyner': { tr: 'Satılık Konteyner', en: 'Satılık Konteyner' },
+  'containers-for-sale': { tr: 'Containers for Sale', en: 'Containers for Sale' },
   'teklif-al': { tr: 'Teklif Al', en: 'Get a Quote' },
   'maliyet-hesaplayici': { tr: 'Maliyet Hesaplayıcı', en: 'Cost Calculator' },
 };
