@@ -3,6 +3,24 @@
  * Centralized event tracking for PEKCON website
  */
 
+// GTM'de bu olaylar için G-09MSN7JYJ8'e giden bir GA4 Event etiketi var.
+// Bunları ayrıca gtag ile göndermek GA4'te çift sayım yaratır (ve form_submit
+// için e-posta/telefonu GA4'e parametre olarak sızdırır), bu yüzden yalnızca
+// dataLayer'a itilirler. GTM'de yeni GA4 etiketi eklenirse buraya da ekleyin.
+//   whatsapp_click → GA4 - WhatsApp Click
+//   form_submit    → GA4 - Generate Lead (Main Site)  (GA4'e generate_lead olarak)
+//   generate_lead  → form_submit üzerinden zaten gidiyor; doğrudan göndermek çift sayar
+//   add_to_cart / cta_click / form_abandoned / scroll_depth → aynı adlı GA4 etiketleri
+const GTM_HANDLED_EVENTS = new Set([
+  'whatsapp_click',
+  'form_submit',
+  'generate_lead',
+  'add_to_cart',
+  'cta_click',
+  'form_abandoned',
+  'scroll_depth',
+]);
+
 // Base tracking function (dataLayer + gtag)
 export const trackEvent = (event: string, data: Record<string, any> = {}) => {
   if (typeof window === 'undefined') return;
@@ -16,8 +34,8 @@ export const trackEvent = (event: string, data: Record<string, any> = {}) => {
     });
   }
 
-  // Also fire via gtag for GA4
-  if (typeof window.gtag === 'function') {
+  // GTM'de GA4 etiketi olmayan olaylar için doğrudan gtag ile GA4'e gönder
+  if (!GTM_HANDLED_EVENTS.has(event) && typeof window.gtag === 'function') {
     window.gtag('event', event, data);
   }
 };
