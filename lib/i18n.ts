@@ -65,7 +65,7 @@ export const translations = {
       seaTransport: 'Denizyolu Taşımacılık',
       landTransport: 'Karayolu Taşımacılık',
 
-      containerSales: 'Konteyner Satış & Kiralama',
+      containerSales: 'Konteyner Satışı',
       about: 'Hakkımızda',
       contactPage: 'İletişim',
       getQuote: 'Teklif Al',
@@ -382,7 +382,7 @@ export const translations = {
       seaTransport: 'Sea Freight',
       landTransport: 'Land Transport',
 
-      containerSales: 'Container Sale & Rental',
+      containerSales: 'Container Sales',
       about: 'About Us',
       contactPage: 'Contact',
       getQuote: 'Get Quote',
