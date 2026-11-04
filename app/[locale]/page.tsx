@@ -164,23 +164,17 @@ export default async function HomePage({
       '@type': 'ListItem',
       position: i + 1,
       item: {
-        '@type': 'Product',
+        '@type': 'Service',
         '@id': `${baseUrl}/${locale}/konteynerler#${c.id}`,
         name: c.name,
-        sku: c.type,
         image: `${baseUrl}${c.image}`,
+        serviceType: locale === 'tr' ? 'Konteyner Tedariği' : 'Container Supply',
         description: locale === 'tr'
           ? `${c.name} - ${c.dimensions.external.length}m uzunluk, ${c.capacity.volume} m³ hacim, ${c.capacity.maxPayload} kg yük kapasitesi. Sıfır ve ikinci el seçeneklerle PEKCON'dan hızlı teklif.`
           : `${c.name} - ${c.dimensions.external.length}m length, ${c.capacity.volume} m³ volume, ${c.capacity.maxPayload} kg payload capacity. New and used options, fast quote from PEKCON.`,
-        brand: { '@type': 'Brand', name: 'PEKCON' },
-        category: locale === 'tr' ? 'Yük Konteyneri' : 'Shipping Container',
-        offers: {
-          '@type': 'Offer',
-          availability: 'https://schema.org/InStock',
-          url: quoteUrl,
-          priceCurrency: locale === 'tr' ? 'TRY' : 'USD',
-          seller: { '@type': 'Organization', name: 'PEKCON Container & Logistics' },
-        },
+        provider: { '@type': 'Organization', name: 'PEKCON Container & Logistics' },
+        areaServed: { '@type': 'Place', name: 'Worldwide' },
+        url: quoteUrl,
       },
     })),
   };
