@@ -53,6 +53,11 @@ export default function Footer({ locale = 'tr' }: { locale?: string }) {
                   {t.footer.containerSales}
                 </Link>
               </li>
+              <li>
+                <Link href={locale === 'en' ? '/en/cost-calculator' : `/${locale}/maliyet-hesaplayici`} className="text-dark-700 hover:text-primary-500 transition-colors">
+                  {locale === 'en' ? 'Cost Calculator' : 'Maliyet Hesaplayıcı'}
+                </Link>
+              </li>
             </ul>
           </div>
 
