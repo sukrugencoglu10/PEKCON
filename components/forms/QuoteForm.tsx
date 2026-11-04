@@ -394,23 +394,16 @@ export default function QuoteForm({
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              {/* Yalnızca satın alma hizmeti verildiği için tek seçenek: ortalanmış ve her zaman seçili */}
-              <div>
-                <label className="block text-sm font-medium text-dark-800 mb-3 text-center">
-                  {f.transactionType} *
-                </label>
-                <div className="flex justify-center">
-                  <label className="relative flex items-center justify-center px-12 py-4 border-2 rounded-xl border-primary-500 bg-primary-50 text-primary-700 cursor-default">
-                    <input
-                      type="radio"
-                      value="purchase"
-                      {...register('transactionType')}
-                      className="sr-only"
-                    />
-                    <span className="font-medium">{f.purchase}</span>
-                  </label>
-                </div>
-              </div>
+              {/* Yalnızca satın alma hizmeti verildiği için tek seçenek: tam genişlik ve her zaman seçili */}
+              <label className="relative flex w-full items-center justify-center p-4 border-2 rounded-xl border-primary-500 bg-primary-50 text-primary-700 cursor-default">
+                <input
+                  type="radio"
+                  value="purchase"
+                  {...register('transactionType')}
+                  className="sr-only"
+                />
+                <span className="font-medium">{f.purchase}</span>
+              </label>
 
               <FormSelect
                 label={`${f.category} *`}
