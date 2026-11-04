@@ -18,6 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
     description: locale === 'tr'
       ? "20'lik, 40'lık, 40 HC, 45 HC, Reefer, Open Top ve Flat Rack konteynerlerin dış/iç ölçüleri, kapı açıklığı, hacim (m³), boş ağırlık ve azami yük kapasitesi. Palet yerleşim planları ve SSS."
       : 'External/internal dimensions, door opening, volume (m³), tare weight and max payload for 20ft, 40ft, 40 HC, 45 HC, Reefer, Open Top and Flat Rack containers. Pallet loading plans and FAQ.',
+    alternates: {
+      canonical: locale === 'tr' ? 'https://pekcon.com/tr/konteynerler' : 'https://pekcon.com/en/containers',
+      languages: { 'tr': 'https://pekcon.com/tr/konteynerler', 'en': 'https://pekcon.com/en/containers' },
+    },
   };
 }
 

@@ -153,7 +153,7 @@ export default async function HomePage({
     capacity: { volume: number; maxPayload: number };
   }>;
   const baseUrl = 'https://pekcon.com';
-  const quoteUrl = `${baseUrl}/${locale}/teklif-al`;
+  const quoteUrl = `${baseUrl}/${locale}/${locale === 'tr' ? 'teklif-al' : 'quote'}`;
 
   const itemListSchema = {
     '@context': 'https://schema.org',

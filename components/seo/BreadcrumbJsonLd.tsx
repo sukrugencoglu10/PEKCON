@@ -11,6 +11,18 @@ const PAGE_NAMES: Record<string, { tr: string; en: string }> = {
   'maliyet-hesaplayici': { tr: 'Maliyet Hesaplayıcı', en: 'Cost Calculator' },
 };
 
+// EN sayfalarının herkese açık slug'ları (next.config.ts'teki redirect/rewrite'larla aynı).
+// TR slug kullanılırsa breadcrumb, 301 yönlendiren bir URL'yi gösteriyordu.
+const EN_SLUGS: Record<string, string> = {
+  hakkimizda: 'about',
+  hizmetlerimiz: 'services',
+  iletisim: 'contact',
+  konteynerler: 'containers',
+  'satilik-konteyner': 'containers-for-sale',
+  'teklif-al': 'quote',
+  'maliyet-hesaplayici': 'cost-calculator',
+};
+
 export default function BreadcrumbJsonLd({
   locale,
   slug,
@@ -37,7 +49,7 @@ export default function BreadcrumbJsonLd({
         '@type': 'ListItem',
         position: 2,
         name: pageName,
-        item: `${baseUrl}/${locale}/${slug}`,
+        item: `${baseUrl}/${locale}/${locale === 'en' ? (EN_SLUGS[slug] ?? slug) : slug}`,
       },
     ],
   };
