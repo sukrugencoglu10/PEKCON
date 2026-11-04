@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
       { source: '/en/teklif-al',    destination: '/en/quote',      permanent: true },
       { source: '/en/maliyet-hesaplayici', destination: '/en/cost-calculator', permanent: true },
       { source: '/en/satilik-konteyner', destination: '/en/containers-for-sale', permanent: true },
+      // Eski container.pekcon.com sitesinden gelen indeksli /en.html → EN ana sayfa
+      { source: '/en.html', destination: '/en', permanent: true },
     ];
   },
   async rewrites() {
