@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { containerSpecs } from '@/data/container-specs';
 import type { Locale } from '@/lib/i18n';
 
@@ -130,14 +129,6 @@ export default function ContainerSpecsTable({ locale = 'tr' }: { locale?: Locale
 
       <p className="text-xs text-gray-500 mt-3 max-w-3xl">{l.note}</p>
 
-      <div className="mt-6 text-center">
-        <Link
-          href={`/${locale}/teklif-al`}
-          className="inline-block bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 text-white font-bold text-sm md:text-base px-8 py-3.5 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.02]"
-        >
-          {l.cta}
-        </Link>
-      </div>
     </section>
   );
 }

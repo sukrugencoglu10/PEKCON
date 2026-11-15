@@ -465,18 +465,6 @@ export default function ContainerDimensionsSection({ locale = 'tr' }: { locale?:
           SECTION 1: Konteyner Ölçüleri Tablosu
           ═══════════════════════════════════════════════ */}
       <section>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <h2 className="text-3xl md:text-4xl font-display font-black text-dark-900 mb-3">
-            {cd.pageTitle}
-          </h2>
-          <p className="text-base md:text-lg text-dark-700 max-w-2xl mx-auto">
-            {cd.pageSubtitle}
-          </p>
-        </motion.div>
 
         {/* Category Tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
