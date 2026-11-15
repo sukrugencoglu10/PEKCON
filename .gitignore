@@ -35,3 +35,10 @@ next-env.d.ts
 
 # turbopack
 .turbo
+
+# local data / logs
+local.db
+*.db
+debug.log
+.git_status_tmp.txt
+.claude/worktrees/

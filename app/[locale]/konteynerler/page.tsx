@@ -33,6 +33,27 @@ export default async function ContainersPage({ params }: { params: Promise<{ loc
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-28 md:pt-32 pb-16 px-4">
       <BreadcrumbJsonLd locale={locale} slug="konteynerler" />
       <div className="max-w-7xl mx-auto space-y-20">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 shadow-sm">
+          <p className="flex-1 text-sm md:text-base text-amber-900 leading-relaxed">
+            {locale === 'tr' ? (
+              <>
+                <strong>Stoklarımız anlık değişiyor.</strong> Güncel konteyner fotoğrafları ve fiyat bilgisi için bizimle WhatsApp iletişim hattımızdan hemen iletişime geçebilirsiniz.
+              </>
+            ) : (
+              <>
+                <strong>Our stock changes constantly.</strong> For the latest container photos and pricing, contact us on our WhatsApp line.
+              </>
+            )}
+          </p>
+          <a
+            href={`https://wa.me/905427179357?text=${encodeURIComponent(locale === 'tr' ? 'Merhaba, güncel konteyner fotoğrafları ve fiyatları hakkında bilgi almak istiyorum.' : 'Hello, I would like to get the latest container photos and prices.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-5 py-2.5 transition-colors whitespace-nowrap"
+          >
+            {locale === 'tr' ? "WhatsApp'tan Yazın" : 'Message on WhatsApp'}
+          </a>
+        </div>
         <ContainerSpecsTable locale={locale} />
         <ContainerDimensionsSection locale={locale} />
         <ContainerFAQ locale={locale} />

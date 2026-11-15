@@ -1,10 +1,18 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { timingSafeEqual } from 'crypto';
+import { timingSafeEqual, createHash } from 'crypto';
 import { signToken, buildAuthCookie } from '@/lib/admin-auth';
+import { getClientIp, isRateLimited } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+  // Brute-force koruması: IP başına 15 dakikada en fazla 5 deneme
+  if (isRateLimited(`admin-login:${getClientIp(request)}`, 5, 15 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: 'Çok fazla deneme. Lütfen daha sonra tekrar deneyin.' },
+      { status: 429 }
+    );
+  }
   try {
     const { password } = await request.json() as { password?: string };
 
@@ -19,9 +27,11 @@ export async function POST(request: NextRequest) {
 
     let isValid = false;
     try {
-      isValid =
-        password.length === expected.length &&
-        timingSafeEqual(Buffer.from(password), Buffer.from(expected));
+      // Hash'leri karşılaştır: uzunluk bilgisi sızmaz
+      isValid = timingSafeEqual(
+        createHash('sha256').update(password).digest(),
+        createHash('sha256').update(expected).digest()
+      );
     } catch {
       isValid = false;
     }

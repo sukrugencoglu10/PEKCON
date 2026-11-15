@@ -3,7 +3,14 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
-const SECRET = process.env.ADMIN_COOKIE_SECRET ?? 'fallback-dev-secret-change-in-prod';
+const SECRET: string = (() => {
+  const s = process.env.ADMIN_COOKIE_SECRET;
+  if (s) return s;
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
+    throw new Error('ADMIN_COOKIE_SECRET tanımlı değil.');
+  }
+  return 'dev-only-insecure-secret';
+})();
 export const COOKIE_NAME = 'pekcon_admin';
 const MAX_AGE = 60 * 60 * 8; // 8 saat
 

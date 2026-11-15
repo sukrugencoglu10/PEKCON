@@ -183,6 +183,16 @@ export default async function HomePage({
     <>
       <JsonLd data={organizationSchema} />
       <JsonLd data={itemListSchema} />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'PEKCON Container & Logistics',
+          url: 'https://pekcon.com',
+          inLanguage: ['tr', 'en'],
+          publisher: { '@type': 'Organization', name: 'PEKCON Container & Logistics', url: 'https://pekcon.com' },
+        }}
+      />
       <HeroSection locale={locale} keyword={keyword} />
       <TrustSlider locale={locale} />
       <StatsSection locale={locale} />

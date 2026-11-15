@@ -6,6 +6,7 @@ import {
   estimateLeadValueServer,
 } from '@/lib/server-tracking';
 import { insertConversion } from '@/lib/analytics-db';
+import { escapeHtml, getClientIp, isRateLimited } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ function normalizeTurkishPhone(phone: string): string {
   return phone.startsWith('+') ? '+' + digits : phone;
 }
 
-function buildEmailHtml(data: {
+function buildEmailHtml(raw: {
   transactionType: string;
   containerCategory: string;
   containerType?: string;
@@ -33,6 +34,20 @@ function buildEmailHtml(data: {
   companyName?: string;
   notes?: string;
 }) {
+  // Kullanıcı girdilerini HTML'e kaçışla (mail içi HTML enjeksiyonunu önler)
+  const esc = (v?: string) => (v === undefined ? undefined : escapeHtml(v));
+  const data = {
+    ...raw,
+    containerCategory: escapeHtml(raw.containerCategory),
+    containerType: esc(raw.containerType),
+    region: esc(raw.region),
+    fullName: esc(raw.fullName),
+    email: esc(raw.email),
+    phone: esc(raw.phone),
+    companyName: esc(raw.companyName),
+    notes: esc(raw.notes),
+    quantity: Number(raw.quantity) || 0,
+  };
   const typeLabel = 'Satın Alma';
   const categoryMap: Record<string, string> = {
     standard_cargo: 'Standart Yük',
@@ -308,6 +323,13 @@ async function syncToHubSpot(data: {
 }
 
 export async function POST(request: NextRequest) {
+  // Spam koruması: IP başına 10 dakikada en fazla 5 teklif
+  if (isRateLimited(`quote:${getClientIp(request)}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { success: false, error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
   try {
     const body = await request.json();
     const validatedData = quoteFormSchema.parse(body);

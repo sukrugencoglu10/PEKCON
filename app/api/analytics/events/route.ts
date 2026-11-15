@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getClientIp, isRateLimited } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,15 +22,21 @@ export function getFieldEvents(): FieldDwellEvent[] {
 }
 
 export async function POST(req: NextRequest) {
+  if (isRateLimited(`events:${getClientIp(req)}`, 120, 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+  if (Number(req.headers.get('content-length') ?? 0) > 4096) {
+    return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+  }
   try {
     const body = await req.json();
 
     const event: FieldDwellEvent = {
-      field_name: String(body.field_name ?? ''),
-      dwell_ms: Number(body.dwell_ms ?? 0),
-      correction_count: Number(body.correction_count ?? 0),
-      step: Number(body.step ?? 0),
-      session_id: String(body.session_id ?? ''),
+      field_name: String(body.field_name ?? '').slice(0, 64),
+      dwell_ms: Math.min(Math.max(Number(body.dwell_ms ?? 0) || 0, 0), 3_600_000),
+      correction_count: Math.min(Math.max(Number(body.correction_count ?? 0) || 0, 0), 1000),
+      step: Math.min(Math.max(Number(body.step ?? 0) || 0, 0), 20),
+      session_id: String(body.session_id ?? '').slice(0, 64),
       timestamp: new Date().toISOString(),
     };
 
