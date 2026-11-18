@@ -6,6 +6,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import CTASection from '@/components/home/CTASection';
 import StickyQuoteBar from '@/components/home/StickyQuoteBar';
+import ContainerTypeCards, { type ContainerTypeCard } from '@/components/containers/ContainerTypeCards';
 
 export const revalidate = 3600;
 
@@ -36,7 +37,7 @@ type Content = {
   introBody: string;
   typesTitle: string;
   typesSub: string;
-  types: { icon: React.ReactNode; name: string; desc: string }[];
+  types: ContainerTypeCard[];
   condTitle: string;
   conditions: { title: string; desc: string }[];
   whyTitle: string;
@@ -76,9 +77,9 @@ function buildContent(locale: Locale): Content {
       typesTitle: 'Satılık Konteyner Tipleri',
       typesSub: 'İhtiyacınıza en uygun tipi seçin; detaylı ölçüler için ölçü tablomuza göz atın.',
       types: [
-        { icon: ICON.box, name: "20' DC (Standart)", desc: 'En yaygın tip; genel kuru yük için ideal. ~33 m³ hacim, ~28 ton yük kapasitesi.' },
-        { icon: ICON.box, name: "40' DC (Standart)", desc: 'Hacimli yükler için uzun gövde. ~68 m³ hacim, geniş taban alanı.' },
-        { icon: ICON.boxes, name: "40' HC (High Cube)", desc: '30 cm ekstra yükseklik, ~76 m³ hacim. Hacimli ama hafif yükler için ideal.' },
+        { icon: ICON.box, name: "20' DC (Standart)", image: '/20.webp', type: '20DC', desc: 'En yaygın tip; genel kuru yük için ideal. ~33 m³ hacim, ~28 ton yük kapasitesi.' },
+        { icon: ICON.box, name: "40' DC (Standart)", image: '/40.webp', type: '40DC', desc: 'Hacimli yükler için uzun gövde. ~68 m³ hacim, geniş taban alanı.' },
+        { icon: ICON.boxes, name: "40' HC (High Cube)", image: '/40h.webp', type: '40HC', desc: '30 cm ekstra yükseklik, ~76 m³ hacim. Hacimli ama hafif yükler için ideal.' },
         { icon: ICON.boxes, name: "45' HC", desc: 'Maksimum hacim (~86 m³) ve ekstra uzunluk. Büyük hacimli sevkiyatlar için.' },
         { icon: ICON.snow, name: "40' Reefer (Soğutmalı)", desc: '-30°C / +30°C sıcaklık kontrolü. Gıda ve ısıya duyarlı yükler için.' },
         { icon: ICON.box, name: "Open Top (Üstü Açılır)", desc: 'Vinçle üstten yükleme; kapıdan geçmeyen yüksek yükler için.' },
@@ -132,9 +133,9 @@ function buildContent(locale: Locale): Content {
     typesTitle: 'Container Types for Sale',
     typesSub: 'Choose the type that fits your need; see our dimensions table for full specs.',
     types: [
-      { icon: ICON.box, name: "20' DC (Standard)", desc: 'The most common type; ideal for general dry cargo. ~33 m³ volume, ~28 t payload.' },
-      { icon: ICON.box, name: "40' DC (Standard)", desc: 'Long body for voluminous cargo. ~68 m³ volume, large floor area.' },
-      { icon: ICON.boxes, name: "40' HC (High Cube)", desc: '30 cm extra height, ~76 m³ volume. Ideal for voluminous but light cargo.' },
+      { icon: ICON.box, name: "20' DC (Standard)", image: '/20.webp', type: '20DC', desc: 'The most common type; ideal for general dry cargo. ~33 m³ volume, ~28 t payload.' },
+      { icon: ICON.box, name: "40' DC (Standard)", image: '/40.webp', type: '40DC', desc: 'Long body for voluminous cargo. ~68 m³ volume, large floor area.' },
+      { icon: ICON.boxes, name: "40' HC (High Cube)", image: '/40h.webp', type: '40HC', desc: '30 cm extra height, ~76 m³ volume. Ideal for voluminous but light cargo.' },
       { icon: ICON.boxes, name: "45' HC", desc: 'Maximum volume (~86 m³) and extra length. For large-volume shipments.' },
       { icon: ICON.snow, name: "40' Reefer", desc: '-30°C / +30°C temperature control. For food and heat-sensitive cargo.' },
       { icon: ICON.box, name: 'Open Top', desc: 'Top loading by crane; for tall cargo that will not pass through the doors.' },
@@ -243,22 +244,7 @@ export default async function ContainersForSalePage({ params }: { params: Promis
             <h2 className="text-3xl md:text-4xl font-display font-black text-dark-900 mb-3">{c.typesTitle}</h2>
             <p className="text-base md:text-lg text-dark-700 max-w-2xl mx-auto">{c.typesSub}</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {c.types.map((t) => (
-              <div
-                key={t.name}
-                className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow p-5"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="flex-shrink-0 w-11 h-11 rounded-xl bg-primary-50 flex items-center justify-center">
-                    {t.icon}
-                  </span>
-                  <h3 className="font-bold text-dark-900 text-lg">{t.name}</h3>
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed">{t.desc}</p>
-              </div>
-            ))}
-          </div>
+          <ContainerTypeCards types={c.types} locale={locale} />
           <div className="text-center mt-8">
             <Link href={c.specsHref} className="text-primary-600 font-semibold hover:text-primary-700 underline underline-offset-4">
               {c.specsLink} →

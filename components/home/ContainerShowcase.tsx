@@ -1,11 +1,11 @@
 'use client';
 
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { X } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import ContainerQuoteModal from '@/components/containers/ContainerQuoteModal';
 import { slideUp, staggerContainer } from '@/lib/animations';
 import { getTranslations, type Locale } from '@/lib/i18n';
 
@@ -53,7 +53,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
     },
   ];
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selected, setSelected] = useState<(typeof containers)[number] | null>(null);
 
   return (
     <section ref={ref} className="relative py-20 md:py-24 overflow-hidden bg-dark-900">
@@ -100,10 +100,12 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
               variants={slideUp}
               className="group h-full"
             >
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative">
-                <div 
+              <div
+                className="bg-white/10 backdrop-blur-md rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative cursor-pointer"
+                onClick={() => setSelected(container)}
+              >
+                <div
                   className="relative w-full h-48 mb-6 rounded-xl overflow-hidden cursor-zoom-in group-hover:scale-105 transition-transform duration-300 bg-white/5"
-                  onClick={() => setSelectedImage(container.image)}
                 >
                   <Image
                     src={container.image}
@@ -137,7 +139,11 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
                   ))}
                 </ul>
 
-                <Link href={`/${locale}/konteynerler#${container.id}`} className="mt-auto">
+                <Link
+                  href={`/${locale}/konteynerler#${container.id}`}
+                  className="mt-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Button variant="primary" className="w-full !bg-red-600 !bg-none hover:!bg-red-700 transition-all hover:shadow-xl hover:shadow-red-500/40">
                     {locale === 'tr' ? 'Detayları Görüntüle' : 'View Details'}
                   </Button>
@@ -156,40 +162,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
         </div>
       </div>
 
-      {/* Image Modal */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 cursor-zoom-out"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-5xl h-[80vh] bg-white/5 rounded-2xl overflow-hidden border border-white/10"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
-                aria-label="Close modal"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              <Image
-                src={selectedImage || ''}
-                alt="Enlarged view"
-                fill
-                className="object-contain p-8"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ContainerQuoteModal item={selected} onClose={() => setSelected(null)} locale={locale} />
     </section>
   );
 }
