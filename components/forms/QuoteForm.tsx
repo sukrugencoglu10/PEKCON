@@ -428,7 +428,7 @@ export default function QuoteForm({
           ]}
         />
 
-        <div className="grid grid-cols-[1fr_7rem] gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {containerCategory === 'standard_cargo' && (
             <FormSelect
               label={f.type}
