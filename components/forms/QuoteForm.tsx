@@ -377,10 +377,16 @@ export default function QuoteForm({
         onSubmit={handleSubmit(onSubmit)}
         noValidate
       >
-        {/* Yalnızca satın alma hizmeti verildiği için sabit değer */}
-        <input type="hidden" value="purchase" {...register('transactionType')} />
-
-        <p className="text-sm text-gray-600 leading-relaxed">{f.quickHint}</p>
+        {/* Yalnızca satın alma hizmeti verildiği için tek seçenek: tam genişlik ve her zaman seçili */}
+        <label className="relative flex w-full items-center justify-center p-4 border-2 rounded-xl border-primary-500 bg-primary-50 text-primary-700 cursor-default">
+          <input
+            type="radio"
+            value="purchase"
+            {...register('transactionType')}
+            className="sr-only"
+          />
+          <span className="font-medium">{f.purchase}</span>
+        </label>
 
         {/* İletişim bilgileri en başta: en değerli bilgi önce alınır */}
         <div className="grid sm:grid-cols-2 gap-4">
@@ -426,6 +432,7 @@ export default function QuoteForm({
           {containerCategory === 'standard_cargo' && (
             <FormSelect
               label={f.type}
+              className="h-12 py-0"
               {...register('containerType')}
               error={errors.containerType?.message}
               options={[
@@ -443,6 +450,7 @@ export default function QuoteForm({
             containerCategory === 'open_top') && (
             <FormSelect
               label={f.type}
+              className="h-12 py-0"
               {...register('containerType')}
               error={errors.containerType?.message}
               options={[
@@ -458,6 +466,7 @@ export default function QuoteForm({
           <FormInput
             type="number"
             inputMode="numeric"
+            className="h-12 py-0"
             label={`${f.quantity} *`}
             {...register('quantity', { valueAsNumber: true })}
             error={errors.quantity?.message}
