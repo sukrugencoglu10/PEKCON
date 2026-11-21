@@ -14,7 +14,8 @@ export const quoteFormSchema = z.object({
   fullName: z.string().min(2, 'Ad soyad gereklidir'),
   companyName: z.string().optional(),
   phone: z.string().regex(/^\+90[0-9]{10}$/, '+90 ile başlayan 10 haneli numara giriniz'),
-  email: z.string().email('Geçerli bir e-posta adresi giriniz'),
+  // E-posta isteğe bağlı: boş bırakılabilir, doldurulursa geçerli olmalı
+  email: z.union([z.literal(''), z.string().trim().email('Geçerli bir e-posta adresi giriniz')]).optional(),
   notes: z.string().optional(),
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),
@@ -40,6 +41,16 @@ export const contactFormSchema = z.object({
   utmTerm: z.string().optional(),
   gclid: z.string().optional(),
   originalReferrer: z.string().optional(),
+});
+
+// Yarım kalan teklif formu: kullanıcı telefonunu yazıp formu göndermeden ayrıldığında
+export const partialQuoteSchema = z.object({
+  phone: z.string().regex(/^\+90[0-9]{10}$/),
+  fullName: z.string().max(100).optional(),
+  containerCategory: z.string().max(40).optional(),
+  containerType: z.string().max(20).optional(),
+  quantity: z.number().min(1).max(1000).optional(),
+  gclid: z.string().max(300).optional(),
 });
 
 export type QuoteFormData = z.infer<typeof quoteFormSchema>;

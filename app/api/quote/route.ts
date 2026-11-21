@@ -168,9 +168,10 @@ function buildEmailHtml(raw: {
           <!-- Footer -->
           <tr>
             <td style="padding:28px 32px;text-align:center;">
-              <a href="mailto:${data.email ?? ''}" style="display:inline-block;background:#0069b4;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
+              ${data.email ? `
+              <a href="mailto:${data.email}" style="display:inline-block;background:#0069b4;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 ✉️ Müşteriye Yanıtla
-              </a>
+              </a>` : ''}
               ${data.phone ? `
               <a href="https://wa.me/${normalizeTurkishPhone(data.phone).replace('+', '')}" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;margin:4px;">
                 💬 WhatsApp
@@ -279,7 +280,8 @@ async function syncToHubSpot(data: {
     headers,
     body: JSON.stringify({
       properties: {
-        email: data.email ?? '',
+        // HubSpot boş e-posta string'ini kabul etmiyor; yoksa alanı hiç göndermiyoruz
+        ...(data.email ? { email: data.email } : {}),
         phone: data.phone ?? '',
         firstname: data.fullName?.split(' ')[0] ?? '',
         lastname: data.fullName?.split(' ').slice(1).join(' ') ?? '',
@@ -332,7 +334,9 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    const validatedData = quoteFormSchema.parse(body);
+    const parsed = quoteFormSchema.parse(body);
+    // E-posta isteğe bağlı: boş string'i "yok" olarak ele al
+    const validatedData = { ...parsed, email: parsed.email?.trim() || undefined };
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -341,7 +345,7 @@ export async function POST(request: NextRequest) {
       to: RECIPIENT_EMAILS,
       subject: `Yeni Teklif Talebi — ${validatedData.fullName ?? 'Misafir'} | ${validatedData.quantity} adet`,
       html: buildEmailHtml(validatedData),
-      replyTo: validatedData.email,
+      ...(validatedData.email ? { replyTo: validatedData.email } : {}),
     });
 
     // Debug: Check if env var is loaded (this will show in Vercel logs)

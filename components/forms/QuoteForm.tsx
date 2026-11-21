@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { quoteFormSchema, QuoteFormData } from '@/lib/validators';
@@ -10,7 +10,7 @@ import FormTextarea from './FormTextarea';
 import Button from '../ui/Button';
 import { getTranslations, type Locale } from '@/lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ChevronRight, ChevronLeft, Edit2 } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import type { ContainerType } from '@/components/home/KonteynerScene';
 import {
   trackQuoteFormSubmit,
@@ -21,7 +21,6 @@ import {
   trackFormAbandoned,
   trackAddToCart,
   trackFormFieldDwell,
-  trackFormStepTime,
 } from '@/lib/gtm';
 
 const FORM_TO_SCENE_TYPE: Record<string, Record<string, ContainerType>> = {
@@ -45,6 +44,37 @@ const FORM_TO_SCENE_TYPE: Record<string, Record<string, ContainerType>> = {
   },
 };
 
+// Konteyner penceresinden gelen ?tip= değerleri (ör. /tr/teklif-al?tip=40HC)
+const PREFILL_STANDARD_TYPES = new Set(['20DC', '40DC', '40HC', '45HC']);
+
+const VALID_PHONE = /^\+90[0-9]{10}$/;
+
+function readTrackingData(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem('site_tracking_data');
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Sayfa kapanırken de gitmesi gereken istekler için (sendBeacon, yoksa keepalive fetch). */
+function sendOnExit(url: string, payload: unknown) {
+  const body = JSON.stringify(payload);
+  try {
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      const ok = navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
+      if (ok) return;
+    }
+  } catch {}
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body,
+    keepalive: true,
+  }).catch(() => {});
+}
+
 export default function QuoteForm({
   locale = 'tr',
   onContainerTypeChange,
@@ -52,14 +82,17 @@ export default function QuoteForm({
   locale?: Locale;
   onContainerTypeChange?: (type: ContainerType | null) => void;
 }) {
-  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [formInteracted, setFormInteracted] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
   const formTopRef = useRef<HTMLDivElement | null>(null);
-  const abandonTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Form oturumu durumu (closure'larda bayat kalmaması için ref)
+  const interactedRef = useRef(false);
+  const submittedRef = useRef(false);
+  const exitHandledRef = useRef(false);
   const lastFieldRef = useRef<string>('');
-  const stepStartTimeRef = useRef<number>(Date.now());
   const fieldFocusTimeRef = useRef<Record<string, number>>({});
   const fieldInitialValueRef = useRef<Record<string, string>>({});
   // Stable session ID for correlating events in the analytics API
@@ -70,30 +103,30 @@ export default function QuoteForm({
   const eventIdRef = useRef<string>(
     typeof crypto !== 'undefined' ? crypto.randomUUID() : Math.random().toString(36).slice(2)
   );
-  
-  // Extend translation type strictly
+
   const t = getTranslations(locale);
-  const f = t.quotePage.form as any; 
+  const f = t.quotePage.form as any;
 
   const {
     register,
     handleSubmit,
     watch,
-    trigger,
+    setValue,
+    getValues,
     formState: { errors },
     reset,
-    getValues
   } = useForm<QuoteFormData>({
     resolver: zodResolver(quoteFormSchema),
     defaultValues: {
       transactionType: 'purchase',
+      containerCategory: 'standard_cargo',
       quantity: 1,
       phone: '+90',
+      email: '',
     },
-    mode: 'onChange'
+    mode: 'onTouched',
   });
 
-  const formValues = watch();
   const containerCategory = watch('containerCategory');
   const containerTypeValue = watch('containerType');
 
@@ -108,53 +141,88 @@ export default function QuoteForm({
     onContainerTypeChange?.(mapped);
   }, [containerTypeValue, containerCategory, onContainerTypeChange]);
 
-  // Form abandonment + dwell time tracking
+  // Konteyner penceresinden seçilen tipi forma önceden doldur (?tip=40HC)
   useEffect(() => {
+    try {
+      const tip = new URLSearchParams(window.location.search).get('tip')?.toUpperCase();
+      if (tip && PREFILL_STANDARD_TYPES.has(tip)) {
+        setValue('containerCategory', 'standard_cargo');
+        setValue('containerType', tip);
+      }
+    } catch {}
+  }, [setValue]);
+
+  /**
+   * Kullanıcı formu göndermeden sayfadan ayrılırsa (sekme kapanır, başka uygulamaya geçer,
+   * sayfa değişir): bir kez "form bırakıldı" kaydı at; telefon geçerliyse yarım lead'i kaydet.
+   */
+  const handleExit = useCallback(() => {
+    if (exitHandledRef.current || submittedRef.current || !interactedRef.current) return;
+    exitHandledRef.current = true;
+
+    const values = getValues();
+    const tracking = readTrackingData();
+
+    trackFormAbandoned('quote_form', lastFieldRef.current);
+
+    sendOnExit('/api/analytics/conversion', {
+      type: 'form_abandon',
+      utm_source: tracking.utmSource,
+      utm_medium: tracking.utmMedium,
+      utm_campaign: tracking.utmCampaign,
+      utm_term: tracking.utmTerm,
+      gclid: tracking.gclid,
+      fbclid: tracking.fbclid,
+      original_referrer: tracking.originalReferrer,
+      page_url: window.location.href,
+    });
+
+    if (VALID_PHONE.test(values.phone ?? '')) {
+      sendOnExit('/api/quote/partial', {
+        phone: values.phone,
+        fullName: values.fullName || undefined,
+        containerCategory: values.containerCategory || undefined,
+        containerType: values.containerType || undefined,
+        quantity: Number(values.quantity) || undefined,
+        gclid: tracking.gclid || undefined,
+      });
+    }
+  }, [getValues]);
+
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') handleExit();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', handleExit);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', handleExit);
+      // Site içi sayfa değişiminde (bileşen kaldırılırken) de say
+      handleExit();
+    };
+  }, [handleExit]);
+
+  // Alan odak / bekleme süresi takibi — yalnızca bu formun kendi <form> öğesine bağlanır
+  useEffect(() => {
+    const formElement = formRef.current;
+    if (!formElement) return;
+
     const handleFocusIn = (e: Event) => {
       const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
       const fieldName = target.getAttribute('name') || '';
+      if (!fieldName) return;
 
-      if (!formInteracted && fieldName) {
-        setFormInteracted(true);
+      if (!interactedRef.current) {
+        interactedRef.current = true;
+        exitHandledRef.current = false;
         trackFormStarted('quote_form');
       }
 
-      if (fieldName) {
-        lastFieldRef.current = fieldName;
-        trackFormFieldFocus('quote_form', fieldName);
-        fieldFocusTimeRef.current[fieldName] = Date.now();
-        fieldInitialValueRef.current[fieldName] = target.value ?? '';
-
-        if (abandonTimeoutRef.current) {
-          clearTimeout(abandonTimeoutRef.current);
-        }
-
-        abandonTimeoutRef.current = setTimeout(() => {
-          if (submitStatus === 'idle') {
-            trackFormAbandoned('quote_form', lastFieldRef.current);
-
-            // Turso DB'ye terk kaydı
-            try {
-              const tracking = JSON.parse(localStorage.getItem('site_tracking_data') || '{}');
-              fetch('/api/analytics/conversion', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  type: 'form_abandon',
-                  utm_source: tracking.utmSource,
-                  utm_medium: tracking.utmMedium,
-                  utm_campaign: tracking.utmCampaign,
-                  utm_term: tracking.utmTerm,
-                  gclid: tracking.gclid,
-                  fbclid: tracking.fbclid,
-                  original_referrer: tracking.originalReferrer,
-                  page_url: window.location.href,
-                }),
-              }).catch(() => {});
-            } catch {}
-          }
-        }, 60000);
-      }
+      lastFieldRef.current = fieldName;
+      trackFormFieldFocus('quote_form', fieldName);
+      fieldFocusTimeRef.current[fieldName] = Date.now();
+      fieldInitialValueRef.current[fieldName] = target.value ?? '';
     };
 
     const handleFocusOut = (e: Event) => {
@@ -170,7 +238,6 @@ export default function QuoteForm({
             ? 1
             : 0;
         trackFormFieldDwell('quote_form', fieldName, dwellMs, correctionCount);
-        // POST to admin analytics API (fire-and-forget)
         fetch('/api/analytics/events', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -178,7 +245,7 @@ export default function QuoteForm({
             field_name: fieldName,
             dwell_ms: dwellMs,
             correction_count: correctionCount,
-            step: currentStep,
+            step: 1,
             session_id: sessionIdRef.current,
           }),
         }).catch(() => null);
@@ -186,22 +253,13 @@ export default function QuoteForm({
       }
     };
 
-    const formElement = document.querySelector('form');
-    if (formElement) {
-      formElement.addEventListener('focusin', handleFocusIn);
-      formElement.addEventListener('focusout', handleFocusOut);
-    }
-
+    formElement.addEventListener('focusin', handleFocusIn);
+    formElement.addEventListener('focusout', handleFocusOut);
     return () => {
-      if (formElement) {
-        formElement.removeEventListener('focusin', handleFocusIn);
-        formElement.removeEventListener('focusout', handleFocusOut);
-      }
-      if (abandonTimeoutRef.current) {
-        clearTimeout(abandonTimeoutRef.current);
-      }
+      formElement.removeEventListener('focusin', handleFocusIn);
+      formElement.removeEventListener('focusout', handleFocusOut);
     };
-  }, [submitStatus, formInteracted]);
+  }, [submitStatus]);
 
   // Track form errors
   useEffect(() => {
@@ -212,58 +270,20 @@ export default function QuoteForm({
     });
   }, [errors]);
 
-  const validateStep = async (step: number) => {
-    let fieldsToValidate: (keyof QuoteFormData)[] = [];
-
-    if (step === 1) {
-      fieldsToValidate = ['transactionType', 'containerCategory', 'quantity'];
-      if (
-        containerCategory === 'standard_cargo' ||
-        containerCategory === 'refrigerated' ||
-        containerCategory === 'flat_rack' ||
-        containerCategory === 'open_top'
-      ) {
-        fieldsToValidate.push('containerType');
-      }
-    } else if (step === 2) {
-      fieldsToValidate = ['fullName', 'phone', 'email'];
-    }
-
-    const isValid = await trigger(fieldsToValidate);
-    if (isValid) {
-      const elapsed = Date.now() - stepStartTimeRef.current;
-      trackFormStepTime(step, step + 1, elapsed, 'forward');
-      stepStartTimeRef.current = Date.now();
-      setCurrentStep((prev) => prev + 1);
-      formTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const prevStep = () => {
-    const elapsed = Date.now() - stepStartTimeRef.current;
-    trackFormStepTime(currentStep, currentStep - 1, elapsed, 'back');
-    stepStartTimeRef.current = Date.now();
-    setCurrentStep((prev) => prev - 1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // İsteğe bağlı alanlarda hata varsa (ör. hatalı e-posta) bölümü açık göster
+  useEffect(() => {
+    if (errors.email || errors.companyName || errors.notes || errors.region) setShowDetails(true);
+  }, [errors.email, errors.companyName, errors.notes, errors.region]);
 
   const onSubmit = async (data: QuoteFormData) => {
     setIsSubmitting(true);
 
-    if (abandonTimeoutRef.current) {
-      clearTimeout(abandonTimeoutRef.current);
-    }
-
     try {
-      // Read tracking data from localStorage (set by TrackingProvider)
-      let trackingData: Record<string, string> = {};
-      try {
-        const raw = localStorage.getItem('site_tracking_data');
-        if (raw) trackingData = JSON.parse(raw);
-      } catch {}
+      const trackingData = readTrackingData();
 
       const payload = {
         ...data,
+        email: data.email?.trim() || undefined,
         utmSource: trackingData.utmSource,
         utmMedium: trackingData.utmMedium,
         utmCampaign: trackingData.utmCampaign,
@@ -282,8 +302,9 @@ export default function QuoteForm({
 
       if (!response.ok) throw new Error('Submission failed');
 
+      submittedRef.current = true;
+
       // Meta Pixel — client-side Lead eventi (server CAPI ile deduplikasyon için aynı event_id)
-      // Kritik sıra: server CAPI önce gönderildi (API route içinde), client sonra tetiklenir
       if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
         window.fbq(
           'track',
@@ -299,20 +320,24 @@ export default function QuoteForm({
       }
 
       // Fire tracking only after successful submission
-      trackQuoteFormSubmit(data);
-      trackAddToCart(data);
-      trackLeadConversion(data);
+      const trackingPayload = { ...data, email: payload.email };
+      trackQuoteFormSubmit(trackingPayload);
+      trackAddToCart(trackingPayload);
+      trackLeadConversion(trackingPayload);
 
       setSubmitStatus('success');
-      setFormInteracted(false);
-      
-      // Keep success message visible for a moment then reset or redirect could happen here
+
+      // Başarı mesajından sonra formu yeni bir oturum olarak sıfırla
       setTimeout(() => {
         reset();
-        setCurrentStep(1);
+        setShowDetails(false);
+        interactedRef.current = false;
+        submittedRef.current = false;
+        exitHandledRef.current = false;
+        eventIdRef.current =
+          typeof crypto !== 'undefined' ? crypto.randomUUID() : Math.random().toString(36).slice(2);
         setSubmitStatus('idle');
       }, 5000);
-
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
@@ -322,20 +347,9 @@ export default function QuoteForm({
     }
   };
 
-  // Steps Configuration
-  const steps = [
-    { id: 1, title: f.step1 || 'Product Selection' },
-    { id: 2, title: f.step2 || 'Contact Info' },
-    { id: 3, title: f.step3 || 'Review' }
-  ];
-
-  /* -------------------------------------------------------------------------- */
-  /*                               RENDER CONTENT                               */
-  /* -------------------------------------------------------------------------- */
-
   if (submitStatus === 'success') {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="p-8 bg-green-50 border border-green-200 rounded-xl text-center"
@@ -353,301 +367,194 @@ export default function QuoteForm({
     );
   }
 
+  const phoneRegistration = register('phone');
+
   return (
     <div ref={formTopRef} className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      {/* Progress Header */}
-      <div className="bg-gray-50 border-b border-gray-200 p-4 md:p-6">
-        <div className="flex justify-between items-center mb-2 relative">
-          {steps.map((step, index) => (
-            <div key={step.id} className="flex flex-col items-center relative z-10 w-1/3">
-              <div 
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                  currentStep >= step.id 
-                    ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30' 
-                    : 'bg-gray-200 text-gray-500'
-                }`}
+      <form
+        ref={formRef}
+        className="p-6 md:p-8 space-y-5"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
+        {/* Yalnızca satın alma hizmeti verildiği için sabit değer */}
+        <input type="hidden" value="purchase" {...register('transactionType')} />
+
+        <p className="text-sm text-gray-600 leading-relaxed">{f.quickHint}</p>
+
+        {/* İletişim bilgileri en başta: en değerli bilgi önce alınır */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FormInput
+            type="text"
+            label={`${f.fullName} *`}
+            autoComplete="name"
+            {...register('fullName')}
+            error={errors.fullName?.message}
+          />
+          <FormInput
+            type="tel"
+            inputMode="numeric"
+            autoComplete="tel"
+            label={`${f.phone} *`}
+            placeholder="+90 5XX XXX XX XX"
+            {...phoneRegistration}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              let val = e.target.value;
+              if (!val.startsWith('+90')) val = '+90';
+              const digits = val.slice(3).replace(/[^0-9]/g, '').slice(0, 10);
+              e.target.value = '+90' + digits;
+              phoneRegistration.onChange(e);
+            }}
+            error={errors.phone?.message}
+          />
+        </div>
+
+        <FormSelect
+          label={`${f.category} *`}
+          {...register('containerCategory')}
+          error={errors.containerCategory?.message}
+          options={[
+            { value: 'standard_cargo', label: f.standard },
+            { value: 'refrigerated', label: f.refrigerated },
+            { value: 'flat_rack', label: f.flat_rack },
+            { value: 'open_top', label: f.open_top },
+            { value: 'custom', label: f.custom },
+          ]}
+        />
+
+        <div className="grid grid-cols-[1fr_7rem] gap-4">
+          {containerCategory === 'standard_cargo' && (
+            <FormSelect
+              label={f.type}
+              {...register('containerType')}
+              error={errors.containerType?.message}
+              options={[
+                { value: '', label: f.select },
+                { value: '20DC', label: "20' DC" },
+                { value: '40DC', label: "40' DC" },
+                { value: '40HC', label: "40' HC" },
+                { value: '45HC', label: "45' HC" },
+              ]}
+            />
+          )}
+
+          {(containerCategory === 'refrigerated' ||
+            containerCategory === 'flat_rack' ||
+            containerCategory === 'open_top') && (
+            <FormSelect
+              label={f.type}
+              {...register('containerType')}
+              error={errors.containerType?.message}
+              options={[
+                { value: '', label: f.select },
+                { value: '20', label: "20'" },
+                { value: '40', label: "40'" },
+              ]}
+            />
+          )}
+
+          {containerCategory === 'custom' && <div />}
+
+          <FormInput
+            type="number"
+            inputMode="numeric"
+            label={`${f.quantity} *`}
+            {...register('quantity', { valueAsNumber: true })}
+            error={errors.quantity?.message}
+            min={1}
+            max={1000}
+          />
+        </div>
+
+        {/* İsteğe bağlı ek bilgiler */}
+        <div className="border-t border-gray-100 pt-4">
+          <button
+            type="button"
+            onClick={() => setShowDetails((v) => !v)}
+            className="flex w-full items-center justify-between text-sm font-medium text-primary-700 hover:text-primary-800"
+            aria-expanded={showDetails}
+          >
+            {showDetails ? f.hideDetails : f.optionalDetails}
+            <ChevronDown
+              size={18}
+              className={`transition-transform ${showDetails ? 'rotate-180' : ''}`}
+            />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {showDetails && (
+              <motion.div
+                key="details"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
               >
-                {step.id < currentStep ? <Check size={16} /> : step.id}
-              </div>
-              <span className={`text-[10px] sm:text-xs mt-2 font-medium text-center leading-tight px-1 ${currentStep >= step.id ? 'text-primary-700' : 'text-gray-400'}`}>
-                {step.title}
-              </span>
-            </div>
-          ))}
-          {/* Connecting Line - Precisely centered between circle centers (16.6% to 83.3%) */}
-          <div className="absolute top-4 left-[16.6%] right-[16.6%] h-[2px] bg-gray-200 -z-0" />
-          <div 
-            className="absolute top-4 left-[16.6%] h-[2px] bg-primary-500 -z-0 transition-all duration-500" 
-            style={{ width: `${((currentStep - 1) / 2) * 66.8}%` }}
-          /> 
-        </div>
-      </div>
+                <div className="space-y-4 pt-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <FormInput
+                      type="email"
+                      autoComplete="email"
+                      label={`${f.email} (${f.optional})`}
+                      {...register('email')}
+                      error={errors.email?.message}
+                    />
+                    <FormInput
+                      type="text"
+                      autoComplete="organization"
+                      label={`${f.company} (${f.optional})`}
+                      {...register('companyName')}
+                      error={errors.companyName?.message}
+                    />
+                  </div>
 
-      <form className="p-6 md:p-8" onSubmit={(e) => e.preventDefault()}>
-        <AnimatePresence mode='wait'>
-          {/* STEP 1: Product Selection */}
-          {currentStep === 1 && (
-            <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              {/* Yalnızca satın alma hizmeti verildiği için tek seçenek: tam genişlik ve her zaman seçili */}
-              <label className="relative flex w-full items-center justify-center p-4 border-2 rounded-xl border-primary-500 bg-primary-50 text-primary-700 cursor-default">
-                <input
-                  type="radio"
-                  value="purchase"
-                  {...register('transactionType')}
-                  className="sr-only"
-                />
-                <span className="font-medium">{f.purchase}</span>
-              </label>
-
-              <FormSelect
-                label={`${f.category} *`}
-                {...register('containerCategory')}
-                error={errors.containerCategory?.message}
-                options={[
-                  { value: '', label: f.select },
-                  { value: 'standard_cargo', label: f.standard },
-                  { value: 'refrigerated', label: f.refrigerated },
-                  { value: 'flat_rack', label: f.flat_rack },
-                  { value: 'open_top', label: f.open_top },
-                  { value: 'custom', label: f.custom },
-                ]}
-              />
-
-              {containerCategory === 'standard_cargo' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                >
                   <FormSelect
-                    label={`${f.type} *`}
-                    {...register('containerType')}
-                    error={errors.containerType?.message}
+                    label={`${f.region} (${f.optional})`}
+                    {...register('region')}
+                    error={errors.region?.message}
                     options={[
                       { value: '', label: f.select },
-                      { value: '20DC', label: "20' DC (Dry Container)" },
-                      { value: '40DC', label: "40' DC (Dry Container)" },
-                      { value: '40HC', label: "40' HC (High Cube)" },
-                      { value: '45HC', label: "45' HC (High Cube)" },
+                      { value: 'istanbul_avrupa', label: 'İstanbul (Avrupa)' },
+                      { value: 'istanbul_anadolu', label: 'İstanbul (Anadolu)' },
+                      { value: 'kocaeli_gebze', label: 'Kocaeli (Gebze)' },
+                      { value: 'izmir_aliaga', label: 'İzmir (Aliağa)' },
+                      { value: 'mersin', label: 'Mersin' },
+                      { value: 'gemlik', label: 'Bursa (Gemlik)' },
+                      { value: 'iskenderun', label: 'İskenderun' },
+                      { value: 'samsun', label: 'Samsun' },
+                      { value: 'antalya', label: 'Antalya' },
+                      { value: 'hamburg', label: 'Hamburg (Almanya)' },
+                      { value: 'rotterdam', label: 'Rotterdam (Hollanda)' },
+                      { value: 'diger', label: 'Diğer / Belirtilmemiş' },
                     ]}
                   />
-                </motion.div>
-              )}
 
-              {(containerCategory === 'refrigerated' || containerCategory === 'flat_rack' || containerCategory === 'open_top') && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                >
-                  <FormSelect
-                    label={`${f.type} *`}
-                    {...register('containerType')}
-                    error={errors.containerType?.message}
-                    options={[
-                      { value: '', label: f.select },
-                      { value: '20', label: "20'" },
-                      { value: '40', label: "40'" },
-                    ]}
+                  <FormTextarea
+                    label={`${f.notes} (${f.optional})`}
+                    placeholder={f.notesPlaceholder}
+                    {...register('notes')}
+                    error={errors.notes?.message}
                   />
-                </motion.div>
-              )}
-
-              <FormInput
-                type="number"
-                label={`${f.quantity} *`}
-                {...register('quantity', { valueAsNumber: true })}
-                error={errors.quantity?.message}
-                min={1}
-                max={1000}
-              />
-
-              <FormSelect
-                label={`${f.region} *`}
-                {...register('region')}
-                error={errors.region?.message}
-                options={[
-                  { value: '', label: f.select },
-                  { value: 'istanbul_avrupa', label: 'İstanbul (Avrupa)' },
-                  { value: 'istanbul_anadolu', label: 'İstanbul (Anadolu)' },
-                  { value: 'kocaeli_gebze', label: 'Kocaeli (Gebze)' },
-                  { value: 'izmir_aliaga', label: 'İzmir (Aliağa)' },
-                  { value: 'mersin', label: 'Mersin' },
-                  { value: 'gemlik', label: 'Bursa (Gemlik)' },
-                  { value: 'iskenderun', label: 'İskenderun' },
-                  { value: 'samsun', label: 'Samsun' },
-                  { value: 'hamburg', label: 'Hamburg (Almanya)' },
-                  { value: 'rotterdam', label: 'Rotterdam (Hollanda)' },
-                  { value: 'antwerp', label: 'Antalya' },
-                  { value: 'diger', label: 'Diğer / Belirtilmemiş' },
-                ]}
-              />
-            </motion.div>
-          )}
-
-          {/* STEP 2: Contact Info */}
-          {currentStep === 2 && (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="grid md:grid-cols-2 gap-4">
-                <FormInput
-                  type="text"
-                  label={`${f.fullName} *`}
-                  {...register('fullName')}
-                  error={errors.fullName?.message}
-                />
-                <FormInput
-                  type="text"
-                  label={f.company}
-                  {...register('companyName')}
-                  error={errors.companyName?.message}
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <FormInput
-                  type="tel"
-                  label={`${f.phone} *`}
-                  placeholder="5XX XXX XX XX"
-                  {...(() => {
-                    const { onChange, ...rest } = register('phone');
-                    return {
-                      ...rest,
-                      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                        let val = e.target.value;
-                        if (!val.startsWith('+90')) val = '+90';
-                        const digits = val.slice(3).replace(/[^0-9]/g, '').slice(0, 10);
-                        e.target.value = '+90' + digits;
-                        onChange(e);
-                      },
-                    };
-                  })()}
-                  error={errors.phone?.message}
-                />
-                <FormInput
-                  type="email"
-                  label={`${f.email} *`}
-                  {...register('email')}
-                  error={errors.email?.message}
-                />
-              </div>
-
-              <FormTextarea
-                label={f.notes}
-                placeholder={f.notesPlaceholder}
-                {...register('notes')}
-                error={errors.notes?.message}
-              />
-            </motion.div>
-          )}
-
-          {/* STEP 3: Summary & Review */}
-          {currentStep === 3 && (
-            <motion.div
-              key="step3"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <h3 className="text-lg font-display font-bold text-dark-900 border-b pb-2">
-                {f.summary || 'Summary'}
-              </h3>
-              
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">{f.category}:</span>
-                  <span className="font-medium text-dark-900 capitalize">
-                   {getValues('containerCategory')?.replace('_', ' ')}
-                  </span>
                 </div>
-                {getValues('containerType') && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">{f.type}:</span>
-                    <span className="font-medium text-dark-900">{getValues('containerType')}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-gray-500">{f.quantity}:</span>
-                  <span className="font-medium text-dark-900">{getValues('quantity')}</span>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 rounded-lg p-4 space-y-3 text-sm">
-                 <div className="flex justify-between items-start">
-                  <span className="text-blue-600 font-medium">{f.fullName}:</span>
-                  <span className="text-blue-900 text-right">{getValues('fullName')}</span>
-                </div>
-                {getValues('companyName') && (
-                  <div className="flex justify-between items-start">
-                    <span className="text-blue-600 font-medium">{f.company}:</span>
-                    <span className="text-blue-900">{getValues('companyName')}</span>
-                  </div>
-                )}
-                <div className="flex justify-between items-start">
-                  <span className="text-blue-600 font-medium">{f.phone}:</span>
-                  <span className="text-blue-900">{getValues('phone')}</span>
-                </div>
-                 <div className="flex justify-between items-start">
-                  <span className="text-blue-600 font-medium">{f.email}:</span>
-                  <span className="text-blue-900 break-all ml-4">{getValues('email')}</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Navigation Buttons */}
-        <div className="mt-8 flex justify-between pt-4 border-t border-gray-100">
-          {currentStep > 1 && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={prevStep}
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft size={16} />
-              {f.back || 'Back'}
-            </Button>
-          )}
-          
-          {currentStep < 3 ? (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => validateStep(currentStep)}
-              className="ml-auto flex items-center gap-2"
-            >
-              {f.next || 'Next'}
-              <ChevronRight size={16} />
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={handleSubmit(onSubmit)}
-              disabled={isSubmitting}
-              className="ml-auto w-full md:w-auto min-w-[150px]"
-            >
-              {isSubmitting ? f.submitting : f.submit}
-            </Button>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-        
+
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={isSubmitting}
+          className="w-full"
+        >
+          {isSubmitting ? f.submitting : f.submit}
+        </Button>
+
         {submitStatus === 'error' && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm text-center"
+            className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm text-center"
           >
             {f.error}
           </motion.div>

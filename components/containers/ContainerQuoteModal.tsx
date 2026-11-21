@@ -25,7 +25,9 @@ export default function ContainerQuoteModal({
   locale: Locale;
 }) {
   const isTr = locale === 'tr';
-  const quoteHref = locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`;
+  const quoteBase = locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`;
+  // Seçilen konteyner tipi forma önceden doldurulsun (QuoteForm ?tip= okur)
+  const quoteHref = item?.type ? `${quoteBase}?tip=${encodeURIComponent(item.type)}` : quoteBase;
 
   return (
     <AnimatePresence>
