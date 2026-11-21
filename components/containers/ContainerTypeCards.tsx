@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
+import Image from 'next/image';
 import type { Locale } from '@/lib/i18n';
 import ContainerQuoteModal, { type ContainerModalItem } from './ContainerQuoteModal';
 
@@ -35,6 +36,17 @@ export default function ContainerTypeCards({ types, locale }: { types: Container
               }}
               className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:border-primary-300 transition-shadow p-5 cursor-pointer"
             >
+              {t.image && (
+                <div className="relative w-full aspect-[16/10] mb-4 rounded-xl overflow-hidden bg-gray-50">
+                  <Image
+                    src={t.image}
+                    alt={t.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-contain"
+                  />
+                </div>
+              )}
               <div className="flex items-center gap-3 mb-2">
                 <span className="flex-shrink-0 w-11 h-11 rounded-xl bg-primary-50 flex items-center justify-center">
                   {t.icon}

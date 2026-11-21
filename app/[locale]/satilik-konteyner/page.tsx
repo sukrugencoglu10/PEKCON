@@ -202,7 +202,11 @@ export default async function ContainersForSalePage({ params }: { params: Promis
       <BreadcrumbJsonLd locale={locale} slug={c.slug} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-secondary-600 via-secondary-500 to-primary-600 pt-28 md:pt-32 pb-16 px-4">
+      <section
+        className="relative overflow-hidden bg-dark-900 bg-cover bg-center pt-28 md:pt-32 pb-16 px-4"
+        style={{ backgroundImage: "url('/satilik-konteyner-hero.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/70" />
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -217,13 +221,13 @@ export default async function ContainersForSalePage({ params }: { params: Promis
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href={c.quoteHref}
-              className="inline-flex items-center gap-2 bg-white text-secondary-600 hover:bg-gray-100 font-bold text-base px-8 py-3.5 rounded-xl shadow-lg transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 bg-red-600 border border-red-600 text-white hover:bg-red-700 hover:border-red-700 font-bold text-base px-8 py-3.5 rounded-xl shadow-lg transition-all hover:scale-[1.02]"
             >
               <FileText size={18} /> {c.ctaQuote}
             </Link>
             <Link
               href={c.specsHref}
-              className="inline-flex items-center gap-2 bg-white/10 border border-white/40 text-white hover:bg-white/20 font-bold text-base px-8 py-3.5 rounded-xl transition-all"
+              className="inline-flex items-center gap-2 bg-white text-secondary-600 hover:bg-gray-100 font-bold text-base px-8 py-3.5 rounded-xl shadow-lg transition-all hover:scale-[1.02]"
             >
               <Boxes size={18} /> {c.ctaSpecs}
             </Link>

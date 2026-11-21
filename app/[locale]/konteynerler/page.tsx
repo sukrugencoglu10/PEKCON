@@ -30,9 +30,13 @@ export default async function ContainersPage({ params }: { params: Promise<{ loc
   const t = getTranslations(locale);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-28 md:pt-32 pb-16 px-4">
+    <div
+      className="relative min-h-screen bg-cover bg-center bg-fixed pt-28 md:pt-32 pb-16 px-4"
+      style={{ backgroundImage: "url('/satilik-konteyner-hero.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-white/85" />
       <BreadcrumbJsonLd locale={locale} slug="konteynerler" />
-      <div className="max-w-7xl mx-auto space-y-20">
+      <div className="relative z-10 max-w-7xl mx-auto space-y-20">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 shadow-sm">
           <p className="flex-1 text-sm md:text-base text-amber-900 leading-relaxed">
             {locale === 'tr' ? (
