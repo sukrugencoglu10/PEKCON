@@ -1,8 +1,41 @@
 'use client';
 
 import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import type { ContainerType } from './KonteynerScene';
+
+// Kullanıcı seçim yapana kadar fotoğraflar bu sırayla döner
+const AUTOPLAY_ORDER: ContainerType[] = ['40hc', '20dc', '40dc'];
+const AUTOPLAY_MS = 4000;
+
+/**
+ * Seçili konteyner tipi + otomatik geçiş. Kullanıcı formdan ya da kartlardan
+ * bir tip seçince (pick) otomatik geçiş durur.
+ */
+export function useContainerAutoplay(initial: ContainerType = '40hc') {
+  const reduceMotion = useReducedMotion();
+  const [selected, setSelected] = useState<ContainerType>(initial);
+  const [userPicked, setUserPicked] = useState(false);
+
+  useEffect(() => {
+    if (userPicked || reduceMotion) return;
+    const id = setInterval(() => {
+      setSelected((cur) => {
+        const i = AUTOPLAY_ORDER.indexOf(cur);
+        return AUTOPLAY_ORDER[(i + 1) % AUTOPLAY_ORDER.length];
+      });
+    }, AUTOPLAY_MS);
+    return () => clearInterval(id);
+  }, [userPicked, reduceMotion]);
+
+  const pick = useCallback((type: ContainerType) => {
+    setUserPicked(true);
+    setSelected(type);
+  }, []);
+
+  return { selected, pick };
+}
 
 // Arka planı temizlenmiş gerçek konteyner fotoğrafları (public/konteyner/*.webp)
 const PHOTOS = {
@@ -23,18 +56,26 @@ export function photoKeyFor(type: ContainerType): PhotoKey {
 export default function ContainerPhotoShowcase({
   containerType = '40hc',
   locale = 'tr',
+  variant = 'dark',
 }: {
   containerType?: ContainerType;
   locale?: string;
+  /** dark: koyu zemin (ana sayfa hero), light: açık zemin (teklif al sayfası) */
+  variant?: 'dark' | 'light';
 }) {
   const reduceMotion = useReducedMotion();
+  const isLight = variant === 'light';
   const key = photoKeyFor(containerType);
   const photo = PHOTOS[key];
 
   return (
     <div className="relative w-full h-[200px] md:h-[280px] flex items-center justify-center select-none">
       {/* Zemin gölgesi */}
-      <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 w-[70%] h-6 md:h-8 rounded-[50%] bg-black/40 blur-xl" />
+      <div
+        className={`absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 w-[70%] h-6 md:h-8 rounded-[50%] blur-xl ${
+          isLight ? 'bg-black/20' : 'bg-black/40'
+        }`}
+      />
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
@@ -60,7 +101,11 @@ export default function ContainerPhotoShowcase({
               }
               fill
               sizes="(max-width: 1024px) 90vw, 420px"
-              className="object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.45)]"
+              className={`object-contain ${
+                isLight
+                  ? 'drop-shadow-[0_14px_22px_rgba(0,0,0,0.22)]'
+                  : 'drop-shadow-[0_18px_30px_rgba(0,0,0,0.45)]'
+              }`}
               priority={key === '40hc'}
             />
           </motion.div>
@@ -75,7 +120,11 @@ export default function ContainerPhotoShowcase({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 6 }}
           transition={{ duration: 0.3 }}
-          className="absolute top-2 left-2 md:top-3 md:left-3 rounded-full bg-white/15 backdrop-blur-md border border-white/25 px-3 py-1 text-xs md:text-sm font-bold text-white shadow"
+          className={`absolute top-2 left-2 md:top-3 md:left-3 rounded-full backdrop-blur-md px-3 py-1 text-xs md:text-sm font-bold shadow ${
+            isLight
+              ? 'bg-white/90 border border-primary-200 text-primary-600'
+              : 'bg-white/15 border border-white/25 text-white'
+          }`}
         >
           {photo.label}
         </motion.span>

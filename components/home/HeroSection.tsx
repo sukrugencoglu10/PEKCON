@@ -21,12 +21,8 @@ import { getKeywordConfig } from '@/lib/keyword-config';
 import QuoteForm from '@/components/forms/QuoteForm';
 import ContainerComparison from './ContainerComparison';
 import { getCategoryFromType, type ContainerType } from './KonteynerScene';
-import ContainerPhotoShowcase from './ContainerPhotoShowcase';
+import ContainerPhotoShowcase, { useContainerAutoplay } from './ContainerPhotoShowcase';
 import { ChevronRight, ChevronDown, Ship } from 'lucide-react';
-
-// Kullanıcı seçim yapana kadar gerçek konteyner fotoğrafları sırayla döner
-const AUTOPLAY_ORDER: ContainerType[] = ['40hc', '20dc', '40dc'];
-const AUTOPLAY_MS = 4000;
 
 export default function HeroSection({ locale = 'tr', keyword }: { locale?: Locale; keyword?: string }) {
   const t = getTranslations(locale);
@@ -36,29 +32,13 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   const isDesktopRef = useRef<boolean | null>(null);
   
   const [animState, setAnimState] = useState<'idle' | 'transforming' | 'swimming'>('idle');
-  const [selectedContainer, setSelectedContainer] = useState<ContainerType>('40hc');
+  // Gerçek konteyner fotoğrafları: seçim yapılana kadar otomatik döner
+  const { selected: selectedContainer, pick: pickContainer } = useContainerAutoplay('40hc');
   const containerCategory = getCategoryFromType(selectedContainer);
-  // Kullanıcı formdan ya da kartlardan bir tip seçince otomatik geçiş durur
-  const [userPicked, setUserPicked] = useState(false);
-  const pickContainer = (type: ContainerType) => {
-    setUserPicked(true);
-    setSelectedContainer(type);
-  };
 
   useEffect(() => {
     isDesktopRef.current = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
   }, []);
-
-  useEffect(() => {
-    if (userPicked || prefersReducedMotion) return;
-    const id = setInterval(() => {
-      setSelectedContainer((cur) => {
-        const i = AUTOPLAY_ORDER.indexOf(cur);
-        return AUTOPLAY_ORDER[(i + 1) % AUTOPLAY_ORDER.length];
-      });
-    }, AUTOPLAY_MS);
-    return () => clearInterval(id);
-  }, [userPicked, prefersReducedMotion]);
 
   const handleQuoteClick = (e: React.MouseEvent) => {
     if (animState !== 'idle') return;
