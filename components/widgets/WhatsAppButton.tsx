@@ -1,10 +1,26 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { trackWhatsAppConversion } from '@/lib/gtm';
+import { STICKY_BAR_EVENT } from '@/components/home/StickyQuoteBar';
+
+const BASE_OFFSET = 24; // çubuk yokken alttan boşluk (px)
+const GAP_ABOVE_BAR = 12; // çubuk açıkken çubukla buton arası (px)
 
 export default function WhatsAppButton() {
+  // Alttaki "Teklif Al" çubuğu açıkken onun yüksekliği kadar yukarı kay
+  const [barHeight, setBarHeight] = useState(0);
+  useEffect(() => {
+    const onChange = (e: Event) => {
+      setBarHeight((e as CustomEvent<{ height: number }>).detail?.height ?? 0);
+    };
+    window.addEventListener(STICKY_BAR_EVENT, onChange);
+    return () => window.removeEventListener(STICKY_BAR_EVENT, onChange);
+  }, []);
+  const bottom = barHeight > 0 ? barHeight + GAP_ABOVE_BAR : BASE_OFFSET;
+
   const params = useParams();
   const locale = params?.locale as string || 'tr';
 
@@ -46,7 +62,10 @@ export default function WhatsAppButton() {
   };
 
   return (
-    <div className="fixed bottom-20 right-6 z-50 animate-[fadeInUp_0.3s_ease_forwards] md:bottom-6">
+    <div
+      className="fixed right-6 z-50 animate-[fadeInUp_0.3s_ease_forwards] transition-[bottom] duration-300 ease-out"
+      style={{ bottom }}
+    >
       <a
         href={whatsappUrl}
         target="_blank"

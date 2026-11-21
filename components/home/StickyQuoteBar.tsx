@@ -9,6 +9,7 @@ import { trackStickyBarEvent } from '@/lib/gtm';
 const WHATSAPP_URL = 'https://wa.me/905427179357?text=Merhaba%2C%20konteyner%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.';
 const DISMISS_KEY = 'stickyBarDismissed';
 const SCROLL_THRESHOLD = 500;
+export const STICKY_BAR_EVENT = 'sticky-quote-bar-change';
 
 export default function StickyQuoteBar({ locale }: { locale: string }) {
   const [visible, setVisible] = useState(false);
@@ -61,6 +62,19 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
     }
   }, [visible, dismissed, locale]);
 
+  // Çubuk görünürlüğünü ve yüksekliğini yayınla: WhatsApp butonu çubuk açıkken onun üstüne kayar
+  const barRef = useRef<HTMLDivElement | null>(null);
+  const shown = visible && !dismissed && !isQuotePage;
+  useEffect(() => {
+    const height = shown ? barRef.current?.offsetHeight ?? 64 : 0;
+    window.dispatchEvent(new CustomEvent(STICKY_BAR_EVENT, { detail: { height } }));
+  }, [shown]);
+  useEffect(() => {
+    return () => {
+      window.dispatchEvent(new CustomEvent(STICKY_BAR_EVENT, { detail: { height: 0 } }));
+    };
+  }, []);
+
   const handleDismiss = () => {
     trackStickyBarEvent('dismiss', locale);
     setDismissed(true);
@@ -74,6 +88,7 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
     <AnimatePresence>
       {visible && !dismissed && (
         <motion.div
+          ref={barRef}
           key="sticky-quote-bar"
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
