@@ -1,14 +1,16 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
-import { X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Locale } from '@/lib/i18n';
 
 export type ContainerModalItem = {
   name: string;
   image?: string;
+  images?: string[];
+  initialIndex?: number;
   type?: string;
   desc?: string;
 };
@@ -26,8 +28,20 @@ export default function ContainerQuoteModal({
 }) {
   const isTr = locale === 'tr';
   const quoteBase = locale === 'en' ? '/en/quote' : `/${locale}/teklif-al`;
-  // Seçilen konteyner tipi forma önceden doldurulsun (QuoteForm ?tip= okur)
   const quoteHref = item?.type ? `${quoteBase}?tip=${encodeURIComponent(item.type)}` : quoteBase;
+
+  const gallery = item?.images && item.images.length > 0 ? item.images : item?.image ? [item.image] : [];
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    setActiveIdx(item?.initialIndex ?? 0);
+  }, [item]);
+
+  const hasGallery = gallery.length > 0;
+  const activeSrc = gallery[activeIdx] ?? gallery[0];
+
+  const prev = () => setActiveIdx((i) => (i - 1 + gallery.length) % gallery.length);
+  const next = () => setActiveIdx((i) => (i + 1) % gallery.length);
 
   return (
     <AnimatePresence>
@@ -44,7 +58,7 @@ export default function ContainerQuoteModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             className={`relative w-full my-auto bg-white rounded-2xl overflow-hidden shadow-2xl grid grid-cols-1 cursor-default ${
-              item.image ? 'max-w-6xl md:grid-cols-[3fr_2fr]' : 'max-w-lg'
+              hasGallery ? 'max-w-6xl md:grid-cols-[3fr_2fr]' : 'max-w-lg'
             }`}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
@@ -53,21 +67,68 @@ export default function ContainerQuoteModal({
           >
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
+              className="absolute top-3 right-3 z-20 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
               aria-label={isTr ? 'Kapat' : 'Close'}
             >
               <X className="w-6 h-6" />
             </button>
 
-            {item.image && (
-              <div className="relative w-full h-[40vh] md:h-[70vh] bg-gray-100">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  sizes="(min-width: 768px) 60vw, 100vw"
-                  className="object-contain p-6 md:p-10"
-                />
+            {hasGallery && activeSrc && (
+              <div className="flex flex-col bg-gray-100">
+                <div className="relative w-full h-[38vh] md:h-[62vh] flex items-center justify-center overflow-hidden">
+                  <img
+                    src={activeSrc}
+                    alt={`${item.name} (${activeIdx + 1}/${gallery.length})`}
+                    className="w-full h-full object-contain p-4 md:p-8"
+                  />
+
+                  {gallery.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={prev}
+                        aria-label={isTr ? 'Önceki fotoğraf' : 'Previous photo'}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/50 hover:bg-black/75 text-white backdrop-blur-sm transition-colors"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={next}
+                        aria-label={isTr ? 'Sonraki fotoğraf' : 'Next photo'}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/50 hover:bg-black/75 text-white backdrop-blur-sm transition-colors"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                      <span className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/60 text-white text-xs font-semibold">
+                        {activeIdx + 1} / {gallery.length}
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                {gallery.length > 1 && (
+                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-200/70 overflow-x-auto">
+                    {gallery.map((src, idx) => (
+                      <button
+                        key={`${src}-${idx}`}
+                        type="button"
+                        onClick={() => setActiveIdx(idx)}
+                        className={`relative w-16 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${
+                          idx === activeIdx
+                            ? 'border-primary-600 ring-2 ring-primary-600/30'
+                            : 'border-transparent opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <img
+                          src={src}
+                          alt={`${item.name} ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

@@ -7,8 +7,9 @@ import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import CTASection from '@/components/home/CTASection';
 import StickyQuoteBar from '@/components/home/StickyQuoteBar';
 import ContainerTypeCards, { type ContainerTypeCard } from '@/components/containers/ContainerTypeCards';
+import { getAllContainerImagesGrouped, type ContainerImageTypeKey } from '@/lib/container-images-db';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -58,7 +59,20 @@ const ICON = {
   snow: <Snowflake size={26} className="text-cyan-600" />,
 };
 
-function buildContent(locale: Locale): Content {
+function resolveImages(
+  uploaded: Partial<Record<ContainerImageTypeKey, string[]>>,
+  key: ContainerImageTypeKey,
+  fallback?: string
+): string[] | undefined {
+  const custom = uploaded[key];
+  if (custom && custom.length > 0) return custom;
+  return fallback ? [fallback] : undefined;
+}
+
+function buildContent(
+  locale: Locale,
+  uploaded: Partial<Record<ContainerImageTypeKey, string[]>>
+): Content {
   const isTr = locale === 'tr';
   const quoteHref = isTr ? '/tr/teklif-al' : '/en/quote';
   const specsHref = isTr ? '/tr/konteynerler' : '/en/containers';
@@ -77,13 +91,13 @@ function buildContent(locale: Locale): Content {
       typesTitle: 'Satılık Konteyner Tipleri',
       typesSub: 'İhtiyacınıza en uygun tipi seçin; detaylı ölçüler için ölçü tablomuza göz atın.',
       types: [
-        { icon: ICON.box, name: "20' DC (Standart)", image: '/20.webp', type: '20DC', desc: 'En yaygın tip; genel kuru yük için ideal. ~33 m³ hacim, ~28 ton yük kapasitesi.' },
-        { icon: ICON.box, name: "40' DC (Standart)", image: '/40.webp', type: '40DC', desc: 'Hacimli yükler için uzun gövde. ~68 m³ hacim, geniş taban alanı.' },
-        { icon: ICON.boxes, name: "40' HC (High Cube)", image: '/40h.webp', type: '40HC', desc: '30 cm ekstra yükseklik, ~76 m³ hacim. Hacimli ama hafif yükler için ideal.' },
-        { icon: ICON.boxes, name: "45' HC", desc: 'Maksimum hacim (~86 m³) ve ekstra uzunluk. Büyük hacimli sevkiyatlar için.' },
-        { icon: ICON.snow, name: "40' Reefer (Soğutmalı)", desc: '-30°C / +30°C sıcaklık kontrolü. Gıda ve ısıya duyarlı yükler için.' },
-        { icon: ICON.box, name: "Open Top (Üstü Açılır)", desc: 'Vinçle üstten yükleme; kapıdan geçmeyen yüksek yükler için.' },
-        { icon: ICON.boxes, name: 'Flat Rack', desc: 'Yanları açık platform; makine, boru, mermer gibi gabari dışı ağır yükler için.' },
+        { icon: ICON.box, name: "20' DC (Standart)", images: resolveImages(uploaded, '20DC', '/20.webp'), type: '20DC', desc: 'En yaygın tip; genel kuru yük için ideal. ~33 m³ hacim, ~28 ton yük kapasitesi.' },
+        { icon: ICON.box, name: "40' DC (Standart)", images: resolveImages(uploaded, '40DC', '/40.webp'), type: '40DC', desc: 'Hacimli yükler için uzun gövde. ~68 m³ hacim, geniş taban alanı.' },
+        { icon: ICON.boxes, name: "40' HC (High Cube)", images: resolveImages(uploaded, '40HC', '/40h.webp'), type: '40HC', desc: '30 cm ekstra yükseklik, ~76 m³ hacim. Hacimli ama hafif yükler için ideal.' },
+        { icon: ICON.boxes, name: "45' HC", images: resolveImages(uploaded, '45HC'), type: '45HC', desc: 'Maksimum hacim (~86 m³) ve ekstra uzunluk. Büyük hacimli sevkiyatlar için.' },
+        { icon: ICON.snow, name: "40' Reefer (Soğutmalı)", images: resolveImages(uploaded, '40REEFER'), type: '40REEFER', desc: '-30°C / +30°C sıcaklık kontrolü. Gıda ve ısıya duyarlı yükler için.' },
+        { icon: ICON.box, name: "Open Top (Üstü Açılır)", images: resolveImages(uploaded, 'OPENTOP'), type: 'OPENTOP', desc: 'Vinçle üstten yükleme; kapıdan geçmeyen yüksek yükler için.' },
+        { icon: ICON.boxes, name: 'Flat Rack', images: resolveImages(uploaded, 'FLATRACK'), type: 'FLATRACK', desc: 'Yanları açık platform; makine, boru, mermer gibi gabari dışı ağır yükler için.' },
       ],
       condTitle: 'Sıfır mı, İkinci El mi?',
       conditions: [
@@ -133,13 +147,13 @@ function buildContent(locale: Locale): Content {
     typesTitle: 'Container Types for Sale',
     typesSub: 'Choose the type that fits your need; see our dimensions table for full specs.',
     types: [
-      { icon: ICON.box, name: "20' DC (Standard)", image: '/20.webp', type: '20DC', desc: 'The most common type; ideal for general dry cargo. ~33 m³ volume, ~28 t payload.' },
-      { icon: ICON.box, name: "40' DC (Standard)", image: '/40.webp', type: '40DC', desc: 'Long body for voluminous cargo. ~68 m³ volume, large floor area.' },
-      { icon: ICON.boxes, name: "40' HC (High Cube)", image: '/40h.webp', type: '40HC', desc: '30 cm extra height, ~76 m³ volume. Ideal for voluminous but light cargo.' },
-      { icon: ICON.boxes, name: "45' HC", desc: 'Maximum volume (~86 m³) and extra length. For large-volume shipments.' },
-      { icon: ICON.snow, name: "40' Reefer", desc: '-30°C / +30°C temperature control. For food and heat-sensitive cargo.' },
-      { icon: ICON.box, name: 'Open Top', desc: 'Top loading by crane; for tall cargo that will not pass through the doors.' },
-      { icon: ICON.boxes, name: 'Flat Rack', desc: 'Open platform; for out-of-gauge heavy loads such as machinery, pipes and marble.' },
+      { icon: ICON.box, name: "20' DC (Standard)", images: resolveImages(uploaded, '20DC', '/20.webp'), type: '20DC', desc: 'The most common type; ideal for general dry cargo. ~33 m³ volume, ~28 t payload.' },
+      { icon: ICON.box, name: "40' DC (Standard)", images: resolveImages(uploaded, '40DC', '/40.webp'), type: '40DC', desc: 'Long body for voluminous cargo. ~68 m³ volume, large floor area.' },
+      { icon: ICON.boxes, name: "40' HC (High Cube)", images: resolveImages(uploaded, '40HC', '/40h.webp'), type: '40HC', desc: '30 cm extra height, ~76 m³ volume. Ideal for voluminous but light cargo.' },
+      { icon: ICON.boxes, name: "45' HC", images: resolveImages(uploaded, '45HC'), type: '45HC', desc: 'Maximum volume (~86 m³) and extra length. For large-volume shipments.' },
+      { icon: ICON.snow, name: "40' Reefer", images: resolveImages(uploaded, '40REEFER'), type: '40REEFER', desc: '-30°C / +30°C temperature control. For food and heat-sensitive cargo.' },
+      { icon: ICON.box, name: 'Open Top', images: resolveImages(uploaded, 'OPENTOP'), type: 'OPENTOP', desc: 'Top loading by crane; for tall cargo that will not pass through the doors.' },
+      { icon: ICON.boxes, name: 'Flat Rack', images: resolveImages(uploaded, 'FLATRACK'), type: 'FLATRACK', desc: 'Open platform; for out-of-gauge heavy loads such as machinery, pipes and marble.' },
     ],
     condTitle: 'New or Used?',
     conditions: [
@@ -178,7 +192,16 @@ function buildContent(locale: Locale): Content {
 
 export default async function ContainersForSalePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
-  const c = buildContent(locale);
+  const uploadedUrls: Partial<Record<ContainerImageTypeKey, string[]>> = {};
+  try {
+    const grouped = await getAllContainerImagesGrouped();
+    for (const [key, list] of Object.entries(grouped)) {
+      uploadedUrls[key as ContainerImageTypeKey] = list.map((img) => img.url);
+    }
+  } catch (err) {
+    console.error('[ContainersForSalePage] Failed to load container images:', err);
+  }
+  const c = buildContent(locale, uploadedUrls);
   const baseUrl = 'https://pekcon.com';
 
   const serviceSchema = {
