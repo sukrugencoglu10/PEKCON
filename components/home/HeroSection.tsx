@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, useReducedMotion, AnimatePresence, type Variants } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,14 +21,12 @@ import { getKeywordConfig } from '@/lib/keyword-config';
 import QuoteForm from '@/components/forms/QuoteForm';
 import ContainerComparison from './ContainerComparison';
 import { getCategoryFromType, type ContainerType } from './KonteynerScene';
+import ContainerPhotoShowcase from './ContainerPhotoShowcase';
 import { ChevronRight, ChevronDown, Ship } from 'lucide-react';
 
-const KonteynerScene = dynamic(() => import('./KonteynerScene'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-[280px] w-full rounded-3xl bg-white/5 animate-pulse" />
-  ),
-});
+// Kullanıcı seçim yapana kadar gerçek konteyner fotoğrafları sırayla döner
+const AUTOPLAY_ORDER: ContainerType[] = ['40hc', '20dc', '40dc'];
+const AUTOPLAY_MS = 4000;
 
 export default function HeroSection({ locale = 'tr', keyword }: { locale?: Locale; keyword?: string }) {
   const t = getTranslations(locale);
@@ -41,13 +38,27 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   const [animState, setAnimState] = useState<'idle' | 'transforming' | 'swimming'>('idle');
   const [selectedContainer, setSelectedContainer] = useState<ContainerType>('40hc');
   const containerCategory = getCategoryFromType(selectedContainer);
-  // Render 3D scene on client-side only to prevent hydration mismatch and defer LCP block
-  const [showScene, setShowScene] = useState(false);
+  // Kullanıcı formdan ya da kartlardan bir tip seçince otomatik geçiş durur
+  const [userPicked, setUserPicked] = useState(false);
+  const pickContainer = (type: ContainerType) => {
+    setUserPicked(true);
+    setSelectedContainer(type);
+  };
 
   useEffect(() => {
     isDesktopRef.current = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
-    setShowScene(true); // Mobilde de görünsün (CSR, formun altına yerleşecek)
   }, []);
+
+  useEffect(() => {
+    if (userPicked || prefersReducedMotion) return;
+    const id = setInterval(() => {
+      setSelectedContainer((cur) => {
+        const i = AUTOPLAY_ORDER.indexOf(cur);
+        return AUTOPLAY_ORDER[(i + 1) % AUTOPLAY_ORDER.length];
+      });
+    }, AUTOPLAY_MS);
+    return () => clearInterval(id);
+  }, [userPicked, prefersReducedMotion]);
 
   const handleQuoteClick = (e: React.MouseEvent) => {
     if (animState !== 'idle') return;
@@ -186,25 +197,23 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
               <div className="relative bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
                 <QuoteForm
                   locale={locale}
-                  onContainerTypeChange={(t) => { if (t) setSelectedContainer(t); }}
+                  onContainerTypeChange={(t) => { if (t) pickContainer(t); }}
                 />
               </div>
             </div>
           </motion.div>
 
-          {/* ─── COL 3: 3D Container + Comparison (mobil: order-2, desktop: order-3) ─── */}
-          {showScene && (
-            <motion.div variants={heroSlide} className="order-2 lg:order-3 -mt-12 lg:mt-0 lg:self-end">
-              <KonteynerScene containerType={selectedContainer} />
-              <ContainerComparison
-                locale={locale}
-                selected={selectedContainer}
-                containerCategory={containerCategory}
-                onSelect={setSelectedContainer}
-                variant="dark"
-              />
-            </motion.div>
-          )}
+          {/* ─── COL 3: Gerçek konteyner fotoğrafları + Karşılaştırma (mobil: order-2, desktop: order-3) ─── */}
+          <motion.div variants={heroSlide} className="w-full order-2 lg:order-3 lg:self-end">
+            <ContainerPhotoShowcase containerType={selectedContainer} locale={locale} />
+            <ContainerComparison
+              locale={locale}
+              selected={selectedContainer}
+              containerCategory={containerCategory}
+              onSelect={pickContainer}
+              variant="dark"
+            />
+          </motion.div>
 
           {/* ─── MOBİL ONLY: Butonlar (3D animasyonun altında, sm+ gizli) ─── */}
           <motion.div variants={heroSlide} className="sm:hidden order-3 w-full flex flex-col items-center gap-3">
