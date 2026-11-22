@@ -34,14 +34,14 @@ export default async function ContainersPage({ params }: { params: Promise<{ loc
 
   return (
     <div
-      className="relative min-h-screen bg-cover bg-center bg-fixed pt-28 md:pt-32 pb-16 px-4"
+      className="relative min-h-screen bg-cover bg-center bg-fixed pt-5 md:pt-32 pb-16 px-4"
       style={{ backgroundImage: "url('/satilik-konteyner-hero.jpg')" }}
     >
       <div className="absolute inset-0 bg-white/85" />
       <BreadcrumbJsonLd locale={locale} slug="konteynerler" />
-      <div className="relative z-10 max-w-7xl mx-auto space-y-20">
-        <div className="space-y-10">
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 shadow-sm">
+      <div className="relative z-10 max-w-7xl mx-auto space-y-14 md:space-y-20">
+        <div className="space-y-6 md:space-y-10">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left gap-3 sm:gap-4 shadow-sm">
             <p className="flex-1 text-sm md:text-base text-amber-900 leading-relaxed">
               {locale === 'tr' ? (
                 <>
