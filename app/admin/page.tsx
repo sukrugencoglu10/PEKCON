@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { verifyToken, COOKIE_NAME } from '@/lib/admin-auth';
@@ -21,6 +23,15 @@ export default async function AdminLoginPage() {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <h1 className="text-xl font-bold text-gray-900 mb-6 text-center">Giriş Yapın</h1>
           <LoginForm />
+        </div>
+        <div className="text-center mt-6">
+          <Link
+            href="/tr"
+            className="inline-flex items-center gap-2 text-sm font-medium text-blue-200 hover:text-white transition-colors"
+          >
+            <ArrowLeft size={16} />
+            Ana siteye dön
+          </Link>
         </div>
       </div>
     </div>
