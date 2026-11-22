@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Instagram, Check } from 'lucide-react';
 import type { Locale } from '@/lib/i18n';
 
 export type ContainerModalItem = {
@@ -32,10 +32,44 @@ export default function ContainerQuoteModal({
 
   const gallery = item?.images && item.images.length > 0 ? item.images : item?.image ? [item.image] : [];
   const [activeIdx, setActiveIdx] = useState(0);
+  const [shareMsg, setShareMsg] = useState('');
 
   useEffect(() => {
     setActiveIdx(item?.initialIndex ?? 0);
+    setShareMsg('');
   }, [item]);
+
+  const getShareUrl = () =>
+    typeof window !== 'undefined'
+      ? window.location.href
+      : isTr
+      ? 'https://pekcon.com/tr/satilik-konteyner'
+      : 'https://pekcon.com/en/containers-for-sale';
+
+  const handleInstagramShare = async () => {
+    const shareUrl = getShareUrl();
+    const shareTitle = item ? `${item.name} — PEKCON` : 'PEKCON';
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: shareTitle, url: shareUrl });
+        return;
+      } catch (err) {
+        if ((err as Error)?.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareMsg(
+        isTr
+          ? "Bağlantı kopyalandı! Instagram'da yapıştırıp paylaşabilirsiniz."
+          : 'Link copied! Paste it in Instagram to share.'
+      );
+      setTimeout(() => setShareMsg(''), 3500);
+    } catch {
+      // ignore
+    }
+    window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer');
+  };
 
   const hasGallery = gallery.length > 0;
   const activeSrc = gallery[activeIdx] ?? gallery[0];
@@ -176,6 +210,50 @@ export default function ContainerQuoteModal({
                 >
                   {isTr ? "WhatsApp'tan İletişime Geç" : 'Contact on WhatsApp'}
                 </a>
+              </div>
+
+              {/* Paylaş ikonları */}
+              <div className="pt-3 border-t border-gray-100 flex flex-col items-center gap-2">
+                <div className="inline-flex items-center gap-3">
+                  <span className="text-xs font-medium text-gray-400">
+                    {isTr ? 'Paylaş:' : 'Share:'}
+                  </span>
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(
+                      `${item.name} — PEKCON ${getShareUrl()}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={isTr ? "WhatsApp'ta Paylaş" : 'Share on WhatsApp'}
+                    aria-label={isTr ? "WhatsApp'ta Paylaş" : 'Share on WhatsApp'}
+                    className="w-10 h-10 rounded-full bg-[#25D366]/15 hover:bg-[#25D366] text-[#1fa855] hover:text-white flex items-center justify-center shadow-sm hover:shadow-md hover:scale-105 transition-all"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="19"
+                      height="19"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.49 0 .14 5.35.14 11.92c0 2.1.55 4.15 1.59 5.96L0 24l6.29-1.65a11.87 11.87 0 0 0 5.77 1.47h.01c6.57 0 11.92-5.35 11.92-11.92 0-3.18-1.24-6.17-3.47-8.42ZM12.06 21.8h-.01a9.87 9.87 0 0 1-5.04-1.38l-.36-.21-3.73.98 1-3.64-.24-.37a9.86 9.86 0 0 1-1.52-5.26c0-5.46 4.44-9.9 9.91-9.9 2.65 0 5.13 1.03 7 2.9a9.84 9.84 0 0 1 2.9 7c0 5.46-4.44 9.88-9.91 9.88Zm5.43-7.42c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35Z" />
+                    </svg>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleInstagramShare}
+                    title={isTr ? "Instagram'da Paylaş" : 'Share on Instagram'}
+                    aria-label={isTr ? "Instagram'da Paylaş" : 'Share on Instagram'}
+                    className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500/15 via-pink-500/15 to-purple-600/15 hover:from-amber-500 hover:via-pink-500 hover:to-purple-600 text-pink-600 hover:text-white flex items-center justify-center shadow-sm hover:shadow-md hover:scale-105 transition-all"
+                  >
+                    <Instagram size={19} />
+                  </button>
+                </div>
+                {shareMsg && (
+                  <p className="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-1.5 w-full">
+                    <Check size={14} className="shrink-0" />
+                    <span>{shareMsg}</span>
+                  </p>
+                )}
               </div>
             </div>
           </motion.div>
