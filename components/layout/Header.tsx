@@ -289,16 +289,16 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
             <div className="lg:hidden mt-4 pb-4">
-              <nav className="flex flex-col space-y-2">
+              <nav className="flex flex-col space-y-1.5">
                 {navLinks.map((link) => (
                   <div key={link.href}>
                     {link.dropdown ? (
                       <>
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-1">
                           <Link
                             href={link.href}
                             className={cn(
-                              "flex-1 px-4 py-2 rounded-md font-medium transition-all",
+                              "block flex-1 px-4 py-2.5 rounded-md font-medium transition-all",
                               isActive(link.href)
                                 ? "bg-secondary-500 text-white"
                                 : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
@@ -353,7 +353,7 @@ export default function Header({ locale = "tr" }: { locale?: string }) {
                       <Link
                         href={link.href}
                         className={cn(
-                          "px-4 py-2 rounded-md font-medium transition-all",
+                          "block w-full px-4 py-2.5 rounded-md font-medium transition-all",
                           isActive(link.href)
                             ? "bg-secondary-500 text-white"
                             : "text-secondary-500 hover:bg-secondary-500 hover:text-white"
