@@ -11,8 +11,10 @@
 //   form_submit    → GA4 - Generate Lead (Main Site)  (GA4'e generate_lead olarak)
 //   generate_lead  → form_submit üzerinden zaten gidiyor; doğrudan göndermek çift sayar
 //   add_to_cart / cta_click / form_abandoned / scroll_depth → aynı adlı GA4 etiketleri
+//   phone_click    → GA4 - Phone Click + Google Ads telefon dönüşümü
 const GTM_HANDLED_EVENTS = new Set([
   'whatsapp_click',
+  'phone_click',
   'form_submit',
   'generate_lead',
   'add_to_cart',
@@ -86,6 +88,20 @@ export const trackWhatsAppConversion = (locale: string) => {
     gclid: tracking.gclid || null,
     fbclid: tracking.fbclid || null,
     transaction_id: transactionId,
+  });
+};
+
+// Telefon (tel:) tıklaması — mobilde arama başlatır; GTM bu event'i GA4'e ve
+// Google Ads telefon dönüşümüne iletir.
+export const trackPhoneClick = (phoneNumber: string, ctaLocation: string) => {
+  if (typeof window === 'undefined') return;
+  trackEvent('phone_click', {
+    method: 'phone',
+    phone_number: phoneNumber,
+    cta_location: ctaLocation,
+    page_path: window.location.pathname,
+    // Her tıklamaya benzersiz ID: Ads etiketi dönüşümü tekilleştirebilsin
+    transaction_id: `tel_${Date.now()}`,
   });
 };
 

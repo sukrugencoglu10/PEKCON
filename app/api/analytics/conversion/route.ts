@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type, utm_source, utm_medium, utm_campaign, utm_term, gclid, fbclid, original_referrer, locale, page_url } = body;
 
-    if (!['whatsapp_click', 'form_abandon'].includes(type)) {
+    if (!['whatsapp_click', 'form_abandon', 'phone_click'].includes(type)) {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }
 

@@ -17,6 +17,8 @@ export default function WhatsAppButton() {
       setBarHeight((e as CustomEvent<{ height: number }>).detail?.height ?? 0);
     };
     window.addEventListener(STICKY_BAR_EVENT, onChange);
+    // Çubuk bu butondan önce ölçüldüyse son yüksekliği al
+    setBarHeight((window as unknown as { __stickyBarHeight?: number }).__stickyBarHeight ?? 0);
     return () => window.removeEventListener(STICKY_BAR_EVENT, onChange);
   }, []);
   const bottom = barHeight > 0 ? barHeight + GAP_ABOVE_BAR : BASE_OFFSET;

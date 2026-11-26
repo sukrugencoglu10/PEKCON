@@ -3,6 +3,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ChatWidget from '@/components/widgets/ChatWidget';
 import WhatsAppButton from '@/components/widgets/WhatsAppButton';
+import StickyQuoteBar from '@/components/home/StickyQuoteBar';
 import { Inter, Satisfy } from 'next/font/google';
 import GoogleTagManager from '@/components/analytics/GoogleTagManager';
 import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
@@ -105,6 +106,7 @@ export default async function LocaleLayout({
         <Footer locale={locale} />
         <ExitIntentPopup locale={locale as 'tr' | 'en'} />
         <ChatWidget />
+        <StickyQuoteBar locale={locale} />
         <WhatsAppButton />
       </body>
     </html>

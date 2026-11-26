@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { CheckCircle2, Package, Snowflake, Boxes, ShieldCheck, Truck, Globe2, FileText } from 'lucide-react';
+import { CheckCircle2, Package, Snowflake, Boxes, ShieldCheck, Truck, Globe2, FileText, MessageCircle } from 'lucide-react';
 import { type Locale } from '@/lib/i18n';
 import JsonLd from '@/components/seo/JsonLd';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import CTASection from '@/components/home/CTASection';
-import StickyQuoteBar from '@/components/home/StickyQuoteBar';
 import ContainerTypeCards, { type ContainerTypeCard } from '@/components/containers/ContainerTypeCards';
 import { getAllContainerImagesGrouped, type ContainerImageTypeKey } from '@/lib/container-images-db';
 
@@ -255,6 +254,33 @@ export default async function ContainersForSalePage({ params }: { params: Promis
               <Boxes size={18} /> {c.ctaSpecs}
             </Link>
           </div>
+
+          {/* Fiyat kutusu — fiyat arayan (çoğu mobil) ziyaretçiye ilk ekranda hızlı yol */}
+          <div className="mt-6 mx-auto max-w-xl rounded-2xl bg-white/95 border border-green-200 shadow-lg px-4 py-4 sm:px-5 flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+            <div className="flex-1 min-w-0">
+              <p className="text-dark-900 font-bold text-base leading-snug">
+                {locale === 'tr' ? "Güncel fiyatı 2 dakikada WhatsApp'tan öğrenin" : 'Get the current price on WhatsApp in 2 minutes'}
+              </p>
+              <p className="text-gray-600 text-sm leading-snug mt-0.5">
+                {locale === 'tr'
+                  ? 'Stoklarımız anlık değişiyor; güncel fotoğraf ve fiyatı hemen gönderelim.'
+                  : 'Our stock changes constantly; we will send current photos and prices right away.'}
+              </p>
+            </div>
+            <a
+              href={`https://wa.me/905427179357?text=${encodeURIComponent(
+                locale === 'tr'
+                  ? 'Merhaba, güncel konteyner fiyatlarını öğrenmek istiyorum.'
+                  : 'Hello, I would like to learn the current container prices.'
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cta-location="price_box_hero"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold text-[15px] px-5 py-3 transition-colors whitespace-nowrap"
+            >
+              <MessageCircle size={18} /> {locale === 'tr' ? 'Fiyatı Öğren' : 'Get Price'}
+            </a>
+          </div>
         </div>
       </section>
 
@@ -340,7 +366,6 @@ export default async function ContainersForSalePage({ params }: { params: Promis
       </div>
 
       <CTASection locale={locale} />
-      <StickyQuoteBar locale={locale} />
     </div>
   );
 }

@@ -79,7 +79,7 @@ async function ensurePageViewsTable() {
 }
 
 export interface ConversionInput {
-  type: 'form_submit' | 'whatsapp_click' | 'form_abandon';
+  type: 'form_submit' | 'whatsapp_click' | 'form_abandon' | 'phone_click';
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;

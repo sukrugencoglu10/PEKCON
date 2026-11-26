@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { trackPhoneClick } from '@/lib/gtm';
 
 export default function AnalyticsEvents() {
   useEffect(() => {
@@ -34,10 +35,38 @@ export default function AnalyticsEvents() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // WhatsApp Click Tracking
+    // WhatsApp + Telefon Click Tracking
     const handleWhatsAppClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const link = target.closest('a');
+
+      // Telefon (tel:) — sitedeki tüm arama linkleri (header, footer, alt çubuk, iletişim)
+      if (link && link.href.startsWith('tel:')) {
+        trackPhoneClick(
+          link.href.replace('tel:', ''),
+          link.dataset.ctaLocation || 'inline_link'
+        );
+        try {
+          const tracking = JSON.parse(localStorage.getItem('site_tracking_data') || '{}');
+          fetch('/api/analytics/conversion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'phone_click',
+              utm_source: tracking.utmSource,
+              utm_medium: tracking.utmMedium,
+              utm_campaign: tracking.utmCampaign,
+              utm_term: tracking.utmTerm,
+              gclid: tracking.gclid,
+              fbclid: tracking.fbclid,
+              original_referrer: tracking.originalReferrer,
+              page_url: window.location.href,
+            }),
+          }).catch(() => {});
+        } catch {}
+        return;
+      }
+
       if (link && link.href.includes('wa.me')) {
         // Kendi ölçümünü yapan linkler (ör. yüzen WhatsApp butonu) burada
         // tekrar sayılmaz; aksi halde whatsapp_click iki kez gider.

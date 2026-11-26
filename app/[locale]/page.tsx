@@ -3,7 +3,6 @@ import HeroSection from '@/components/home/HeroSection';
 import TrustSlider from '@/components/home/TrustSlider';
 import StatsSection from '@/components/home/StatsSection';
 import SegmentationCards from '@/components/home/SegmentationCards';
-import StickyQuoteBar from '@/components/home/StickyQuoteBar';
 import JsonLd from '@/components/seo/JsonLd';
 
 // Below-the-fold: lazy load for smaller initial bundle
@@ -201,7 +200,6 @@ export default async function HomePage({
       <ServicesOverview locale={locale} />
       <FAQSection locale={locale} />
       <CTASection locale={locale} />
-      <StickyQuoteBar locale={locale} />
     </>
   );
 }
