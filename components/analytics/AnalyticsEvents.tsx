@@ -15,9 +15,26 @@ export default function AnalyticsEvents() {
     const scrollThresholds = [25, 50, 75, 90, 100];
     const triggered = new Set<number>();
 
+    // Her scroll olayında layout okumak (scrollHeight) mobilde takılmaya yol açar:
+    // ölçümü kare başına bire indir, tüm eşikler dolunca dinlemeyi bırak.
+    let scrollTicking = false;
     const handleScroll = () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        scrollTicking = false;
+        measureScroll();
+      });
+    };
+
+    const measureScroll = () => {
       const scrollPercent =
         ((window.scrollY + window.innerHeight) / document.body.scrollHeight) * 100;
+
+      if (triggered.size === scrollThresholds.length) {
+        window.removeEventListener('scroll', handleScroll);
+        return;
+      }
 
       scrollThresholds.forEach((threshold) => {
         if (scrollPercent >= threshold && !triggered.has(threshold)) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Images } from 'lucide-react';
 import type { Locale } from '@/lib/i18n';
 import ContainerQuoteModal, { type ContainerModalItem } from './ContainerQuoteModal';
@@ -59,11 +60,13 @@ export default function ContainerTypeCards({ types, locale }: { types: Container
             >
               {activeSrc && (
                 <div className="relative w-full aspect-[16/10] mb-4 rounded-xl overflow-hidden bg-gray-100">
-                  <img
+                  {/* Kart ~600px gösteriliyor; 2400px orijinal yerine boyuta uygun WebP/AVIF */}
+                  <Image
                     src={activeSrc}
                     alt={t.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                    className="object-cover"
                   />
 
                   {gallery.length > 1 && (

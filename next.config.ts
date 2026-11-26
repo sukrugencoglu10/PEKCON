@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000, // 1 year cache for optimized images
   },
   compress: true,
+  experimental: {
+    // Tailwind CSS'i (~15 KB) HTML'e göm: ayrı CSS dosyası render'ı ~660 ms bloke ediyordu
+    inlineCss: true,
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {

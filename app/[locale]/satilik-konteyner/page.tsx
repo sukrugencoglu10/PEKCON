@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { CheckCircle2, Package, Snowflake, Boxes, ShieldCheck, Truck, Globe2, FileText } from 'lucide-react';
 import { type Locale } from '@/lib/i18n';
@@ -224,10 +225,16 @@ export default async function ContainersForSalePage({ params }: { params: Promis
       <BreadcrumbJsonLd locale={locale} slug={c.slug} />
 
       {/* Hero */}
-      <section
-        className="relative overflow-hidden bg-dark-900 bg-cover bg-center pt-28 md:pt-32 pb-16 px-4"
-        style={{ backgroundImage: "url('/satilik-konteyner-hero.jpg')" }}
-      >
+      <section className="relative overflow-hidden bg-dark-900 pt-28 md:pt-32 pb-16 px-4">
+        {/* CSS arka planı yerine öncelikli yüklenen, boyuta göre WebP/AVIF sunulan görsel (LCP) */}
+        <Image
+          src="/satilik-konteyner-hero.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/70" />
         <div
           className="absolute inset-0 opacity-10"

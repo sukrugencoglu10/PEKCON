@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, Instagram, Check } from 'lucide-react';
 import type { Locale } from '@/lib/i18n';
 
@@ -85,7 +86,7 @@ export default function ContainerQuoteModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 cursor-zoom-out overflow-y-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 cursor-zoom-out overflow-y-auto"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -101,7 +102,7 @@ export default function ContainerQuoteModal({
           >
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 z-20 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
+              className="absolute top-3 right-3 z-20 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
               aria-label={isTr ? 'Kapat' : 'Close'}
             >
               <X className="w-6 h-6" />
@@ -110,10 +111,14 @@ export default function ContainerQuoteModal({
             {hasGallery && activeSrc && (
               <div className="flex flex-col bg-gray-100">
                 <div className="relative w-full h-[38vh] md:h-[62vh] flex items-center justify-center overflow-hidden">
-                  <img
+                  {/* Optimize edilmiş, ekran boyutuna göre küçültülmüş sürüm (orijinal 2400px yerine) */}
+                  <Image
+                    key={activeSrc}
                     src={activeSrc}
                     alt={`${item.name} (${activeIdx + 1}/${gallery.length})`}
-                    className="w-full h-full object-contain p-4 md:p-8"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    className="object-contain p-4 md:p-8"
                   />
 
                   {gallery.length > 1 && (
@@ -122,7 +127,7 @@ export default function ContainerQuoteModal({
                         type="button"
                         onClick={prev}
                         aria-label={isTr ? 'Önceki fotoğraf' : 'Previous photo'}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/50 hover:bg-black/75 text-white backdrop-blur-sm transition-colors"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/50 hover:bg-black/75 text-white transition-colors"
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
@@ -130,7 +135,7 @@ export default function ContainerQuoteModal({
                         type="button"
                         onClick={next}
                         aria-label={isTr ? 'Sonraki fotoğraf' : 'Next photo'}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/50 hover:bg-black/75 text-white backdrop-blur-sm transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/50 hover:bg-black/75 text-white transition-colors"
                       >
                         <ChevronRight className="w-5 h-5" />
                       </button>
@@ -154,10 +159,12 @@ export default function ContainerQuoteModal({
                             : 'border-transparent opacity-70 hover:opacity-100'
                         }`}
                       >
-                        <img
+                        <Image
                           src={src}
                           alt={`${item.name} ${idx + 1}`}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="64px"
+                          className="object-cover"
                         />
                       </button>
                     ))}

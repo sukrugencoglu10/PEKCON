@@ -7,7 +7,8 @@ import StickyQuoteBar from '@/components/home/StickyQuoteBar';
 import { Inter, Satisfy } from 'next/font/google';
 import GoogleTagManager from '@/components/analytics/GoogleTagManager';
 import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
-import MicrosoftClarity from '@/components/analytics/MicrosoftClarity';
+// Microsoft Clarity GTM üzerinden ("Microsoft Clarity - Official" etiketi) yükleniyor;
+// ayrıca bileşenle yüklemek Clarity'yi iki kez çalıştırıyordu.
 import MetaPixel from '@/components/analytics/MetaPixel';
 import { Suspense } from 'react';
 import type { Viewport } from 'next';
@@ -96,7 +97,6 @@ export default async function LocaleLayout({
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <GoogleTagManager gtmId="GTM-536W5D89" />
-          <MicrosoftClarity />
           <MetaPixel />
           <AnalyticsEvents />
           <TrackingProvider />
