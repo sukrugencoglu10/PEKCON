@@ -72,7 +72,7 @@ export default function ServicesOverview({ locale }: ServicesOverviewProps) {
             {t.services.title}
           </h2>
           <div className="w-24 h-1.5 bg-primary-500 mx-auto mb-8 rounded-full" />
-          <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-white/50">
+          <div className="max-w-4xl mx-auto bg-white/90 p-8 rounded-2xl shadow-sm border border-white/50">
             <p className="text-xl text-dark-700 leading-relaxed font-medium">
               {t.services.subtitle}
             </p>
@@ -97,7 +97,7 @@ export default function ServicesOverview({ locale }: ServicesOverviewProps) {
                 <Link href={`/${locale}/hizmetlerimiz`}>
                   <motion.div
                     variants={cardHover}
-                    className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 h-full group border border-gray-100 hover:border-primary-200"
+                    className="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 h-full group border border-gray-100 hover:border-primary-200"
                   >
                     <div className="w-20 h-20 border-2 border-primary-500 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary-500 group-hover:border-primary-500 transition-all duration-500">
                       <Icon className="w-10 h-10 text-primary-500 group-hover:text-white transition-colors duration-500" />

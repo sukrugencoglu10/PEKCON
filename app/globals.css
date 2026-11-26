@@ -98,6 +98,50 @@
   animation: shine 3s infinite;
 }
 
+/* Hero CTA efektleri: framer-motion (JS, her kare ana iş parçacığı + 'left' layout)
+   yerine yalnızca transform kullanan CSS animasyonları — compositor'da çalışır. */
+@keyframes cta-sweep {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  60%, 100% { transform: translateX(300%) skewX(-12deg); }
+}
+.animate-cta-sweep {
+  animation: cta-sweep 3.5s ease-in-out infinite;
+}
+
+@keyframes nudge-x {
+  0%, 100% { transform: translateX(0); opacity: 1; }
+  50% { transform: translateX(8px); opacity: 0.7; }
+}
+.animate-nudge-x {
+  animation: nudge-x 1.2s ease-out infinite;
+}
+
+@keyframes nudge-y {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.7; }
+}
+.animate-nudge-y {
+  animation: nudge-y 1.2s ease-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-bob {
+  animation: bob 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cta-sweep,
+  .animate-nudge-x,
+  .animate-nudge-y,
+  .animate-bob {
+    animation: none;
+  }
+}
+
 @keyframes scroll-left {
   0% {
     transform: translateX(0);

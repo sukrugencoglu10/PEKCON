@@ -87,11 +87,9 @@ export default function ContainerPhotoShowcase({
           className="relative h-full flex items-center justify-center"
           style={{ width: `${photo.scale * 100}%` }}
         >
-          <motion.div
-            className="relative w-full h-full"
-            animate={reduceMotion ? undefined : { y: [0, -6, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          >
+          {/* Süzülme: CSS transform animasyonu (compositor). drop-shadow'lu görsel bir kez
+              rasterize edilir; JS ile her kare yeniden boyanmaz. */}
+          <div className="relative w-full h-full animate-bob">
             <Image
               src={photo.src}
               alt={
@@ -108,7 +106,7 @@ export default function ContainerPhotoShowcase({
               }`}
               priority={key === '40hc'}
             />
-          </motion.div>
+          </div>
         </motion.div>
       </AnimatePresence>
 
@@ -120,7 +118,7 @@ export default function ContainerPhotoShowcase({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 6 }}
           transition={{ duration: 0.3 }}
-          className={`absolute top-2 left-2 md:top-3 md:left-3 rounded-full backdrop-blur-md px-3 py-1 text-xs md:text-sm font-bold shadow ${
+          className={`absolute top-2 left-2 md:top-3 md:left-3 rounded-full px-3 py-1 text-xs md:text-sm font-bold shadow ${
             isLight
               ? 'bg-white/90 border border-primary-200 text-primary-600'
               : 'bg-white/15 border border-white/25 text-white'

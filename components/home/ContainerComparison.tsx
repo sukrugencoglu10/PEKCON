@@ -203,7 +203,7 @@ export default function ContainerComparison({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 * index, ease: 'easeOut' }}
               onClick={() => onSelect?.(cd.id as ContainerType)}
-              className={`relative backdrop-blur-sm border rounded-xl p-2.5 md:p-3 transition-all duration-200 group cursor-pointer ${
+              className={`relative border rounded-xl p-2.5 md:p-3 transition-all duration-200 group cursor-pointer ${
                 isDark
                   ? selected === cd.id
                     ? 'bg-white/15 border-primary-400 shadow-md ring-2 ring-primary-400/30'

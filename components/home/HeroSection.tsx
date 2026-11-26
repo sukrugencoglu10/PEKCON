@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion, AnimatePresence, type Variants } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
@@ -24,6 +24,8 @@ import { getCategoryFromType, type ContainerType } from './KonteynerScene';
 import ContainerPhotoShowcase, { useContainerAutoplay } from './ContainerPhotoShowcase';
 import { ChevronRight, ChevronDown, Ship } from 'lucide-react';
 
+const MemoQuoteForm = memo(QuoteForm);
+
 export default function HeroSection({ locale = 'tr', keyword }: { locale?: Locale; keyword?: string }) {
   const t = getTranslations(locale);
   const kwConfig = getKeywordConfig(locale, keyword || null);
@@ -35,6 +37,15 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
   // Gerçek konteyner fotoğrafları: seçim yapılana kadar otomatik döner
   const { selected: selectedContainer, pick: pickContainer } = useContainerAutoplay('40hc');
   const containerCategory = getCategoryFromType(selectedContainer);
+
+  // Fotoğraf vitrini her 4 sn'de tip değiştiriyor ve bu bileşeni yeniden render ediyor;
+  // form her seferinde yeniden render olmasın diye prop'u sabitle (MemoQuoteForm).
+  const handleContainerTypeChange = useCallback(
+    (type: ContainerType | null | undefined) => {
+      if (type) pickContainer(type);
+    },
+    [pickContainer]
+  );
 
   useEffect(() => {
     isDesktopRef.current = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
@@ -139,12 +150,12 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
                       exit={{ scale: 0.8, opacity: 0 }}
                       className="inline-flex items-center justify-center rounded-lg transition-all duration-300 px-8 py-4 w-full sm:min-w-[180px] bg-primary-600 hover:bg-primary-500 text-white shadow-2xl hover:shadow-primary-500/50 text-sm font-bold group relative overflow-hidden"
                     >
-                      <motion.div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-10" animate={{ left: ['-50%', '150%'] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }} />
+                      <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent z-10 pointer-events-none animate-cta-sweep" />
                       <span className="relative z-20 flex items-center">
                         {t.nav.quote}
-                        <motion.div animate={{ x: [0, 8, 0], opacity: [1, 0.7, 1] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }} className="ml-2">
+                        <span className="ml-2 inline-flex animate-nudge-x">
                           <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
-                        </motion.div>
+                        </span>
                       </span>
                     </motion.a>
                   )}
@@ -175,9 +186,9 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
-                <QuoteForm
+                <MemoQuoteForm
                   locale={locale}
-                  onContainerTypeChange={(t) => { if (t) pickContainer(t); }}
+                  onContainerTypeChange={handleContainerTypeChange}
                 />
               </div>
             </div>
@@ -215,12 +226,12 @@ export default function HeroSection({ locale = 'tr', keyword }: { locale?: Local
                     exit={{ scale: 0.8, opacity: 0 }}
                     className="inline-flex items-center justify-center rounded-lg transition-all duration-300 px-8 py-4 w-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl hover:shadow-primary-500/50 text-sm font-bold group relative overflow-hidden"
                   >
-                    <motion.div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-10" animate={{ left: ['-50%', '150%'] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }} />
+                    <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent z-10 pointer-events-none animate-cta-sweep" />
                     <span className="relative z-20 flex items-center justify-center">
                       {t.nav.quote}
-                      <motion.div animate={{ y: [0, 8, 0], opacity: [1, 0.7, 1] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }} className="ml-2">
+                      <span className="ml-2 inline-flex animate-nudge-y">
                         <ChevronDown size={20} className="group-hover:scale-110 transition-transform" />
-                      </motion.div>
+                      </span>
                     </span>
                   </motion.a>
                 )}

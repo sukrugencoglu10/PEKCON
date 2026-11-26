@@ -101,7 +101,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
               className="group h-full"
             >
               <div
-                className="bg-white/10 backdrop-blur-md rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative cursor-pointer"
+                className="bg-dark-900/60 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 h-full border border-white/20 hover:border-secondary-500/50 flex flex-col group relative cursor-pointer"
                 onClick={() => setSelected(container)}
               >
                 <div
@@ -114,7 +114,7 @@ export default function ContainerShowcase({ locale = 'tr' }: { locale?: Locale }
                     className="object-contain p-4"
                   />
                   <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
-                    <span className="bg-black/50 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
+                    <span className="bg-black/50 text-white text-xs px-2 py-1 rounded">
                       {locale === 'tr' ? 'Büyütmek için tıkla' : 'Click to enlarge'}
                     </span>
                   </div>
