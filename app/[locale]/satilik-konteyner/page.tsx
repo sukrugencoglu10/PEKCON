@@ -231,7 +231,9 @@ export default async function ContainersForSalePage({ params }: { params: Promis
           src="/satilik-konteyner-hero.jpg"
           alt=""
           fill
-          priority
+          preload
+          loading="eager"
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover object-center"
         />
