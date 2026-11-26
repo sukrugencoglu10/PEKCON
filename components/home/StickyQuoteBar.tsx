@@ -120,7 +120,9 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-            className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]"
+            // Mobil: zemin yok, butonlar içeriğin üstünde süzülür (aradaki boşluk tıklamayı
+            // engellemesin diye pointer-events-none). Masaüstü: metinli beyaz çubuk.
+            className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none sm:pointer-events-auto sm:bg-white sm:border-t sm:border-gray-200 sm:shadow-[0_-10px_40px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]"
           >
             <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-3">
 
@@ -141,7 +143,7 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
                 <a
                   href={PHONE_HREF}
                   data-cta-location="sticky_bar"
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white font-semibold text-[15px] sm:text-sm px-3 sm:px-4 py-3 sm:py-2 rounded-xl sm:rounded-lg transition-colors duration-150"
+                  className="pointer-events-auto shadow-lg shadow-black/30 sm:shadow-none flex-1 sm:flex-none flex items-center justify-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white font-semibold text-[15px] sm:text-sm px-3 sm:px-4 py-3 sm:py-2 rounded-xl sm:rounded-lg transition-colors duration-150"
                 >
                   <Phone size={18} className="sm:w-4 sm:h-4" />
                   <span>{t.call}</span>
@@ -152,7 +154,7 @@ export default function StickyQuoteBar({ locale }: { locale: string }) {
                   href={t.quoteHref}
                   data-cta-location="sticky_bar"
                   onClick={() => trackStickyBarEvent('cta_click', locale)}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-[15px] sm:text-sm px-3 sm:px-4 py-3 sm:py-2 rounded-xl sm:rounded-lg transition-colors duration-150"
+                  className="pointer-events-auto shadow-lg shadow-black/30 sm:shadow-none flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-[15px] sm:text-sm px-3 sm:px-4 py-3 sm:py-2 rounded-xl sm:rounded-lg transition-colors duration-150"
                 >
                   <FileText size={18} className="sm:w-4 sm:h-4" />
                   <span>{t.quote}</span>
